@@ -59,9 +59,172 @@
     <string name="message_reset_link_sent">Se esse e-mail estiver cadastrado, enviamos um link para criar uma nova senha.</string>
     <string name="message_account_created">Conta criada! Vamos configurar sua fazenda.</string>
 
-    <!-- Home provisória (Fase 04) -->
-    <string name="home_title">Início</string>
-    <string name="home_greeting">Olá, %1$s</string>
-    <string name="home_placeholder">Em breve: a rotina do dia.</string>
-    <string name="home_sign_out">Sair</string>
+    <!-- Navegação -->
+    <string name="nav_home">Início</string>
+    <string name="nav_tanks">Tanques</string>
+    <string name="nav_register">Registrar</string>
+    <string name="nav_more">Mais</string>
+    <string name="action_back">Voltar</string>
+    <string name="action_save">Salvar</string>
+    <string name="action_save_anyway">Salvar mesmo assim</string>
+    <string name="action_change">Alterar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_ok">OK</string>
+
+    <!-- Níveis de alerta e parâmetros -->
+    <string name="level_adequado">Adequado</string>
+    <string name="level_atencao">Atenção</string>
+    <string name="level_critico">Crítico</string>
+    <string name="level_emergencia">Emergência</string>
+    <string name="level_no_readings">Sem medições</string>
+    <string name="kind_oxygen">Oxigênio</string>
+    <string name="kind_temperature">Temperatura</string>
+    <string name="kind_ph">pH</string>
+    <string name="kind_toxic_ammonia">Amônia tóxica</string>
+    <string name="kind_total_ammonia">Amônia total</string>
+    <string name="kind_nitrite">Nitrito</string>
+    <string name="kind_transparency">Transparência</string>
+    <string name="kind_alkalinity">Alcalinidade</string>
+    <string name="kind_hardness">Dureza</string>
+    <string name="kind_ph_variation">Variação do pH</string>
+    <string name="kind_mortality">Mortalidade</string>
+    <string name="unit_mg_l">mg/L</string>
+    <string name="unit_celsius">°C</string>
+    <string name="unit_cm">cm</string>
+    <string name="unit_percent" formatted="false">%</string>
+    <string name="unit_kg">kg</string>
+    <string name="unit_g">g</string>
+    <string name="unit_m2">m²</string>
+    <string name="unit_m">m</string>
+    <string name="unit_m3">m³</string>
+    <string name="unit_hp">HP</string>
+    <string name="unit_percent_per_day" formatted="false">% ao dia</string>
+    <string name="unit_fish">peixes</string>
+    <string name="value_with_unit">%1$s %2$s</string>
+    <string name="measured_at">Medido em %1$s</string>
+    <string name="ammonia_needs_ph_temperature">Informe pH e temperatura para calcular a amônia tóxica.</string>
+    <string name="status_card_level_description">Nível: %1$s</string>
+
+    <!-- Tipos, espécies, fases e momentos -->
+    <string name="tank_type_escavado">Viveiro escavado</string>
+    <string name="tank_type_acude">Açude</string>
+    <string name="tank_type_tanque_rede">Tanque-rede</string>
+    <string name="tank_type_alvenaria">Tanque de alvenaria</string>
+    <string name="tank_type_redondo">Tanque redondo</string>
+    <string name="species_tilapia">Tilápia</string>
+    <string name="species_tambaqui">Tambaqui</string>
+    <string name="species_pirarucu">Pirarucu</string>
+    <string name="species_other">Outra espécie</string>
+    <string name="phase_alevinagem">Alevinagem</string>
+    <string name="phase_recria">Recria</string>
+    <string name="phase_engorda">Engorda</string>
+    <string name="moment_manha">manhã</string>
+    <string name="moment_meio_dia">meio-dia</string>
+    <string name="moment_tarde">tarde</string>
+    <string name="moment_noite">noite</string>
+
+    <!-- Home: rotina diária -->
+    <string name="home_title">Hoje</string>
+    <string name="home_alerts_title">Alertas</string>
+    <string name="home_no_alerts">Nenhum alerta no momento.</string>
+    <string name="home_tasks_title">Para fazer hoje</string>
+    <string name="home_all_done">Tudo em dia hoje.</string>
+    <string name="home_no_tanks">Cadastre seu primeiro tanque na aba Tanques.</string>
+    <string name="home_alert_title">%1$s: %2$s</string>
+    <string name="task_measure_daily">Medir %1$s (%2$s)</string>
+    <string name="task_measure_weekly">Medir %1$s (semanal)</string>
+    <plurals name="task_feeding">
+        <item quantity="one">Dar ração: falta %1$d de %2$d tratos de hoje (%3$s)</item>
+        <item quantity="other">Dar ração: faltam %1$d de %2$d tratos de hoje (%3$s)</item>
+    </plurals>
+    <string name="task_biometry_today">Fazer a biometria hoje (%1$s)</string>
+    <plurals name="task_biometry_late">
+        <item quantity="one">Biometria atrasada há %1$d dia (%2$s)</item>
+        <item quantity="other">Biometria atrasada há %1$d dias (%2$s)</item>
+    </plurals>
+
+    <!-- Tanques -->
+    <string name="tanks_title">Tanques</string>
+    <string name="tanks_empty">Você ainda não tem tanques. Toque em \"Novo tanque\" para começar.</string>
+    <string name="tanks_new">Novo tanque</string>
+    <string name="tank_no_lot">Sem lote ativo</string>
+    <string name="tank_one_lot">%1$s · %2$s</string>
+    <plurals name="fish_count">
+        <item quantity="one">%1$d peixe</item>
+        <item quantity="other">%1$d peixes</item>
+    </plurals>
+    <string name="tank_many_lots">%1$d lotes ativos</string>
+    <string name="tank_not_found">Tanque não encontrado.</string>
+    <string name="tank_detail_water_title">Qualidade da água</string>
+    <string name="tank_detail_no_readings">Nenhuma medição ainda.</string>
+    <string name="tank_register_water">Registrar água</string>
+    <string name="tank_lots_title">Lotes ativos</string>
+    <string name="tank_no_lots">Este tanque não tem lote ativo.</string>
+    <string name="tank_new_lot">Novo lote</string>
+    <string name="lot_register_feeding">Registrar ração</string>
+    <string name="lot_open_details">Ver detalhes do lote</string>
+    <string name="lot_card_summary">%1$s · %2$s kg</string>
+
+    <!-- Formulários -->
+    <string name="form_required_legend">* campo obrigatório</string>
+    <string name="label_required">%1$s *</string>
+    <string name="error_required">Preencha este campo.</string>
+    <string name="error_invalid_number">Digite um número válido, como 10 ou 10,5.</string>
+    <string name="error_not_positive">Digite um número maior que zero.</string>
+    <string name="error_percent_range">Digite um valor de 0 a 100.</string>
+    <string name="message_saved">Registro salvo</string>
+
+    <!-- Novo tanque -->
+    <string name="tank_form_title">Novo tanque</string>
+    <string name="field_tank_name">Nome do tanque</string>
+    <string name="field_tank_name_example">Ex.: Viveiro 1</string>
+    <string name="field_tank_type">Tipo de tanque</string>
+    <string name="field_area">Área</string>
+    <string name="field_area_example">Ex.: 1000</string>
+    <string name="field_depth">Profundidade média</string>
+    <string name="field_depth_example">Ex.: 1,5</string>
+    <string name="field_volume">Volume</string>
+    <string name="field_volume_example">Ex.: 20</string>
+    <string name="field_has_aerator">Tem aerador</string>
+    <string name="field_aerator_power">Potência do aerador</string>
+    <string name="field_aerator_power_example">Ex.: 2</string>
+    <string name="field_renewal">Renovação de água</string>
+    <string name="field_renewal_example">Ex.: 5 (use 0 se não troca a água)</string>
+
+    <!-- Lote -->
+    <string name="lot_detail_title">%1$s · %2$s</string>
+    <string name="lot_not_found">Lote não encontrado.</string>
+    <string name="lot_alive">Peixes vivos</string>
+    <string name="lot_biomass">Biomassa</string>
+    <string name="lot_average_weight">Peso médio</string>
+    <string name="lot_mortality">Mortalidade acumulada</string>
+    <string name="lot_fcr">TCA (conversão alimentar)</string>
+    <string name="lot_fcr_none">Sem biometria ainda</string>
+    <string name="lot_alerts_title">Alertas do lote</string>
+    <string name="lot_no_alerts">Nenhum alerta para este lote.</string>
+    <string name="lot_in_tank">Tanque: %1$s</string>
+    <string name="lot_form_title">Novo lote</string>
+    <string name="field_species">Espécie</string>
+    <string name="field_phase">Fase</string>
+    <string name="field_quantity">Quantidade de peixes</string>
+    <string name="field_quantity_example">Ex.: 1000</string>
+    <string name="field_initial_weight">Peso médio inicial</string>
+    <string name="field_initial_weight_example">Ex.: 5</string>
+    <string name="field_final_weight">Peso final esperado</string>
+    <string name="field_final_weight_example_range">Ex.: %1$s a %2$s</string>
+    <string name="field_final_weight_example_market">Peso de mercado, em gramas</string>
+    <string name="field_origin">Origem dos alevinos</string>
+    <string name="field_origin_optional">Opcional</string>
+    <string name="field_stocking_date">Data do povoamento</string>
+    <string name="capacity_title">Capacidade do viveiro</string>
+    <string name="capacity_info">Capacidade: %1$s kg (%2$s a %3$s kg por 1.000 m²). Cabem até %4$s.</string>
+    <string name="capacity_warning">Este povoamento passa da capacidade do viveiro. O máximo é %1$s.</string>
+    <string name="capacity_unavailable">A capacidade só é calculada para viveiro escavado e açude.</string>
+
+    <!-- Abas provisórias -->
+    <string name="register_title">Registrar</string>
+    <string name="coming_soon_title">Em breve</string>
+    <string name="coming_soon_text">Esta tela chega na próxima fase do app.</string>
+    <string name="more_title">Mais</string>
+    <string name="more_sign_out">Sair</string>
 </resources>

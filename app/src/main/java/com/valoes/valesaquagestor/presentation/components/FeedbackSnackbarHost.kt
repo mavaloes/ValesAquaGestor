@@ -5,6 +5,12 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
+import com.valoes.valesaquagestor.R
 import androidx.compose.ui.Modifier
 
 /** Local onde as mensagens de feedback aparecem ("Registro salvo", "Sem conexão…"). */
@@ -32,6 +38,22 @@ fun FeedbackEffect(
         if (message != null) {
             hostState.showSnackbar(message = message, duration = SnackbarDuration.Long)
             onShown()
+        }
+    }
+}
+
+/**
+ * Mostra "Registro salvo" uma única vez quando [show] é `true` (a tela chegou logo depois de salvar
+ * um registro). Lembra que já mostrou, mesmo se a tela girar.
+ */
+@Composable
+fun SavedMessageEffect(show: Boolean, hostState: SnackbarHostState) {
+    var shown by rememberSaveable { mutableStateOf(false) }
+    val message = stringResource(R.string.message_saved)
+    LaunchedEffect(show) {
+        if (show && !shown) {
+            shown = true
+            hostState.showSnackbar(message = message, duration = SnackbarDuration.Short)
         }
     }
 }

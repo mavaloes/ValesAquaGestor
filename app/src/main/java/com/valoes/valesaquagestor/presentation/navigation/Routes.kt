@@ -18,6 +18,44 @@ data object SignUp
 @Serializable
 data object ForgotPassword
 
-/** Home. Provisória e vazia na Fase 04; vira a rotina diária na Fase 05. */
+/** Aba "Início": a rotina diária. */
 @Serializable
 data object Home
+
+/** Aba "Tanques". */
+@Serializable
+data object Tanques
+
+/** Aba "Registrar". Provisória até a Fase 06. */
+@Serializable
+data object Registrar
+
+/** Aba "Mais". */
+@Serializable
+data object Mais
+
+/**
+ * Detalhe do tanque. [saved] vale `true` logo depois de criar o tanque, para mostrar "Registro salvo".
+ */
+@Serializable
+data class TankDetail(val id: Long, val saved: Boolean = false)
+
+/** Detalhe do lote. [saved] vale `true` logo depois de criar o lote, para mostrar "Registro salvo". */
+@Serializable
+data class LotDetail(val id: Long, val saved: Boolean = false)
+
+/** Formulário de novo tanque. */
+@Serializable
+data object NewTank
+
+/** Formulário de novo lote no tanque [tankId]. */
+@Serializable
+data class NewLot(val tankId: Long)
+
+/** Registrar água (Fase 06). Provisória até lá. */
+@Serializable
+data class WaterRecord(val tankId: Long)
+
+/** Registrar ração (Fase 06). Provisória até lá. */
+@Serializable
+data class FeedingRecord(val lotId: Long)

@@ -1,6 +1,8 @@
 package com.valoes.valesaquagestor.domain.calc
 
 import com.valoes.valesaquagestor.domain.model.FaseLote
+import com.valoes.valesaquagestor.domain.model.Tanque
+import com.valoes.valesaquagestor.domain.model.TipoTanque
 import kotlin.math.floor
 
 /**
@@ -93,6 +95,57 @@ object CapacityCalculator {
     fun maxFish(capacityKg: Double, finalWeightG: Double): Int =
         floor(capacityKg * 1000.0 / finalWeightG + ROUNDING_GUARD).toInt()
 
+    /**
+     * Peso final típico de cada fase, em g, só como exemplo no formulário. Engorda: `null`, porque
+     * o peso final é o peso de mercado, que o produtor informa.
+     *
+     * @see F03 p.16 — alevinagem 20 a 30 g; recria 300 a 400 g.
+     */
+    fun typicalFinalWeightG(phase: FaseLote): ClosedFloatingPointRange<Double>? = when (phase) {
+        FaseLote.ALEVINAGEM -> 20.0..30.0
+        FaseLote.RECRIA -> 300.0..400.0
+        FaseLote.ENGORDA -> null
+    }
+
+    /**
+     * Confere um povoamento contra a capacidade do viveiro. Só vale para viveiro escavado e açude
+     * com área informada (a capacidade dos outros tipos não está definida nas fontes): nos demais
+     * casos devolve `null`.
+     *
+     * @param fishCount número de peixes que se quer povoar.
+     * @param finalWeightG peso final esperado, em g.
+     */
+    fun check(tank: Tanque, phase: FaseLote, fishCount: Int, finalWeightG: Double): CapacityCheck? {
+        val area = tank.areaM2 ?: return null
+        if (tank.tipo != TipoTanque.ESCAVADO && tank.tipo != TipoTanque.ACUDE) return null
+        val condition = condition(tank.usaAerador, tank.renovacaoAguaPctDia)
+        val capacityKg = capacityKg(area, condition, phase)
+        val maxFish = maxFish(capacityKg, finalWeightG)
+        return CapacityCheck(
+            condition = condition,
+            range = productivityRange(condition, phase),
+            capacityKg = capacityKg,
+            maxFish = maxFish,
+            exceeds = fishCount > maxFish,
+        )
+    }
+
     /** Tolerância para o erro de ponto flutuante não derrubar um resultado exato para o inteiro abaixo. */
     private const val ROUNDING_GUARD = 1e-9
 }
+
+/**
+ * Resultado da conferência de capacidade.
+ *
+ * @property range faixa de produtividade da condição e da fase, em kg por 1.000 m².
+ * @property capacityKg capacidade do viveiro, em kg (limite superior da faixa, 🔶 `specs/08`, conflito 9).
+ * @property maxFish número máximo de peixes para o peso final informado.
+ * @property exceeds `true` se o povoamento passa da capacidade.
+ */
+data class CapacityCheck(
+    val condition: RearingCondition,
+    val range: CapacityRange,
+    val capacityKg: Double,
+    val maxFish: Int,
+    val exceeds: Boolean,
+)

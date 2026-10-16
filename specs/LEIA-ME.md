@@ -45,13 +45,17 @@ com.valoes.valesaquagestor
 │   ├── calc                (Fase 02) Cálculos: amônia tóxica, ração, capacidade, oxigênio.
 │   ├── repository          Interfaces dos repositórios, de autenticação e de conexão.
 │   ├── validation          Validação dos campos de login e cadastro (Kotlin puro).
-│   └── usecase             (Fase 04 em diante) Casos de uso; a permissão é checada aqui.
+│   └── usecase             Casos de uso: ObserveFarmOverview (retrato da fazenda); a permissão é checada aqui (Fase 08).
 ├── presentation            Telas Compose, ViewModels e UiState.
 │   ├── theme               Tema Material 3 (cores e tipografia).
 │   ├── components          Componentes reutilizáveis (botão grande, campos, Snackbar; StatusCard na Fase 05).
 │   ├── auth                Telas de login, cadastro e recuperação de senha, com ViewModel e UiState.
 │   ├── navigation          Rotas type-safe, tela inicial decidida pela sessão e NavHost.
-│   └── home                Home (provisória e vazia até a Fase 05).
+│   ├── home                Home = rotina diária: alertas por prioridade e o que falta fazer hoje.
+│   ├── tank                Lista de tanques, novo tanque e detalhe do tanque.
+│   ├── lot                 Detalhe do lote e novo lote (com a capacidade do viveiro).
+│   ├── main                Aba "Mais" (Sair provisório) e a tela "Em breve" das abas ainda sem conteúdo.
+│   └── util                Formatação (padrão brasileiro) e validação de campos de formulário.
 └── di                      (Fase 03) Módulos Hilt.
 ```
 

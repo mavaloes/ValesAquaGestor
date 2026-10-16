@@ -2,33 +2,49 @@ package com.valoes.valesaquagestor.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.valoes.valesaquagestor.domain.repository.AuthRepository
+import com.valoes.valesaquagestor.domain.calc.DailyRoutine
+import com.valoes.valesaquagestor.domain.calc.DailyRoutineBuilder
+import com.valoes.valesaquagestor.domain.calc.MonitoringSchedule
+import com.valoes.valesaquagestor.domain.usecase.ObserveFarmOverview
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.Clock
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 /**
- * ViewModel da Home provisória (Fase 04). O logout com confirmação e aviso de registros não
- * enviados é da Fase 08, em Configurações; aqui o "Sair" encerra a sessão direto.
+ * Estado da Home (rotina diária).
+ *
+ * @property hasTanks `false` se a fazenda ainda não tem nenhum tanque ativo.
+ * @property routine alertas por prioridade (EMERGENCIA primeiro) e o que falta fazer hoje.
  */
+data class HomeUiState(
+    val isLoading: Boolean = true,
+    val hasTanks: Boolean = false,
+    val routine: DailyRoutine = DailyRoutine(alerts = emptyList(), tasks = emptyList()),
+)
+
+/** Monta a rotina do dia a partir do retrato da fazenda e da agenda de medições. */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
+    observeFarmOverview: ObserveFarmOverview,
+    clock: Clock,
 ) : ViewModel() {
 
-    /** Nome do usuário logado, ou `null` enquanto carrega. */
-    val userName: StateFlow<String?> = authRepository.currentSession
-        .map { it?.nome }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
+    // A agenda usa os padrões das fontes; a Fase 08 deixa o ADMIN editá-la.
+    private val schedule = MonitoringSchedule()
 
-    /** Encerra a sessão. A navegação para o Login acontece sozinha, porque a sessão deixa de existir. */
-    fun onSignOut() {
-        viewModelScope.launch { authRepository.signOut() }
-    }
+    val state: StateFlow<HomeUiState> = observeFarmOverview()
+        .map { farm ->
+            HomeUiState(
+                isLoading = false,
+                hasTanks = farm.tanks.isNotEmpty(),
+                routine = DailyRoutineBuilder.build(farm, schedule, clock),
+            )
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), HomeUiState())
 
     private companion object {
         const val STOP_TIMEOUT_MILLIS = 5_000L

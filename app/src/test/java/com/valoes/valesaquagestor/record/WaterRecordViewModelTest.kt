@@ -3,6 +3,7 @@ package com.valoes.valesaquagestor.record
 import androidx.lifecycle.SavedStateHandle
 import com.valoes.valesaquagestor.auth.FakeConnectivityChecker
 import com.valoes.valesaquagestor.auth.MainDispatcherRule
+import com.valoes.valesaquagestor.data.sensor.ManualWaterSensorSource
 import com.valoes.valesaquagestor.domain.model.MomentoMedicao
 import com.valoes.valesaquagestor.domain.rules.AlertKind
 import com.valoes.valesaquagestor.domain.rules.AlertLevel
@@ -35,7 +36,7 @@ class WaterRecordViewModelTest {
     private val connectivity = FakeConnectivityChecker(online = true)
 
     private fun viewModel(farm: FarmFixture = FarmFixture(tanks = listOf(tank(1, "Viveiro 1")))) = Pair(
-        WaterRecordViewModel(SavedStateHandle(mapOf(WaterRecordViewModel.TANK_ID_ARG to 1L)), farm.water, farm.tanks, farm.settings, connectivity, FIXED_CLOCK),
+        WaterRecordViewModel(SavedStateHandle(mapOf(WaterRecordViewModel.TANK_ID_ARG to 1L)), farm.water, farm.tanks, farm.settings, ManualWaterSensorSource(), connectivity, FIXED_CLOCK),
         farm,
     )
 

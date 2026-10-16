@@ -24,6 +24,8 @@ class TankRepositoryImpl @Inject constructor(
 
     override suspend fun get(id: Long): Tanque? = dao.getByIdIncludingDeleted(id)?.takeUnless { it.excluido }?.toDomain()
 
+    override suspend fun getByUuid(uuid: String): Tanque? = dao.findByUuid(uuid)?.takeUnless { it.excluido }?.toDomain()
+
     override suspend fun save(tanque: Tanque): Long {
         // Viveiro e açude têm capacidade por área; os demais tipos, por volume (F03 p.15; F12 p.14).
         when (tanque.tipo) {

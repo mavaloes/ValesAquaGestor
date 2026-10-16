@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -41,10 +42,11 @@ import com.valoes.valesaquagestor.presentation.theme.AquaGestorTheme
 fun TankListScreen(
     onOpenTank: (Long) -> Unit,
     onNewTank: () -> Unit,
+    onScanQr: () -> Unit,
     viewModel: TankListViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    TankListContent(state = state, onOpenTank = onOpenTank, onNewTank = onNewTank)
+    TankListContent(state = state, onOpenTank = onOpenTank, onNewTank = onNewTank, onScanQr = onScanQr)
 }
 
 @Composable
@@ -52,6 +54,7 @@ internal fun TankListContent(
     state: TankListUiState,
     onOpenTank: (Long) -> Unit,
     onNewTank: () -> Unit,
+    onScanQr: () -> Unit,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -68,6 +71,15 @@ internal fun TankListContent(
                     icon = Icons.Default.Add,
                     onClick = onNewTank,
                 )
+            }
+            if (state.tanks.isNotEmpty()) {
+                item {
+                    LargeButton(
+                        text = stringResource(R.string.tanks_scan),
+                        icon = Icons.Default.Search,
+                        onClick = onScanQr,
+                    )
+                }
             }
             if (!state.isLoading && state.tanks.isEmpty()) {
                 item { EmptyMessage(text = stringResource(R.string.tanks_empty)) }
@@ -124,6 +136,7 @@ private fun TankListPreview() {
             ),
             onOpenTank = {},
             onNewTank = {},
+            onScanQr = {},
         )
     }
 }
@@ -131,5 +144,5 @@ private fun TankListPreview() {
 @Preview(name = "Tanques vazio", showBackground = true, fontScale = 2f)
 @Composable
 private fun TankListEmptyPreview() {
-    AquaGestorTheme { TankListContent(TankListUiState(isLoading = false), onOpenTank = {}, onNewTank = {}) }
+    AquaGestorTheme { TankListContent(TankListUiState(isLoading = false), onOpenTank = {}, onNewTank = {}, onScanQr = {}) }
 }

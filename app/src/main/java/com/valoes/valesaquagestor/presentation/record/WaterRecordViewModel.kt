@@ -17,9 +17,12 @@ import com.valoes.valesaquagestor.domain.rules.Plausibility
 import com.valoes.valesaquagestor.domain.rules.PlausibilityWarning
 import com.valoes.valesaquagestor.domain.rules.WaterAlert
 import com.valoes.valesaquagestor.domain.rules.WaterReadingsEvaluator
+import com.valoes.valesaquagestor.domain.sensor.SensorReading
+import com.valoes.valesaquagestor.domain.sensor.WaterSensorSource
 import com.valoes.valesaquagestor.presentation.util.FormError
 import com.valoes.valesaquagestor.presentation.util.FormValidation
 import com.valoes.valesaquagestor.presentation.util.SaveFeedback
+import com.valoes.valesaquagestor.presentation.util.formatInput
 import com.valoes.valesaquagestor.presentation.util.parseDecimal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Clock
@@ -61,6 +64,8 @@ data class WaterSaveResult(
  * Estado do registro de água. Todas as medidas são opcionais, mas é preciso informar **pelo menos uma**.
  *
  * @property values texto digitado de cada parâmetro (vírgula ou ponto como separador decimal).
+ * @property fromSensor campos preenchidos por um sensor e ainda não alterados pelo usuário: aparecem
+ *   marcados como "vinda do sensor", mas continuam editáveis.
  * @property warnings valores improváveis: avisam, mas deixam salvar ("Salvar mesmo assim").
  * @property saved preenchido quando o registro foi salvo; diz qual aviso mostrar.
  * @property result nível de cada valor e amônia tóxica, mostrados depois de salvar.
@@ -72,6 +77,7 @@ data class WaterRecordUiState(
     val moment: MomentoMedicao,
     val cloudy: Boolean = false,
     val values: Map<WaterField, String> = emptyMap(),
+    val fromSensor: Set<WaterField> = emptySet(),
     val errors: Map<WaterField, FormError> = emptyMap(),
     val warnings: List<PlausibilityWarning> = emptyList(),
     val isSaving: Boolean = false,
@@ -89,6 +95,7 @@ class WaterRecordViewModel @Inject constructor(
     private val water: WaterQualityRepository,
     tanks: TankRepository,
     private val settings: SettingsRepository,
+    private val sensor: WaterSensorSource,
     private val connectivity: ConnectivityChecker,
     private val clock: Clock,
 ) : ViewModel() {
@@ -105,7 +112,35 @@ class WaterRecordViewModel @Inject constructor(
         viewModelScope.launch {
             val tank = tanks.get(tankId)
             _state.update { it.copy(tankName = tank?.nome.orEmpty(), tankLoaded = tank != null) }
+            // Se um sensor já mediu este tanque, a medição vira o rascunho do formulário.
+            if (tank != null) sensor.takePendingReading(tankId)?.let(::applySensorReading)
         }
+    }
+
+    /**
+     * Preenche o formulário com a leitura do sensor. Os valores ficam editáveis e marcados como "vindos
+     * do sensor"; a data e a hora passam a ser as da medição (também editáveis). Nada é salvo aqui.
+     */
+    private fun applySensorReading(reading: SensorReading) = _state.update { state ->
+        val measured = mapOf(
+            WaterField.TRANSPARENCY to reading.transparenciaCm,
+            WaterField.TEMPERATURE to reading.temperaturaC,
+            WaterField.OXYGEN to reading.oxigenioMgL,
+            WaterField.PH to reading.ph,
+            WaterField.TOTAL_AMMONIA to reading.amoniaTotalMgL,
+            WaterField.NITRITE to reading.nitritoMgL,
+            WaterField.ALKALINITY to reading.alcalinidadeMgL,
+            WaterField.HARDNESS to reading.durezaMgL,
+        ).filterValues { it != null }
+        val values = state.values + measured.mapValues { (_, value) -> formatInput(checkNotNull(value), SENSOR_DECIMALS) }
+        val dateTime = LocalDateTime.ofInstant(reading.readAt, clock.zone).truncatedTo(ChronoUnit.MINUTES)
+        state.copy(
+            values = values,
+            fromSensor = measured.keys,
+            dateTime = dateTime,
+            moment = if (momentChosenByUser) state.moment else MomentSuggester.suggest(dateTime.toLocalTime()),
+            warnings = warningsFor(values),
+        )
     }
 
     private fun initialState(): WaterRecordUiState {
@@ -115,7 +150,8 @@ class WaterRecordViewModel @Inject constructor(
 
     fun onValueChange(field: WaterField, text: String) = _state.update {
         val values = it.values + (field to text)
-        it.copy(values = values, errors = it.errors - field, warnings = warningsFor(values))
+        // Mexeu no campo: o valor passa a ser do usuário e perde a marca de sensor.
+        it.copy(values = values, fromSensor = it.fromSensor - field, errors = it.errors - field, warnings = warningsFor(values))
     }
 
     fun onDateTimeChange(dateTime: LocalDateTime) = _state.update {
@@ -225,5 +261,8 @@ class WaterRecordViewModel @Inject constructor(
     companion object {
         /** Nome do argumento da rota `WaterRecord(tankId)`. */
         const val TANK_ID_ARG = "tankId"
+
+        /** Casas decimais ao mostrar o valor do sensor no campo (não arredonda o que os sensores medem). */
+        private const val SENSOR_DECIMALS = 3
     }
 }

@@ -67,6 +67,7 @@ fun TankDetailScreen(
     onNewLot: (tankId: Long) -> Unit,
     onRegisterWater: (tankId: Long) -> Unit,
     onRegisterFeeding: (lotId: Long) -> Unit,
+    onShowQr: (tankId: Long) -> Unit,
     showSavedMessage: Boolean = false,
     viewModel: TankDetailViewModel = hiltViewModel(),
 ) {
@@ -81,6 +82,7 @@ fun TankDetailScreen(
         onNewLot = onNewLot,
         onRegisterWater = onRegisterWater,
         onRegisterFeeding = onRegisterFeeding,
+        onShowQr = onShowQr,
         onDeleteWaterRecord = viewModel::deleteWaterRecord,
     )
 }
@@ -94,6 +96,7 @@ internal fun TankDetailContent(
     onNewLot: (Long) -> Unit,
     onRegisterWater: (Long) -> Unit,
     onRegisterFeeding: (Long) -> Unit,
+    onShowQr: (Long) -> Unit = {},
     onDeleteWaterRecord: (Long) -> Unit = {},
 ) {
     val tank = state.tank
@@ -162,6 +165,7 @@ internal fun TankDetailContent(
                 icon = Icons.Default.Add,
                 onClick = { onNewLot(tankId) },
             )
+            LinkButton(text = stringResource(R.string.tank_qr_button), onClick = { onShowQr(tankId) })
         }
     }
 }

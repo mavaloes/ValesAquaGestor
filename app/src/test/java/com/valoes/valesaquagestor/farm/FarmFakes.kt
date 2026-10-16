@@ -94,6 +94,7 @@ class FakeTankRepository(initial: List<Tanque> = emptyList()) : TankRepository {
     override fun observeActive(): Flow<List<Tanque>> = tanks.map { list -> list.filter { it.status == StatusTanque.ATIVO } }
     override fun observe(id: Long): Flow<Tanque?> = tanks.map { list -> list.firstOrNull { it.id == id } }
     override suspend fun get(id: Long): Tanque? = tanks.value.firstOrNull { it.id == id }
+    override suspend fun getByUuid(uuid: String): Tanque? = tanks.value.firstOrNull { it.uuid == uuid }
     override suspend fun save(tanque: Tanque): Long {
         val id = if (tanque.id == 0L) (tanks.value.maxOfOrNull { it.id } ?: 0L) + 1 else tanque.id
         tanks.update { list -> list.filterNot { it.id == id } + tanque.copy(id = id) }

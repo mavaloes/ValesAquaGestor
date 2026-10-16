@@ -142,6 +142,9 @@ internal fun WaterRecordContent(
             }
             Text(text = stringResource(R.string.lot_in_tank, state.tankName), style = MaterialTheme.typography.bodyLarge)
             Text(text = stringResource(R.string.water_hint), style = MaterialTheme.typography.bodyMedium)
+            if (state.fromSensor.isNotEmpty()) {
+                Text(text = stringResource(R.string.water_sensor_banner), style = MaterialTheme.typography.bodyLarge)
+            }
             DateTimeField(dateTime = state.dateTime, onDateTimeChange = onDateTimeChange)
             ChoiceGroup(
                 label = stringResource(R.string.field_moment),
@@ -156,6 +159,7 @@ internal fun WaterRecordContent(
                     onValueChange = { onValueChange(spec.field, it) },
                     label = stringResource(spec.label),
                     placeholder = stringResource(spec.example),
+                    helperText = if (spec.field in state.fromSensor) stringResource(R.string.field_from_sensor) else null,
                     suffix = spec.unit?.let { stringResource(it) },
                     keyboardType = KeyboardType.Decimal,
                     errorText = state.errors[spec.field]?.let { stringResource(it.stringRes()) },

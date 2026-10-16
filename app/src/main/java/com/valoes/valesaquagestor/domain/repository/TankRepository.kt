@@ -17,6 +17,9 @@ interface TankRepository {
     /** Um tanque pelo id, ou `null`. */
     suspend fun get(id: Long): Tanque?
 
+    /** Um tanque pelo `uuid` (o que vai no QR Code), ou `null` se não existe ou foi excluído. */
+    suspend fun getByUuid(uuid: String): Tanque?
+
     /**
      * Salva o tanque (novo se `id == 0`) e devolve o id. Preenche `uuid` e `atualizadoEm` e marca
      * como não sincronizado.

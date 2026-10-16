@@ -75,6 +75,14 @@ data class TankDetail(val id: Long, val saved: Boolean = false)
 @Serializable
 data class LotDetail(val id: Long, val saved: Boolean = false)
 
+/** QR Code do tanque [tankId], para imprimir ou compartilhar. */
+@Serializable
+data class TankQr(val tankId: Long)
+
+/** Leitura do QR Code de um tanque pela câmera. */
+@Serializable
+data object ScanQr
+
 /** Formulário de novo tanque. */
 @Serializable
 data object NewTank

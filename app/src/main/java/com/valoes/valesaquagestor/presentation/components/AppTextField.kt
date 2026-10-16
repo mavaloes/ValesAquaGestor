@@ -32,6 +32,7 @@ import com.valoes.valesaquagestor.presentation.theme.AquaGestorTheme
  *
  * @param errorText texto do erro (de `strings.xml`); `null` quando o campo está certo.
  * @param placeholder exemplo do que digitar, visível enquanto o campo está vazio.
+ * @param helperText observação sob o campo (ex.: "Vinda do sensor"); o erro, quando existe, tem prioridade.
  * @param suffix unidade, sempre visível ao lado do valor (ex.: "m²", "mg/L").
  * @param contentType dica para o gerenciador de senhas (e-mail, usuário, senha).
  * @param onImeAction chamado quando o usuário toca na ação "Concluir" do teclado.
@@ -44,6 +45,7 @@ fun AppTextField(
     modifier: Modifier = Modifier,
     errorText: String? = null,
     placeholder: String? = null,
+    helperText: String? = null,
     suffix: String? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Next,
@@ -59,7 +61,7 @@ fun AppTextField(
         label = { Text(label) },
         placeholder = placeholder?.let { { Text(it) } },
         suffix = suffix?.let { { Text(it) } },
-        supportingText = errorText?.let { { Text(it) } },
+        supportingText = (errorText ?: helperText)?.let { { Text(it) } },
         isError = errorText != null,
         singleLine = true,
         enabled = enabled,

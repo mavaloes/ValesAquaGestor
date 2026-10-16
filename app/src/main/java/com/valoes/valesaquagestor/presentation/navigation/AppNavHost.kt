@@ -44,6 +44,8 @@ import com.valoes.valesaquagestor.presentation.help.HelpScreen
 import com.valoes.valesaquagestor.presentation.main.MoreScreen
 import com.valoes.valesaquagestor.presentation.main.RegisterScreen
 import com.valoes.valesaquagestor.presentation.onboarding.OnboardingScreen
+import com.valoes.valesaquagestor.presentation.qr.ScanQrScreen
+import com.valoes.valesaquagestor.presentation.qr.TankQrScreen
 import com.valoes.valesaquagestor.presentation.record.BiometryScreen
 import com.valoes.valesaquagestor.presentation.record.FeedingRecordScreen
 import com.valoes.valesaquagestor.presentation.record.MovementScreen
@@ -138,6 +140,7 @@ private fun AppNavigation(session: Session?, onboardingCompleted: Boolean) {
                     TankListScreen(
                         onOpenTank = { navController.navigate(TankDetail(it)) },
                         onNewTank = { navController.navigate(NewTank) },
+                        onScanQr = { navController.navigate(ScanQr) },
                     )
                 }
                 composable<Registrar> {
@@ -194,6 +197,7 @@ private fun AppNavigation(session: Session?, onboardingCompleted: Boolean) {
                         onNewLot = { navController.navigate(NewLot(it)) },
                         onRegisterWater = { navController.navigate(WaterRecord(it)) },
                         onRegisterFeeding = { navController.navigate(FeedingRecord(it)) },
+                        onShowQr = { navController.navigate(TankQr(it)) },
                         showSavedMessage = entry.toRoute<TankDetail>().saved,
                     )
                 }
@@ -204,6 +208,15 @@ private fun AppNavigation(session: Session?, onboardingCompleted: Boolean) {
                         onRegisterBiometry = { navController.navigate(Biometry(it)) },
                         onRegisterMovement = { navController.navigate(MortalityRecord(it)) },
                         showSavedMessage = entry.toRoute<LotDetail>().saved,
+                    )
+                }
+                composable<TankQr> { TankQrScreen(onBack = { navController.popBackStack() }) }
+                composable<ScanQr> {
+                    ScanQrScreen(
+                        onBack = { navController.popBackStack() },
+                        // O leitor sai da pilha: voltar do tanque aberto leva à lista, não de novo à câmera.
+                        onOpenTank = { navController.navigate(TankDetail(it)) { popUpTo<ScanQr> { inclusive = true } } },
+                        onChooseFromList = { navController.popBackStack() },
                     )
                 }
                 composable<NewTank> {

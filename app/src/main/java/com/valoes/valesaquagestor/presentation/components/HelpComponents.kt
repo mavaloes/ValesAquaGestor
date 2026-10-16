@@ -45,6 +45,8 @@ object HelpTips {
     val Users = HelpTip(R.string.tip_users_title, R.string.tip_users_text)
     val WaterRanges = HelpTip(R.string.tip_water_ranges_title, R.string.tip_water_ranges_text)
     val Schedule = HelpTip(R.string.tip_schedule_title, R.string.tip_schedule_text)
+    val TankQr = HelpTip(R.string.tip_tank_qr_title, R.string.tip_tank_qr_text)
+    val Scan = HelpTip(R.string.tip_scan_title, R.string.tip_scan_text)
     val Login = HelpTip(R.string.tip_login_title, R.string.tip_login_text)
     val SignUp = HelpTip(R.string.tip_signup_title, R.string.tip_signup_text)
     val ForgotPassword = HelpTip(R.string.tip_forgot_title, R.string.tip_forgot_text)

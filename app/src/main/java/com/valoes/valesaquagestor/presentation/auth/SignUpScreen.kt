@@ -84,7 +84,7 @@ internal fun SignUpContent(
             contentType = ContentType.EmailAddress,
             enabled = !state.isLoading,
         )
-        PasswordRulesChecklist(rules = state.passwordRules)
+        PasswordRulesChecklist(rules = state.passwordRules, passwordsMatch = state.passwordsMatch)
         PasswordTextField(
             value = state.password,
             onValueChange = onPasswordChange,

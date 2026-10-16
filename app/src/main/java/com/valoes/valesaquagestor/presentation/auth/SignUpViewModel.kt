@@ -32,6 +32,9 @@ data class SignUpUiState(
     val message: AuthMessage? = null,
 ) {
     val passwordRules: PasswordRules get() = AuthValidator.passwordRules(password)
+
+    /** A confirmação já foi digitada e é igual à senha. */
+    val passwordsMatch: Boolean get() = confirmPassword.isNotEmpty() && confirmPassword == password
 }
 
 @HiltViewModel

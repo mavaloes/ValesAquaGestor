@@ -7,6 +7,8 @@ import com.valoes.valesaquagestor.domain.calc.DailyRoutineBuilder
 import com.valoes.valesaquagestor.domain.usecase.ObserveFarmOverview
 import com.valoes.valesaquagestor.domain.usecase.SetupSuggestion
 import com.valoes.valesaquagestor.domain.usecase.resolveSetupSuggestion
+import com.valoes.valesaquagestor.presentation.main.RegisterTank
+import com.valoes.valesaquagestor.presentation.main.toRegisterTanks
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Clock
 import javax.inject.Inject
@@ -21,12 +23,14 @@ import kotlinx.coroutines.flow.stateIn
  * @property hasTanks `false` se a fazenda ainda não tem nenhum tanque ativo.
  * @property routine alertas por prioridade (EMERGENCIA primeiro) e o que falta fazer hoje.
  * @property setup atalho para retomar a configuração da fazenda (primeiro tanque, primeiro lote).
+ * @property tanks tanques e lotes ativos, para os botões de atalho escolherem onde registrar.
  */
 data class HomeUiState(
     val isLoading: Boolean = true,
     val hasTanks: Boolean = false,
     val routine: DailyRoutine = DailyRoutine(alerts = emptyList(), tasks = emptyList()),
     val setup: SetupSuggestion = SetupSuggestion.None,
+    val tanks: List<RegisterTank> = emptyList(),
 )
 
 /** Monta a rotina do dia a partir do retrato da fazenda e da agenda de medições (padrão ou ajustada pelo ADMIN). */
@@ -43,6 +47,7 @@ class HomeViewModel @Inject constructor(
                 hasTanks = farm.tanks.isNotEmpty(),
                 routine = DailyRoutineBuilder.build(farm, farm.schedule, clock),
                 setup = resolveSetupSuggestion(farm),
+                tanks = farm.toRegisterTanks(),
             )
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), HomeUiState())

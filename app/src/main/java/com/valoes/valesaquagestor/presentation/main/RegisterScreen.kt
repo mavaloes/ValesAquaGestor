@@ -27,6 +27,7 @@ import androidx.lifecycle.viewModelScope
 import com.valoes.valesaquagestor.R
 import com.valoes.valesaquagestor.domain.model.Especie
 import com.valoes.valesaquagestor.domain.model.FaseLote
+import com.valoes.valesaquagestor.domain.usecase.FarmOverview
 import com.valoes.valesaquagestor.domain.usecase.ObserveFarmOverview
 import com.valoes.valesaquagestor.presentation.components.AppTopBar
 import com.valoes.valesaquagestor.presentation.components.EmptyMessage
@@ -52,6 +53,15 @@ data class RegisterUiState(
     val tanks: List<RegisterTank> = emptyList(),
 )
 
+/** Tanques e lotes ativos da fazenda, em ordem de nome, para escolher onde registrar. */
+fun FarmOverview.toRegisterTanks(): List<RegisterTank> = tanks.map { tank ->
+    RegisterTank(
+        tankId = tank.tanque.id,
+        nome = tank.tanque.nome,
+        lots = tank.lots.map { RegisterLot(it.lote.id, it.lote.especie, it.lote.fase) },
+    )
+}.sortedBy { it.nome }
+
 /** Lista os tanques e lotes ativos para escolher onde registrar (no máximo 3 toques até salvar um trato). */
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
@@ -59,18 +69,7 @@ class RegisterViewModel @Inject constructor(
 ) : ViewModel() {
 
     val state: StateFlow<RegisterUiState> = observeFarmOverview()
-        .map { farm ->
-            RegisterUiState(
-                isLoading = false,
-                tanks = farm.tanks.map { tank ->
-                    RegisterTank(
-                        tankId = tank.tanque.id,
-                        nome = tank.tanque.nome,
-                        lots = tank.lots.map { RegisterLot(it.lote.id, it.lote.especie, it.lote.fase) },
-                    )
-                }.sortedBy { it.nome },
-            )
-        }
+        .map { farm -> RegisterUiState(isLoading = false, tanks = farm.toRegisterTanks()) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), RegisterUiState())
 
     private companion object {

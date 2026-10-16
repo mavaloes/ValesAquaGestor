@@ -19,6 +19,7 @@
     <!-- Login -->
     <string name="login_title">Entrar</string>
     <string name="login_subtitle">Entre com seu e-mail e sua senha.</string>
+    <string name="logo_placeholder_description">Espaço reservado para a logomarca do aplicativo</string>
     <string name="login_first_access_note">O primeiro acesso precisa de internet. Depois, o app funciona sem conexão.</string>
     <string name="login_button">Entrar</string>
     <string name="login_forgot_password">Esqueci minha senha</string>
@@ -33,6 +34,7 @@
     <string name="password_rule_length">Pelo menos 8 caracteres</string>
     <string name="password_rule_letter">Pelo menos uma letra</string>
     <string name="password_rule_digit">Pelo menos um número</string>
+    <string name="password_rule_match">As duas senhas são iguais</string>
     <string name="password_rule_met">Atendido</string>
     <string name="password_rule_missing">Ainda falta</string>
 
@@ -129,6 +131,15 @@
     <string name="home_no_alerts">Nenhum alerta no momento.</string>
     <string name="home_tasks_title">Para fazer hoje</string>
     <string name="home_all_done">Tudo em dia hoje.</string>
+    <string name="home_shortcut_water">Qualidade da água</string>
+    <string name="home_shortcut_feeding">Arraçoamento</string>
+    <string name="home_shortcut_biometry">Biometria</string>
+    <string name="home_shortcut_movement">Mortalidade e despesca</string>
+    <string name="home_shortcut_new_lot">Novo lote</string>
+    <string name="home_shortcut_scan_qr">Ler QR Code</string>
+    <string name="home_pick_tank">Escolha o tanque</string>
+    <string name="home_pick_lot">Escolha o lote</string>
+    <string name="home_pick_lot_item">%1$s · %2$s · %3$s</string>
     <string name="home_alert_title">%1$s: %2$s</string>
     <string name="task_measure_daily">Medir %1$s (%2$s)</string>
     <string name="task_measure_weekly">Medir %1$s (semanal)</string>

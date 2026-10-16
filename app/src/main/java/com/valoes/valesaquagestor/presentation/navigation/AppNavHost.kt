@@ -134,6 +134,9 @@ private fun AppNavigation(session: Session?, onboardingCompleted: Boolean) {
                         onRegisterFeeding = { navController.navigate(FeedingRecord(it)) },
                         onRegisterBiometry = { navController.navigate(Biometry(it)) },
                         onSetupFarm = { navController.navigate(SetupFarm(it)) },
+                        onRegisterMovement = { navController.navigate(MortalityRecord(it)) },
+                        onNewLot = { navController.navigate(NewLot(it)) },
+                        onScanQr = { navController.navigate(ScanQr) },
                     )
                 }
                 composable<Tanques> {

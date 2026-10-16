@@ -25,6 +25,16 @@ private val DarkAlertColors = mapOf(
     AlertLevel.EMERGENCIA to AlertColors(Color(0xFF93000A), Color(0xFFFFDAD6)),
 )
 
+private val LightConfirmedColor = Color(0xFF1B7A2E)
+private val DarkConfirmedColor = Color(0xFF81C784)
+
+/**
+ * Verde do "V" de item confirmado (ex.: regra da senha atendida). Contraste de pelo menos 3:1 com
+ * o fundo do tema, e o ícone sempre acompanha texto, então a cor não é a única informação.
+ */
+@Composable
+fun confirmedColor(): Color = if (isSystemInDarkTheme()) DarkConfirmedColor else LightConfirmedColor
+
 /** Cores do nível para o tema atual (claro ou escuro). */
 @Composable
 fun AlertLevel.colors(): AlertColors {

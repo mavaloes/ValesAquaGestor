@@ -1,5 +1,7 @@
 package com.valoes.valesaquagestor.presentation.auth
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.MaterialTheme
@@ -8,17 +10,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.valoes.valesaquagestor.R
 import com.valoes.valesaquagestor.presentation.components.AppTextField
 import com.valoes.valesaquagestor.presentation.components.FeedbackEffect
-import com.valoes.valesaquagestor.presentation.components.HelpTips
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.components.LinkButton
 import com.valoes.valesaquagestor.presentation.components.PasswordTextField
@@ -61,10 +68,24 @@ internal fun LoginContent(
     onSignUp: () -> Unit,
 ) {
     AuthScaffold(
-        title = stringResource(R.string.login_title),
+        title = null,
         subtitle = stringResource(R.string.login_subtitle),
         snackbarHostState = snackbarHostState,
-        help = HelpTips.Login,
+        centerVertically = true,
+        logo = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.app_name),
+                    style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.semantics { heading() },
+                )
+                LogoPlaceholder()
+            }
+        },
     ) {
         AppTextField(
             value = state.email,

@@ -64,7 +64,7 @@ Telas: `10-telas-e-navegacao.md`. Perfis: `06-perfis-permissoes.md`. Requisitos 
 
 ## Decisões que dependem de você (🔶)
 
-1. **Backend de autenticação:** Firebase Auth, Supabase Auth ou API própria? (Mesmo servidor que fará a sincronização, requisito 7.) Até decidir, usar o `FakeAuthRepository`.
-2. **Quem pode se cadastrar:** qualquer pessoa vira ADMIN de uma fazenda nova (padrão acima) ou só por convite?
-3. **Verificação de e-mail:** obrigatória ou só recomendada?
+1. **Backend de autenticação:** **Supabase** (decidido na Fase 09): login e sincronização no mesmo projeto. Sem `supabase.url` e `supabase.anonKey` em `local.properties`, o app usa o `FakeAuthRepository`. Passo a passo em `backend/supabase/README.md`.
+2. **Quem pode se cadastrar:** **qualquer pessoa** vira ADMIN de uma fazenda nova (decidido); funcionários entram por convite do ADMIN.
+3. **Verificação de e-mail:** **só recomendada** (decidido). O Supabase não envia o link sem bloquear a conta, então "Confirm email" fica desligado no projeto; ligar a opção torna a verificação obrigatória.
 4. **Login social (Google):** fora do MVP. Entra depois, se quiser.

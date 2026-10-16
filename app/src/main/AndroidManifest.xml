@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Só verifica se há conexão (mensagens "Sem conexão"); não acessa a internet. -->
+    <!-- Sincronização com o servidor (Fase 09): o app grava tudo no aparelho primeiro e só usa a internet em segundo plano. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- Câmera só para ler o QR Code do tanque. O app funciona normalmente sem ela. -->

@@ -44,6 +44,7 @@ import com.valoes.valesaquagestor.presentation.components.actionRes
 import com.valoes.valesaquagestor.presentation.components.alertValueText
 import com.valoes.valesaquagestor.presentation.components.labelRes
 import com.valoes.valesaquagestor.presentation.components.messageRes
+import com.valoes.valesaquagestor.presentation.sync.SyncStatusIndicator
 import com.valoes.valesaquagestor.presentation.theme.AquaGestorTheme
 import com.valoes.valesaquagestor.presentation.util.formatDateTime
 import java.time.Instant
@@ -72,6 +73,7 @@ fun HomeScreen(
         onRegisterFeeding = onRegisterFeeding,
         onRegisterBiometry = onRegisterBiometry,
         onSetupFarm = onSetupFarm,
+        syncStatus = { SyncStatusIndicator() },
     )
 }
 
@@ -84,11 +86,17 @@ internal fun HomeContent(
     onRegisterFeeding: (Long) -> Unit = {},
     onRegisterBiometry: (Long) -> Unit = {},
     onSetupFarm: (Long?) -> Unit = {},
+    syncStatus: @Composable () -> Unit = {},
 ) {
     val zone = remember { ZoneId.systemDefault() }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { AppTopBar(title = stringResource(R.string.home_title), help = HelpTips.Home) },
+        topBar = {
+            Column {
+                AppTopBar(title = stringResource(R.string.home_title), help = HelpTips.Home)
+                syncStatus()
+            }
+        },
     ) { innerPadding ->
         LazyColumn(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),

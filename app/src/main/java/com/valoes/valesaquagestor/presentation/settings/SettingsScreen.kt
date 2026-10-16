@@ -32,6 +32,7 @@ import com.valoes.valesaquagestor.presentation.components.ConfirmDialog
 import com.valoes.valesaquagestor.presentation.components.HelpTips
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.components.SectionTitle
+import com.valoes.valesaquagestor.presentation.sync.SyncStatusIndicator
 import com.valoes.valesaquagestor.presentation.theme.AquaGestorTheme
 
 /**
@@ -54,6 +55,7 @@ fun SettingsScreen(
         onSignOutClick = viewModel::onSignOutClick,
         onSignOutConfirm = viewModel::onSignOutConfirm,
         onSignOutDismiss = viewModel::onSignOutDismiss,
+        syncStatus = { SyncStatusIndicator() },
     )
 }
 
@@ -66,6 +68,7 @@ internal fun SettingsContent(
     onSignOutClick: () -> Unit,
     onSignOutConfirm: () -> Unit,
     onSignOutDismiss: () -> Unit,
+    syncStatus: @Composable () -> Unit = {},
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -79,6 +82,7 @@ internal fun SettingsContent(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             state.session?.let { AccountCard(it) }
+            syncStatus()
             if (state.canManageSettings) {
                 SectionTitle(stringResource(R.string.settings_farm_title))
                 LargeButton(

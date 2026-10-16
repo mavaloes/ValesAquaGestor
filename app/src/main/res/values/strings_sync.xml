@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fase 09: sincronização com o servidor (specs/05-offline-sync.md). -->
+<resources>
+    <string name="sync_status_synced">Tudo sincronizado</string>
+    <string name="sync_status_syncing">Sincronizando…</string>
+    <plurals name="sync_status_pending">
+        <item quantity="one">%d registro aguardando conexão</item>
+        <item quantity="other">%d registros aguardando conexão</item>
+    </plurals>
+</resources>

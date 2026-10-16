@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -23,9 +25,18 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Escolhe a implementação de AuthRepository. Enquanto não houver backend (Fase 09), usa o
-        // FakeAuthRepository (teste@teste.com / Teste1234). Na Fase 09 isto vira false.
-        buildConfigField("boolean", "USE_FAKE_AUTH", "true")
+        // Servidor Supabase (decisão 🔶 de specs/11-autenticacao.md). A URL e a chave pública do projeto ficam
+        // em local.properties (fora do git): supabase.url=... e supabase.anonKey=... (passo a passo em
+        // backend/supabase/README.md). Sem elas, o app usa o FakeAuthRepository (teste@teste.com / Teste1234)
+        // e não sincroniza.
+        val localProperties = Properties().apply {
+            rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
+        }
+        val supabaseUrl = localProperties.getProperty("supabase.url", "").trim().trimEnd('/')
+        val supabaseAnonKey = localProperties.getProperty("supabase.anonKey", "").trim()
+        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"$supabaseAnonKey\"")
+        buildConfigField("boolean", "USE_FAKE_AUTH", (supabaseUrl.isEmpty() || supabaseAnonKey.isEmpty()).toString())
     }
 
     buildTypes {
@@ -106,12 +117,17 @@ dependencies {
     implementation(libs.zxing.android.embedded)
     implementation(libs.androidx.print)
 
+    // Sincronização (Fase 09): servidor Supabase por HTTP e envio em segundo plano com tentativa de novo.
+    implementation(libs.okhttp)
+    implementation(libs.androidx.work.runtime)
+
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.core.ktx)
     testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.okhttp.mockwebserver)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

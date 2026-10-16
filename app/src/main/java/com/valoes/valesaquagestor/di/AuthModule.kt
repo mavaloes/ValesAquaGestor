@@ -14,6 +14,7 @@ import com.valoes.valesaquagestor.data.session.KeystoreSessionCipher
 import com.valoes.valesaquagestor.data.session.SessionCipher
 import com.valoes.valesaquagestor.data.session.SessionCurrentUserProvider
 import com.valoes.valesaquagestor.data.session.SessionStore
+import com.valoes.valesaquagestor.data.supabase.SupabaseAuthRepository
 import com.valoes.valesaquagestor.data.settings.DataStoreSettingsRepository
 import com.valoes.valesaquagestor.domain.repository.AuthRepository
 import com.valoes.valesaquagestor.domain.repository.ConnectivityChecker
@@ -63,11 +64,14 @@ object AuthModule {
     fun providePreferencesDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
         PreferenceDataStoreFactory.create { context.preferencesDataStoreFile("app_preferences") }
 
-    /** Escolhe a implementação pela flag de build `USE_FAKE_AUTH`. */
+    /**
+     * Escolhe a implementação pela flag de build `USE_FAKE_AUTH`: sem `supabase.url` e `supabase.anonKey`
+     * em `local.properties`, usa o login de mentira; com eles, o Supabase de verdade.
+     */
     @Provides
     @Singleton
-    fun provideAuthRepository(fake: Provider<FakeAuthRepository>): AuthRepository {
-        check(BuildConfig.USE_FAKE_AUTH) { "Backend de autenticação ainda não configurado (Fase 09)." }
-        return fake.get()
-    }
+    fun provideAuthRepository(
+        fake: Provider<FakeAuthRepository>,
+        supabase: Provider<SupabaseAuthRepository>,
+    ): AuthRepository = if (BuildConfig.USE_FAKE_AUTH) fake.get() else supabase.get()
 }

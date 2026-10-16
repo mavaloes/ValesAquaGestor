@@ -120,7 +120,7 @@ com.valoes.valesaquagestor
 | Limite superior ou inferior da capacidade | `08` §5.3 | Superior (o código devolve a faixa) | Fase 02 |
 | Quais níveis travam a ração | `08` conflito 13 | **Decidido** em 16/10/2026 | — |
 | Transferência cria lote no destino? | `08` §5.4 | Só registra a baixa | Fase 06 |
-| Backend, cadastro aberto, verificação de e-mail | `11` #1 a #3 | Fake até decidir | Fase 09 |
+| Backend, cadastro aberto, verificação de e-mail | `11` #1 a #3 | **Decidido**: Supabase, cadastro aberto, verificação só recomendada (`backend/supabase/README.md`) | — |
 | Protocolo do sensor | `07`, Fase 10 | Só a interface | Depois da Fase 10 |
 
 ## Verificação (em toda fase)

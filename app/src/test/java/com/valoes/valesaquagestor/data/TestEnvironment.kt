@@ -9,7 +9,9 @@ import com.valoes.valesaquagestor.data.repository.BiometryRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.FeedingRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.LotMovementRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.LotRepositoryImpl
+import com.valoes.valesaquagestor.data.repository.PendingSyncRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.TankRepositoryImpl
+import com.valoes.valesaquagestor.data.repository.UserRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.WaterQualityRepositoryImpl
 import com.valoes.valesaquagestor.domain.model.ComportamentoPeixe
 import com.valoes.valesaquagestor.domain.model.Especie
@@ -17,6 +19,7 @@ import com.valoes.valesaquagestor.domain.model.FaseLote
 import com.valoes.valesaquagestor.domain.model.Lote
 import com.valoes.valesaquagestor.domain.model.Tanque
 import com.valoes.valesaquagestor.domain.model.TipoTanque
+import com.valoes.valesaquagestor.domain.repository.CurrentUserProvider
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
@@ -41,12 +44,21 @@ class TestEnvironment {
     ).allowMainThreadQueries().build()
 
     private val transaction = RoomTransactionRunner(db)
+
+    /** Quem está logado: o teste troca para conferir `criadoPorUserId`. */
+    var currentUserId: String? = null
+    private val currentUser = CurrentUserProvider { currentUserId }
     val tanques = TankRepositoryImpl(db.tanqueDao(), transaction, clock)
     val lotes = LotRepositoryImpl(db.loteDao(), transaction, clock)
-    val agua = WaterQualityRepositoryImpl(db.qualidadeAguaDao(), transaction, clock)
-    val arracoamentos = FeedingRepositoryImpl(db.arracoamentoDao(), transaction, clock)
-    val biometrias = BiometryRepositoryImpl(db.biometriaDao(), db.loteDao(), transaction, clock)
-    val movimentacoes = LotMovementRepositoryImpl(db.movimentacaoLoteDao(), db.loteDao(), transaction, clock)
+    val agua = WaterQualityRepositoryImpl(db.qualidadeAguaDao(), transaction, clock, currentUser)
+    val arracoamentos = FeedingRepositoryImpl(db.arracoamentoDao(), transaction, clock, currentUser)
+    val biometrias = BiometryRepositoryImpl(db.biometriaDao(), db.loteDao(), transaction, clock, currentUser)
+    val movimentacoes = LotMovementRepositoryImpl(db.movimentacaoLoteDao(), db.loteDao(), transaction, clock, currentUser)
+    val usuarios = UserRepositoryImpl(db.usuarioDao(), transaction, clock)
+    val pendentes = PendingSyncRepositoryImpl(
+        db.tanqueDao(), db.loteDao(), db.qualidadeAguaDao(), db.arracoamentoDao(),
+        db.biometriaDao(), db.movimentacaoLoteDao(), db.usuarioDao(),
+    )
 
     fun close() = db.close()
 

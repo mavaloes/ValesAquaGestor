@@ -54,7 +54,7 @@ class RegisterAndRecentRecordsTest {
 
     private fun lotDetail(farm: FarmFixture) = LotDetailViewModel(
         SavedStateHandle(mapOf(LotDetailViewModel.LOT_ID_ARG to 1L)),
-        farm.lots, farm.tanks, farm.water, farm.movements, farm.biometry, farm.feeding,
+        farm.lots, farm.tanks, farm.water, farm.settings, farm.movements, farm.biometry, farm.feeding,
     )
 
     @Test

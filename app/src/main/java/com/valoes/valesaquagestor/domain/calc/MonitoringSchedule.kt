@@ -17,6 +17,20 @@ enum class MeasuredParameter {
     HARDNESS,
 }
 
+/** Campo editável da [MonitoringSchedule]; a tela de Configurações usa para mostrar o erro no campo certo. */
+enum class ScheduleField {
+    OXYGEN_MORNING_HOUR,
+    OXYGEN_AFTERNOON_HOUR,
+    TRANSPARENCY_FROM_HOUR,
+    TRANSPARENCY_TO_HOUR,
+    HIGH_LOAD_AMMONIA_INTERVAL,
+    HIGH_LOAD_AMMONIA_HOUR,
+    RECRIA_BIOMETRY_INTERVAL,
+    ENGORDA_BIOMETRY_INTERVAL,
+    ALEVINAGEM_FEED_READJUST_INTERVAL,
+    FEED_READJUST_INTERVAL,
+}
+
 /**
  * Medição prevista na rotina diária.
  *
@@ -51,6 +65,60 @@ data class MonitoringSchedule(
     val feedReadjustIntervalDays: Int = FEED_READJUST_INTERVAL_DAYS,
 ) {
 
+    /**
+     * Campos com valor inválido; vazio quando a agenda pode ser salva. Horas vão de 0 a 23, a manhã vem
+     * antes da tarde, a janela da transparência tem começo antes do fim e todo intervalo é de pelo menos
+     * 1 dia. Nenhum limite além disso é inventado.
+     */
+    fun invalidFields(): Set<ScheduleField> = buildSet {
+        fun checkHour(field: ScheduleField, hour: Int) {
+            if (hour !in HOURS_OF_DAY) add(field)
+        }
+        fun checkInterval(field: ScheduleField, days: Int) {
+            if (days < MIN_INTERVAL_DAYS) add(field)
+        }
+        checkHour(ScheduleField.OXYGEN_MORNING_HOUR, oxygenMorningHour)
+        checkHour(ScheduleField.OXYGEN_AFTERNOON_HOUR, oxygenAfternoonHour)
+        checkHour(ScheduleField.TRANSPARENCY_FROM_HOUR, transparencyFromHour)
+        checkHour(ScheduleField.TRANSPARENCY_TO_HOUR, transparencyToHour)
+        checkHour(ScheduleField.HIGH_LOAD_AMMONIA_HOUR, highLoadAmmoniaHour)
+        if (oxygenAfternoonHour <= oxygenMorningHour) add(ScheduleField.OXYGEN_AFTERNOON_HOUR)
+        if (transparencyToHour <= transparencyFromHour) add(ScheduleField.TRANSPARENCY_TO_HOUR)
+        checkInterval(ScheduleField.HIGH_LOAD_AMMONIA_INTERVAL, highLoadAmmoniaIntervalDays)
+        checkInterval(ScheduleField.RECRIA_BIOMETRY_INTERVAL, recriaBiometryIntervalDays)
+        checkInterval(ScheduleField.ENGORDA_BIOMETRY_INTERVAL, engordaBiometryIntervalDays)
+        checkInterval(ScheduleField.ALEVINAGEM_FEED_READJUST_INTERVAL, alevinagemFeedReadjustIntervalDays)
+        checkInterval(ScheduleField.FEED_READJUST_INTERVAL, feedReadjustIntervalDays)
+    }
+
+    /** Valor atual do [field]: hora do dia ou intervalo em dias. */
+    fun valueOf(field: ScheduleField): Int = when (field) {
+        ScheduleField.OXYGEN_MORNING_HOUR -> oxygenMorningHour
+        ScheduleField.OXYGEN_AFTERNOON_HOUR -> oxygenAfternoonHour
+        ScheduleField.TRANSPARENCY_FROM_HOUR -> transparencyFromHour
+        ScheduleField.TRANSPARENCY_TO_HOUR -> transparencyToHour
+        ScheduleField.HIGH_LOAD_AMMONIA_INTERVAL -> highLoadAmmoniaIntervalDays
+        ScheduleField.HIGH_LOAD_AMMONIA_HOUR -> highLoadAmmoniaHour
+        ScheduleField.RECRIA_BIOMETRY_INTERVAL -> recriaBiometryIntervalDays
+        ScheduleField.ENGORDA_BIOMETRY_INTERVAL -> engordaBiometryIntervalDays
+        ScheduleField.ALEVINAGEM_FEED_READJUST_INTERVAL -> alevinagemFeedReadjustIntervalDays
+        ScheduleField.FEED_READJUST_INTERVAL -> feedReadjustIntervalDays
+    }
+
+    /** Cópia com o [field] trocado por [value]. */
+    fun with(field: ScheduleField, value: Int): MonitoringSchedule = when (field) {
+        ScheduleField.OXYGEN_MORNING_HOUR -> copy(oxygenMorningHour = value)
+        ScheduleField.OXYGEN_AFTERNOON_HOUR -> copy(oxygenAfternoonHour = value)
+        ScheduleField.TRANSPARENCY_FROM_HOUR -> copy(transparencyFromHour = value)
+        ScheduleField.TRANSPARENCY_TO_HOUR -> copy(transparencyToHour = value)
+        ScheduleField.HIGH_LOAD_AMMONIA_INTERVAL -> copy(highLoadAmmoniaIntervalDays = value)
+        ScheduleField.HIGH_LOAD_AMMONIA_HOUR -> copy(highLoadAmmoniaHour = value)
+        ScheduleField.RECRIA_BIOMETRY_INTERVAL -> copy(recriaBiometryIntervalDays = value)
+        ScheduleField.ENGORDA_BIOMETRY_INTERVAL -> copy(engordaBiometryIntervalDays = value)
+        ScheduleField.ALEVINAGEM_FEED_READJUST_INTERVAL -> copy(alevinagemFeedReadjustIntervalDays = value)
+        ScheduleField.FEED_READJUST_INTERVAL -> copy(feedReadjustIntervalDays = value)
+    }
+
     /** Medições diárias: oxigênio e pH de manhã e à tarde; temperatura e transparência no meio do dia. */
     fun dailyMeasurements(): List<ScheduledMeasurement> = listOf(
         ScheduledMeasurement(MeasuredParameter.OXYGEN, listOf(MomentoMedicao.MANHA, MomentoMedicao.TARDE)),
@@ -83,6 +151,12 @@ data class MonitoringSchedule(
         if (phase == FaseLote.ALEVINAGEM) alevinagemFeedReadjustIntervalDays else feedReadjustIntervalDays
 
     companion object {
+        /** Horas de um dia no relógio de 24 h. */
+        private val HOURS_OF_DAY = 0..23
+
+        /** Menor intervalo possível entre duas tarefas: todo dia. */
+        private const val MIN_INTERVAL_DAYS = 1
+
         /** @see F13 p.27 — oxigênio às 6 h, antes da primeira ração (janela de 6 a 8 h). */
         const val OXYGEN_MORNING_HOUR = 6
 

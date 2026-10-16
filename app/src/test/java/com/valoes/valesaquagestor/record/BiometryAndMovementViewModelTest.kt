@@ -41,7 +41,7 @@ class BiometryAndMovementViewModelTest {
 
     private fun biometryVm(farm: FarmFixture) = BiometryViewModel(
         SavedStateHandle(mapOf(BiometryViewModel.LOT_ID_ARG to 1L)),
-        farm.lots, farm.tanks, farm.movements, farm.water, farm.biometry, connectivity, FIXED_CLOCK,
+        farm.lots, farm.tanks, farm.movements, farm.water, farm.settings, farm.biometry, connectivity, FIXED_CLOCK,
     )
 
     @Test

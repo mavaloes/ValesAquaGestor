@@ -6,6 +6,7 @@ import com.valoes.valesaquagestor.data.local.entity.QualidadeAguaEntity
 import com.valoes.valesaquagestor.domain.model.LatestWaterReadings
 import com.valoes.valesaquagestor.domain.model.QualidadeAgua
 import com.valoes.valesaquagestor.domain.model.Reading
+import com.valoes.valesaquagestor.domain.repository.CurrentUserProvider
 import com.valoes.valesaquagestor.domain.repository.WaterQualityRepository
 import java.time.Clock
 import java.time.Instant
@@ -19,6 +20,7 @@ class WaterQualityRepositoryImpl @Inject constructor(
     private val dao: QualidadeAguaDao,
     private val transaction: TransactionRunner,
     private val clock: Clock,
+    private val currentUser: CurrentUserProvider,
 ) : WaterQualityRepository {
 
     override fun observeLatestReadings(tankId: Long): Flow<LatestWaterReadings> = combine(
@@ -53,8 +55,9 @@ class WaterQualityRepositoryImpl @Inject constructor(
 
     override suspend fun save(medicao: QualidadeAgua): Long {
         require(medicao.temAlgumaMedida) { "Informe pelo menos uma medida." }
+        val createdBy = currentUser.currentUserId()
         val now = clock.millis()
-        if (medicao.id == 0L) return dao.insert(medicao.toEntity(null, UUID.randomUUID().toString(), now))
+        if (medicao.id == 0L) return dao.insert(medicao.toEntity(null, UUID.randomUUID().toString(), now, createdBy))
         val existing = requireNotNull(dao.getByIdIncludingDeleted(medicao.id)) { "Medição ${medicao.id} não existe." }
         dao.update(medicao.toEntity(existing, existing.uuid, now))
         return existing.id

@@ -6,6 +6,7 @@ import com.valoes.valesaquagestor.domain.repository.BiometryRepository
 import com.valoes.valesaquagestor.domain.repository.FeedingRepository
 import com.valoes.valesaquagestor.domain.repository.LotMovementRepository
 import com.valoes.valesaquagestor.domain.repository.LotRepository
+import com.valoes.valesaquagestor.domain.repository.SettingsRepository
 import com.valoes.valesaquagestor.domain.repository.TankRepository
 import com.valoes.valesaquagestor.domain.repository.WaterQualityRepository
 import java.time.Clock
@@ -31,20 +32,27 @@ class ObserveFarmOverview @Inject constructor(
     private val feeding: FeedingRepository,
     private val biometry: BiometryRepository,
     private val movements: LotMovementRepository,
+    private val settings: SettingsRepository,
     private val clock: Clock,
 ) {
 
+    operator fun invoke(): Flow<FarmOverview> = combine(
+        tankOverviews(),
+        settings.waterRanges,
+        settings.monitoringSchedule,
+    ) { tankList, ranges, schedule -> FarmOverview(tankList, ranges, schedule) }
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun invoke(): Flow<FarmOverview> =
+    private fun tankOverviews(): Flow<List<TankOverview>> =
         combine(tanks.observeActive(), lots.observeAllActive()) { activeTanks, activeLots -> activeTanks to activeLots }
             .flatMapLatest { (activeTanks, activeLots) ->
                 if (activeTanks.isEmpty()) {
-                    flowOf(FarmOverview(emptyList()))
+                    flowOf(emptyList())
                 } else {
                     val day = today()
                     combine(
                         activeTanks.map { tank -> tankOverview(tank, activeLots.filter { it.tanqueId == tank.id }, day) },
-                    ) { FarmOverview(it.toList()) }
+                    ) { it.toList() }
                 }
             }
 

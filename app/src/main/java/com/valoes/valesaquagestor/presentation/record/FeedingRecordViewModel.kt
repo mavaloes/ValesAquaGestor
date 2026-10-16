@@ -17,6 +17,7 @@ import com.valoes.valesaquagestor.domain.repository.ConnectivityChecker
 import com.valoes.valesaquagestor.domain.repository.FeedingRepository
 import com.valoes.valesaquagestor.domain.repository.LotMovementRepository
 import com.valoes.valesaquagestor.domain.repository.LotRepository
+import com.valoes.valesaquagestor.domain.repository.SettingsRepository
 import com.valoes.valesaquagestor.domain.repository.TankRepository
 import com.valoes.valesaquagestor.domain.repository.WaterQualityRepository
 import com.valoes.valesaquagestor.domain.rules.AlertKind
@@ -86,6 +87,7 @@ class FeedingRecordViewModel @Inject constructor(
     tanks: TankRepository,
     movements: LotMovementRepository,
     water: WaterQualityRepository,
+    settings: SettingsRepository,
     private val feeding: FeedingRepository,
     private val connectivity: ConnectivityChecker,
     private val clock: Clock,
@@ -104,7 +106,7 @@ class FeedingRecordViewModel @Inject constructor(
             val alive = LotCalculator.currentQuantity(lote, movements.observeByLot(lotId).first())
             val readings = water.observeLatestReadings(lote.tanqueId).first()
             val suggestion = if (lote.especie == Especie.TILAPIA) {
-                FeedingCalculator.suggest(alive, lote.pesoMedioAtualG, feedingReadings(readings))
+                FeedingCalculator.suggest(alive, lote.pesoMedioAtualG, feedingReadings(readings), settings.waterRanges.first())
             } else {
                 null
             }

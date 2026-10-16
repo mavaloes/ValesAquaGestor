@@ -10,6 +10,7 @@ import java.time.Instant
  * @property quantidadeKg ração **ofertada**, em kg; vale 0 quando [suspenso].
  * @property proteinaBrutaPct proteína bruta da ração, em %.
  * @property tamanhoPelletMm tamanho do pellet, em mm.
+ * @property criadoPorUserId `userId` de quem criou o registro; `null` nos registros anteriores à Fase 08.
  */
 data class Arracoamento(
     val id: Long = 0,
@@ -24,4 +25,5 @@ data class Arracoamento(
     val tamanhoPelletMm: Double? = null,
     val comportamento: ComportamentoPeixe,
     val sobraRacao: Boolean = false,
+    val criadoPorUserId: String? = null,
 )

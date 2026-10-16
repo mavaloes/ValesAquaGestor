@@ -44,6 +44,11 @@ android {
         compose = true
         buildConfig = true
     }
+    sourceSets {
+        // O Robolectric lê os assets do build debug; é de lá que o MigrationTestHelper pega os schemas
+        // exportados do Room. Só o debug leva os JSONs; o release não.
+        getByName("debug").assets.directories.add("$projectDir/schemas")
+    }
     testOptions {
         // Robolectric (testes de DAO e repositório com Room em memória, sem emulador).
         unitTests.isIncludeAndroidResources = true
@@ -86,6 +91,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
@@ -100,6 +106,7 @@ dependencies {
     testImplementation(libs.turbine)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.core.ktx)
+    testImplementation(libs.androidx.room.testing)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

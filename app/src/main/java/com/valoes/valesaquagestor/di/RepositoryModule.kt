@@ -6,13 +6,17 @@ import com.valoes.valesaquagestor.data.repository.BiometryRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.FeedingRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.LotMovementRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.LotRepositoryImpl
+import com.valoes.valesaquagestor.data.repository.PendingSyncRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.TankRepositoryImpl
+import com.valoes.valesaquagestor.data.repository.UserRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.WaterQualityRepositoryImpl
 import com.valoes.valesaquagestor.domain.repository.BiometryRepository
 import com.valoes.valesaquagestor.domain.repository.FeedingRepository
 import com.valoes.valesaquagestor.domain.repository.LotMovementRepository
 import com.valoes.valesaquagestor.domain.repository.LotRepository
+import com.valoes.valesaquagestor.domain.repository.PendingSyncRepository
 import com.valoes.valesaquagestor.domain.repository.TankRepository
+import com.valoes.valesaquagestor.domain.repository.UserRepository
 import com.valoes.valesaquagestor.domain.repository.WaterQualityRepository
 import dagger.Binds
 import dagger.Module
@@ -51,4 +55,12 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindLotMovementRepository(impl: LotMovementRepositoryImpl): LotMovementRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindPendingSyncRepository(impl: PendingSyncRepositoryImpl): PendingSyncRepository
 }

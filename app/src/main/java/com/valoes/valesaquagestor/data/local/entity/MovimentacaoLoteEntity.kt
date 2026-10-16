@@ -22,6 +22,8 @@ import com.valoes.valesaquagestor.domain.model.TipoMovimentacao
  * @property pesoTotalKg peso total dos peixes retirados, em kg.
  * @property tanqueDestinoId tanque de destino, só na [TipoMovimentacao.TRANSFERENCIA].
  * @property observacao observação livre (ex.: sinais observados nos peixes mortos).
+ * @property criadoPorUserId `userId` de quem criou o registro (`specs/06-perfis-permissoes.md`); `null` nos
+ * registros anteriores à Fase 08.
  * @property uuid identidade do registro na sincronização; único no banco.
  * @property atualizadoEm última alteração, em epoch millis; na sincronização vence o maior.
  * @property excluido exclusão lógica: some das listas, mas fica no banco até o servidor confirmar.
@@ -58,6 +60,7 @@ data class MovimentacaoLoteEntity(
     val pesoTotalKg: Double? = null,
     val tanqueDestinoId: Long? = null,
     val observacao: String? = null,
+    val criadoPorUserId: String? = null,
     override val uuid: String,
     override val atualizadoEm: Long,
     override val excluido: Boolean = false,

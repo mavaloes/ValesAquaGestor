@@ -35,7 +35,7 @@ class WaterRecordViewModelTest {
     private val connectivity = FakeConnectivityChecker(online = true)
 
     private fun viewModel(farm: FarmFixture = FarmFixture(tanks = listOf(tank(1, "Viveiro 1")))) = Pair(
-        WaterRecordViewModel(SavedStateHandle(mapOf(WaterRecordViewModel.TANK_ID_ARG to 1L)), farm.water, farm.tanks, connectivity, FIXED_CLOCK),
+        WaterRecordViewModel(SavedStateHandle(mapOf(WaterRecordViewModel.TANK_ID_ARG to 1L)), farm.water, farm.tanks, farm.settings, connectivity, FIXED_CLOCK),
         farm,
     )
 

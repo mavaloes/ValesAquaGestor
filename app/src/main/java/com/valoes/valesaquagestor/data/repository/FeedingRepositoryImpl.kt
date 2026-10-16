@@ -4,6 +4,7 @@ import com.valoes.valesaquagestor.data.local.dao.ArracoamentoDao
 import com.valoes.valesaquagestor.data.local.database.TransactionRunner
 import com.valoes.valesaquagestor.data.local.entity.ArracoamentoEntity
 import com.valoes.valesaquagestor.domain.model.Arracoamento
+import com.valoes.valesaquagestor.domain.repository.CurrentUserProvider
 import com.valoes.valesaquagestor.domain.repository.FeedingRepository
 import java.time.Clock
 import java.time.Instant
@@ -16,6 +17,7 @@ class FeedingRepositoryImpl @Inject constructor(
     private val dao: ArracoamentoDao,
     private val transaction: TransactionRunner,
     private val clock: Clock,
+    private val currentUser: CurrentUserProvider,
 ) : FeedingRepository {
 
     override fun observeByLot(lotId: Long, from: Instant, to: Instant): Flow<List<Arracoamento>> =
@@ -27,8 +29,9 @@ class FeedingRepositoryImpl @Inject constructor(
     override suspend fun getLast(lotId: Long): Arracoamento? = dao.getLast(lotId)?.toDomain()
 
     override suspend fun save(arracoamento: Arracoamento): Long {
+        val createdBy = currentUser.currentUserId()
         val now = clock.millis()
-        if (arracoamento.id == 0L) return dao.insert(arracoamento.toEntity(null, UUID.randomUUID().toString(), now))
+        if (arracoamento.id == 0L) return dao.insert(arracoamento.toEntity(null, UUID.randomUUID().toString(), now, createdBy))
         val existing = requireNotNull(dao.getByIdIncludingDeleted(arracoamento.id)) { "Trato ${arracoamento.id} não existe." }
         dao.update(arracoamento.toEntity(existing, existing.uuid, now))
         return existing.id

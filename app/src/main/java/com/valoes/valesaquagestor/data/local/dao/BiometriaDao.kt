@@ -35,4 +35,8 @@ interface BiometriaDao {
     /** Registros com alteração ainda não enviada. **Inclui excluídos**: a exclusão também precisa ser enviada. */
     @Query("SELECT * FROM biometria WHERE sincronizado = 0")
     suspend fun getPending(): List<BiometriaEntity>
+
+    /** Quantos registros têm alteração ainda não enviada (para avisar antes de sair da conta). */
+    @Query("SELECT COUNT(*) FROM biometria WHERE sincronizado = 0")
+    fun observePendingCount(): Flow<Int>
 }

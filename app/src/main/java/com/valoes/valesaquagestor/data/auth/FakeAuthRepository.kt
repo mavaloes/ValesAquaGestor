@@ -3,10 +3,12 @@ package com.valoes.valesaquagestor.data.auth
 import com.valoes.valesaquagestor.data.session.SessionStore
 import com.valoes.valesaquagestor.domain.model.Papel
 import com.valoes.valesaquagestor.domain.model.Session
+import com.valoes.valesaquagestor.domain.model.StatusUsuario
 import com.valoes.valesaquagestor.domain.repository.AuthError
 import com.valoes.valesaquagestor.domain.repository.AuthRepository
 import com.valoes.valesaquagestor.domain.repository.AuthResult
 import com.valoes.valesaquagestor.domain.repository.ConnectivityChecker
+import com.valoes.valesaquagestor.domain.repository.UserRepository
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,11 +22,16 @@ import kotlinx.coroutines.flow.Flow
  *
  * Imita o servidor: cadastro, login e recuperação de senha falham sem internet; abrir o app com
  * sessão salva e sair não dependem de conexão. Escolhida por `BuildConfig.USE_FAKE_AUTH`.
+ *
+ * Convites (Fase 08): quem foi convidado pelo ADMIN cria a conta com o e-mail do convite e entra com o
+ * perfil e o `userId` do convite, em vez de virar ADMIN de uma fazenda nova. Quem foi desativado não
+ * entra mais (mesmo erro genérico de senha errada).
  */
 @Singleton
 class FakeAuthRepository @Inject constructor(
     private val sessionStore: SessionStore,
     private val connectivity: ConnectivityChecker,
+    private val users: UserRepository,
 ) : AuthRepository {
 
     private class FakeAccount(val session: Session, val password: String)
@@ -43,7 +50,10 @@ class FakeAuthRepository @Inject constructor(
         val account = accounts[normalize(email)]
         // Mesmo erro para e-mail inexistente e senha errada: não revela se a conta existe.
         if (account == null || account.password != password) return AuthResult.Failure(AuthError.INVALID_CREDENTIALS)
-        sessionStore.save(account.session)
+        val user = users.findByEmail(email)
+        if (user?.status == StatusUsuario.DESATIVADO) return AuthResult.Failure(AuthError.INVALID_CREDENTIALS)
+        // O perfil vale o que o ADMIN deixou na lista de usuários (ele pode ter trocado depois do cadastro).
+        sessionStore.save(if (user == null) account.session else account.session.copy(papel = user.papel))
         return AuthResult.Success
     }
 
@@ -51,7 +61,15 @@ class FakeAuthRepository @Inject constructor(
         if (!connectivity.isOnline()) return AuthResult.Failure(AuthError.NO_CONNECTION)
         val key = normalize(email)
         if (key in accounts) return AuthResult.Failure(AuthError.EMAIL_ALREADY_REGISTERED)
-        val session = Session(userId = UUID.randomUUID().toString(), nome = nome.trim(), email = key, papel = Papel.ADMIN)
+        val invite = users.findByEmail(key)
+        if (invite?.status == StatusUsuario.DESATIVADO) return AuthResult.Failure(AuthError.EMAIL_ALREADY_REGISTERED)
+        val session = if (invite?.status == StatusUsuario.CONVIDADO) {
+            // Aceitou o convite: entra com o perfil e o userId combinados com o ADMIN.
+            users.save(invite.copy(nome = nome.trim(), status = StatusUsuario.ATIVO))
+            Session(userId = invite.uuid, nome = nome.trim(), email = key, papel = invite.papel)
+        } else {
+            Session(userId = UUID.randomUUID().toString(), nome = nome.trim(), email = key, papel = Papel.ADMIN)
+        }
         accounts[key] = FakeAccount(session, password)
         sessionStore.save(session)
         return AuthResult.Success

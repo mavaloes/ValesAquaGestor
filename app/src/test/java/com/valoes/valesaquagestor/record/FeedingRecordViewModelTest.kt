@@ -48,7 +48,7 @@ class FeedingRecordViewModelTest {
 
     private fun viewModel(farm: FarmFixture) = FeedingRecordViewModel(
         SavedStateHandle(mapOf(FeedingRecordViewModel.LOT_ID_ARG to 1L)),
-        farm.lots, farm.tanks, farm.movements, farm.water, farm.feeding, connectivity, FIXED_CLOCK,
+        farm.lots, farm.tanks, farm.movements, farm.water, farm.settings, farm.feeding, connectivity, FIXED_CLOCK,
     )
 
     @Test

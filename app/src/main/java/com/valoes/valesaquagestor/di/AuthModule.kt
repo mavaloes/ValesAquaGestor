@@ -12,10 +12,14 @@ import com.valoes.valesaquagestor.data.onboarding.DataStoreOnboardingRepository
 import com.valoes.valesaquagestor.data.session.EncryptedSessionStore
 import com.valoes.valesaquagestor.data.session.KeystoreSessionCipher
 import com.valoes.valesaquagestor.data.session.SessionCipher
+import com.valoes.valesaquagestor.data.session.SessionCurrentUserProvider
 import com.valoes.valesaquagestor.data.session.SessionStore
+import com.valoes.valesaquagestor.data.settings.DataStoreSettingsRepository
 import com.valoes.valesaquagestor.domain.repository.AuthRepository
 import com.valoes.valesaquagestor.domain.repository.ConnectivityChecker
+import com.valoes.valesaquagestor.domain.repository.CurrentUserProvider
 import com.valoes.valesaquagestor.domain.repository.OnboardingRepository
+import com.valoes.valesaquagestor.domain.repository.SettingsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -25,7 +29,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Provider
 import javax.inject.Singleton
 
-/** Liga sessão, verificação de conexão e primeiro acesso às suas implementações. */
+/** Liga sessão, verificação de conexão, primeiro acesso, usuário atual e configurações às suas implementações. */
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AuthBindingsModule {
@@ -41,6 +45,12 @@ abstract class AuthBindingsModule {
 
     @Binds
     abstract fun bindOnboardingRepository(impl: DataStoreOnboardingRepository): OnboardingRepository
+
+    @Binds
+    abstract fun bindCurrentUserProvider(impl: SessionCurrentUserProvider): CurrentUserProvider
+
+    @Binds
+    abstract fun bindSettingsRepository(impl: DataStoreSettingsRepository): SettingsRepository
 }
 
 @Module

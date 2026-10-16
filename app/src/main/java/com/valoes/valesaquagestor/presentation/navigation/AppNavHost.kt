@@ -48,11 +48,15 @@ import com.valoes.valesaquagestor.presentation.record.BiometryScreen
 import com.valoes.valesaquagestor.presentation.record.FeedingRecordScreen
 import com.valoes.valesaquagestor.presentation.record.MovementScreen
 import com.valoes.valesaquagestor.presentation.record.WaterRecordScreen
+import com.valoes.valesaquagestor.presentation.settings.ScheduleScreen
+import com.valoes.valesaquagestor.presentation.settings.SettingsScreen
+import com.valoes.valesaquagestor.presentation.settings.WaterRangesScreen
 import com.valoes.valesaquagestor.presentation.setup.SetupFarmScreen
 import com.valoes.valesaquagestor.presentation.tank.TankDetailScreen
 import com.valoes.valesaquagestor.presentation.tank.TankFormScreen
 import com.valoes.valesaquagestor.presentation.tank.TankListScreen
 import com.valoes.valesaquagestor.presentation.theme.AquaGestorTheme
+import com.valoes.valesaquagestor.presentation.users.UsersScreen
 import com.valoes.valesaquagestor.presentation.util.SaveFeedback
 import com.valoes.valesaquagestor.presentation.util.stringRes
 import kotlinx.coroutines.launch
@@ -144,7 +148,23 @@ private fun AppNavigation(session: Session?, onboardingCompleted: Boolean) {
                         onRegisterMovement = { navController.navigate(MortalityRecord(it)) },
                     )
                 }
-                composable<Mais> { MoreScreen(onOpenHelp = openHelp) }
+                composable<Mais> {
+                    MoreScreen(
+                        onOpenHelp = openHelp,
+                        onOpenSettings = { navController.navigate(Settings) },
+                        onOpenUsers = { navController.navigate(Users) },
+                    )
+                }
+                composable<Settings> {
+                    SettingsScreen(
+                        onBack = { navController.popBackStack() },
+                        onOpenWaterRanges = { navController.navigate(WaterRangesSettings) },
+                        onOpenSchedule = { navController.navigate(ScheduleSettings) },
+                    )
+                }
+                composable<WaterRangesSettings> { WaterRangesScreen(onBack = { navController.popBackStack() }) }
+                composable<ScheduleSettings> { ScheduleScreen(onBack = { navController.popBackStack() }) }
+                composable<Users> { UsersScreen(onBack = { navController.popBackStack() }) }
                 composable<Help> { HelpScreen(onBack = { navController.popBackStack() }) }
 
                 composable<Onboarding> {

@@ -5,6 +5,7 @@ import com.valoes.valesaquagestor.data.local.dao.LoteDao
 import com.valoes.valesaquagestor.data.local.database.TransactionRunner
 import com.valoes.valesaquagestor.data.local.entity.BiometriaEntity
 import com.valoes.valesaquagestor.domain.model.Biometria
+import com.valoes.valesaquagestor.domain.repository.CurrentUserProvider
 import com.valoes.valesaquagestor.domain.repository.BiometryRepository
 import java.time.Clock
 import java.util.UUID
@@ -17,6 +18,7 @@ class BiometryRepositoryImpl @Inject constructor(
     private val loteDao: LoteDao,
     private val transaction: TransactionRunner,
     private val clock: Clock,
+    private val currentUser: CurrentUserProvider,
 ) : BiometryRepository {
 
     override fun observeLatest(lotId: Long, limit: Int): Flow<List<Biometria>> =
@@ -25,11 +27,12 @@ class BiometryRepositoryImpl @Inject constructor(
     override suspend fun save(biometria: Biometria): Long {
         require(biometria.numeroPeixesAmostra > 0) { "Informe o número de peixes da amostra." }
         require(biometria.pesoAmostraKg > 0.0) { "Informe o peso da amostra." }
+        val createdBy = currentUser.currentUserId()
         val now = clock.millis()
         // Biometria e peso médio do lote na mesma transação: ou os dois são gravados, ou nenhum.
         return transaction.run {
             val id = if (biometria.id == 0L) {
-                dao.insert(biometria.toEntity(null, UUID.randomUUID().toString(), now))
+                dao.insert(biometria.toEntity(null, UUID.randomUUID().toString(), now, createdBy))
             } else {
                 val existing = requireNotNull(dao.getByIdIncludingDeleted(biometria.id)) { "Biometria ${biometria.id} não existe." }
                 dao.update(biometria.toEntity(existing, existing.uuid, now))

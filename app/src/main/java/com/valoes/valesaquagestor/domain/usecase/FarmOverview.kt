@@ -1,6 +1,7 @@
 package com.valoes.valesaquagestor.domain.usecase
 
 import com.valoes.valesaquagestor.domain.calc.LotCalculator
+import com.valoes.valesaquagestor.domain.calc.MonitoringSchedule
 import com.valoes.valesaquagestor.domain.model.Arracoamento
 import com.valoes.valesaquagestor.domain.model.Biometria
 import com.valoes.valesaquagestor.domain.model.LatestWaterReadings
@@ -8,6 +9,7 @@ import com.valoes.valesaquagestor.domain.model.Lote
 import com.valoes.valesaquagestor.domain.model.MovimentacaoLote
 import com.valoes.valesaquagestor.domain.model.QualidadeAgua
 import com.valoes.valesaquagestor.domain.model.Tanque
+import com.valoes.valesaquagestor.domain.rules.WaterRanges
 
 /**
  * Tudo o que a Home e as listas precisam saber de um lote ativo. Os números derivados (peixes
@@ -40,5 +42,12 @@ data class TankOverview(
     val waterToday: List<QualidadeAgua>,
 )
 
-/** Retrato da fazenda: todos os tanques ativos. */
-data class FarmOverview(val tanks: List<TankOverview>)
+/**
+ * Retrato da fazenda: todos os tanques ativos, com as faixas da água e a agenda de medição em uso
+ * (os padrões das fontes ou o que o ADMIN ajustou).
+ */
+data class FarmOverview(
+    val tanks: List<TankOverview>,
+    val waterRanges: WaterRanges = WaterRanges.DEFAULT,
+    val schedule: MonitoringSchedule = MonitoringSchedule(),
+)

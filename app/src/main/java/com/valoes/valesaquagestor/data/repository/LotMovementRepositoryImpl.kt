@@ -7,6 +7,7 @@ import com.valoes.valesaquagestor.data.local.entity.MovimentacaoLoteEntity
 import com.valoes.valesaquagestor.domain.model.MovimentacaoLote
 import com.valoes.valesaquagestor.domain.model.StatusLote
 import com.valoes.valesaquagestor.domain.model.TipoMovimentacao
+import com.valoes.valesaquagestor.domain.repository.CurrentUserProvider
 import com.valoes.valesaquagestor.domain.repository.LotMovementRepository
 import java.time.Clock
 import java.util.UUID
@@ -19,6 +20,7 @@ class LotMovementRepositoryImpl @Inject constructor(
     private val loteDao: LoteDao,
     private val transaction: TransactionRunner,
     private val clock: Clock,
+    private val currentUser: CurrentUserProvider,
 ) : LotMovementRepository {
 
     override fun observeByLot(lotId: Long): Flow<List<MovimentacaoLote>> =
@@ -26,11 +28,12 @@ class LotMovementRepositoryImpl @Inject constructor(
 
     override suspend fun save(movimentacao: MovimentacaoLote): Long {
         require(movimentacao.quantidade > 0) { "Informe a quantidade de peixes." }
+        val createdBy = currentUser.currentUserId()
         val now = clock.millis()
         // Movimentação e encerramento do lote na mesma transação.
         return transaction.run {
             val id = if (movimentacao.id == 0L) {
-                dao.insert(movimentacao.toEntity(null, UUID.randomUUID().toString(), now))
+                dao.insert(movimentacao.toEntity(null, UUID.randomUUID().toString(), now, createdBy))
             } else {
                 val existing = requireNotNull(dao.getByIdIncludingDeleted(movimentacao.id)) { "Movimentação ${movimentacao.id} não existe." }
                 dao.update(movimentacao.toEntity(existing, existing.uuid, now))

@@ -27,7 +27,7 @@ class DetailViewModelsTest {
 
     private fun lotDetail(farm: FarmFixture, id: Long = 1) = LotDetailViewModel(
         SavedStateHandle(mapOf(LotDetailViewModel.LOT_ID_ARG to id)),
-        farm.lots, farm.tanks, farm.water, farm.movements, farm.biometry, farm.feeding,
+        farm.lots, farm.tanks, farm.water, farm.settings, farm.movements, farm.biometry, farm.feeding,
     )
 
     // ---- Detalhe do tanque ----

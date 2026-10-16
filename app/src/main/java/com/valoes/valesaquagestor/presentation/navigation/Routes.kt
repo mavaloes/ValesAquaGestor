@@ -33,6 +33,22 @@ data class SetupFarm(val tankId: Long? = null)
 @Serializable
 data object Help
 
+/** Configurações: minha conta, "Sair" e, só para o ADMIN, faixas da água e agenda. */
+@Serializable
+data object Settings
+
+/** Faixas da água editáveis (só ADMIN). */
+@Serializable
+data object WaterRangesSettings
+
+/** Agenda de medições editável (só ADMIN). */
+@Serializable
+data object ScheduleSettings
+
+/** Usuários da fazenda (só ADMIN). */
+@Serializable
+data object Users
+
 /** Aba "Início": a rotina diária. */
 @Serializable
 data object Home

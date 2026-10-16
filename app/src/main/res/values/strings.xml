@@ -223,7 +223,6 @@
     <!-- Abas provisórias -->
     <string name="register_title">Registrar</string>
     <string name="more_title">Mais</string>
-    <string name="more_sign_out">Sair</string>
 
     <!-- Fase 06: telas de registro -->
     <string name="message_saved_offline">Sem conexão: dados guardados no aparelho</string>
@@ -423,7 +422,7 @@
     <string name="tip_movement_title">Mortalidade e despesca</string>
     <string name="tip_movement_text" formatted="false">Conte os peixes mortos todo dia. Exemplo: 12 peixes mortos hoje, escolha Mortalidade, digite 12 e salve. Com mais de 10% de perdas, chame um técnico.</string>
     <string name="tip_more_title">Mais</string>
-    <string name="tip_more_text">Aqui você acha a ajuda e sai da conta. Seus registros continuam guardados no aparelho.</string>
+    <string name="tip_more_text">Aqui você acha a ajuda e as configurações, onde também sai da conta. O administrador também vê os usuários. Seus registros continuam guardados no aparelho.</string>
     <string name="tip_login_title">Entrar</string>
     <string name="tip_login_text">Use o e-mail e a senha da sua conta. Só o primeiro acesso precisa de internet; depois o app abre sem conexão.</string>
     <string name="tip_signup_title">Criar conta</string>

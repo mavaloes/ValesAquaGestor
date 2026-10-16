@@ -8,7 +8,9 @@ import com.valoes.valesaquagestor.data.local.dao.LoteDao
 import com.valoes.valesaquagestor.data.local.dao.MovimentacaoLoteDao
 import com.valoes.valesaquagestor.data.local.dao.QualidadeAguaDao
 import com.valoes.valesaquagestor.data.local.dao.TanqueDao
+import com.valoes.valesaquagestor.data.local.dao.UsuarioDao
 import com.valoes.valesaquagestor.data.local.database.AppDatabase
+import com.valoes.valesaquagestor.data.local.database.MIGRATION_1_2
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,7 +32,9 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME).build()
+        Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
+            .addMigrations(MIGRATION_1_2)
+            .build()
 
     @Provides
     fun provideTanqueDao(database: AppDatabase): TanqueDao = database.tanqueDao()
@@ -49,6 +53,9 @@ object DatabaseModule {
 
     @Provides
     fun provideMovimentacaoLoteDao(database: AppDatabase): MovimentacaoLoteDao = database.movimentacaoLoteDao()
+
+    @Provides
+    fun provideUsuarioDao(database: AppDatabase): UsuarioDao = database.usuarioDao()
 
     /** Relógio do sistema; os testes trocam por um relógio fixo. */
     @Provides

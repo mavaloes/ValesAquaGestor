@@ -1,5 +1,6 @@
 package com.valoes.valesaquagestor.auth
 
+import com.valoes.valesaquagestor.settings.FakeUserRepository
 import com.valoes.valesaquagestor.data.auth.FakeAuthRepository
 import com.valoes.valesaquagestor.domain.model.Papel
 import com.valoes.valesaquagestor.domain.model.Session
@@ -23,7 +24,7 @@ class FakeAuthRepositoryTest {
     fun setUp() {
         store = FakeSessionStore()
         connectivity = FakeConnectivityChecker(online = true)
-        repository = FakeAuthRepository(store, connectivity)
+        repository = FakeAuthRepository(store, connectivity, FakeUserRepository())
     }
 
     private val failure = { error: AuthError -> AuthResult.Failure(error) }
@@ -114,7 +115,7 @@ class FakeAuthRepositoryTest {
     @Test
     fun `sessao salva continua disponivel sem internet`() = runBlocking {
         val saved = Session("u1", "Maria", "maria@exemplo.com", Papel.FUNCIONARIO)
-        val offlineRepository = FakeAuthRepository(FakeSessionStore(saved), FakeConnectivityChecker(online = false))
+        val offlineRepository = FakeAuthRepository(FakeSessionStore(saved), FakeConnectivityChecker(online = false), FakeUserRepository())
 
         assertEquals(saved, offlineRepository.currentSession.first())
     }

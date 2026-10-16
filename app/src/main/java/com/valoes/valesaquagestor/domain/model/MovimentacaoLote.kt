@@ -10,6 +10,7 @@ import java.time.Instant
  * @property quantidade número de peixes que saíram.
  * @property pesoTotalKg peso total dos peixes retirados, em kg.
  * @property tanqueDestinoId tanque de destino, só na [TipoMovimentacao.TRANSFERENCIA].
+ * @property criadoPorUserId `userId` de quem criou o registro; `null` nos registros anteriores à Fase 08.
  */
 data class MovimentacaoLote(
     val id: Long = 0,
@@ -21,4 +22,5 @@ data class MovimentacaoLote(
     val pesoTotalKg: Double? = null,
     val tanqueDestinoId: Long? = null,
     val observacao: String? = null,
+    val criadoPorUserId: String? = null,
 )

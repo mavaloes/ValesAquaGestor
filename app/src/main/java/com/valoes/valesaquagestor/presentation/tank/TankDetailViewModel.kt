@@ -55,8 +55,8 @@ class TankDetailViewModel @Inject constructor(
     val state: StateFlow<TankDetailUiState> = combine(observeFarmOverview(), water.observeRecent(tankId, RECENT_RECORDS)) { farm, recent ->
             val overview = farm.tanks.firstOrNull { it.tanque.id == tankId }
             val data = overview?.let {
-                val report = WaterReadingsEvaluator.evaluate(it.readings)
-                val phVariation = AlertAggregator.alertsFor(it)
+                val report = WaterReadingsEvaluator.evaluate(it.readings, farm.waterRanges)
+                val phVariation = AlertAggregator.alertsFor(it, farm.waterRanges)
                     .firstOrNull { alert -> alert.kind == AlertKind.PH_VARIATION }
                     ?.let { alert ->
                         WaterAlert(alert.kind, checkNotNull(alert.value), alert.status, it.waterToday.last().dataHora)

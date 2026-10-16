@@ -6,18 +6,22 @@ import androidx.lifecycle.viewModelScope
 import com.valoes.valesaquagestor.domain.calc.LotCalculator
 import com.valoes.valesaquagestor.domain.model.Arracoamento
 import com.valoes.valesaquagestor.domain.model.Biometria
+import com.valoes.valesaquagestor.domain.model.LatestWaterReadings
 import com.valoes.valesaquagestor.domain.model.Lote
 import com.valoes.valesaquagestor.domain.model.MovimentacaoLote
+import com.valoes.valesaquagestor.domain.model.Tanque
 import com.valoes.valesaquagestor.domain.repository.BiometryRepository
 import com.valoes.valesaquagestor.domain.repository.FeedingRepository
 import com.valoes.valesaquagestor.domain.repository.LotMovementRepository
 import com.valoes.valesaquagestor.domain.repository.LotRepository
+import com.valoes.valesaquagestor.domain.repository.SettingsRepository
 import com.valoes.valesaquagestor.domain.repository.TankRepository
 import com.valoes.valesaquagestor.domain.repository.WaterQualityRepository
 import com.valoes.valesaquagestor.domain.rules.AlertItem
 import com.valoes.valesaquagestor.domain.rules.AlertKind
 import com.valoes.valesaquagestor.domain.rules.AlertLevel
 import com.valoes.valesaquagestor.domain.rules.CompositeAlerts
+import com.valoes.valesaquagestor.domain.rules.WaterRanges
 import com.valoes.valesaquagestor.domain.rules.WaterReadingsEvaluator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -67,12 +71,21 @@ class LotDetailViewModel @Inject constructor(
     lots: LotRepository,
     tanks: TankRepository,
     water: WaterQualityRepository,
+    settings: SettingsRepository,
     private val movements: LotMovementRepository,
     private val biometry: BiometryRepository,
     private val feeding: FeedingRepository,
 ) : ViewModel() {
 
     private val lotId: Long = checkNotNull(savedStateHandle[LOT_ID_ARG]) { "Falta o id do lote." }
+
+    /** Tanque, últimas leituras, registros recentes e as faixas da água em uso. */
+    private data class Context(
+        val tank: Tanque?,
+        val readings: LatestWaterReadings,
+        val recents: Recents,
+        val ranges: WaterRanges,
+    )
 
     private data class Recents(
         val feedings: List<Arracoamento>,
@@ -101,15 +114,16 @@ class LotDetailViewModel @Inject constructor(
                     combine(feeding.observeRecent(lotId, RECENT_RECORDS), biometry.observeLatest(lotId, RECENT_RECORDS), movements.observeByLot(lotId)) { f, b, m ->
                         Recents(f, b, m.takeLast(RECENT_RECORDS).reversed())
                     },
-                ) { tank, readings, recents -> Triple(tank, readings, recents) }
+                    settings.waterRanges,
+                ) { tank, readings, recents, ranges -> Context(tank, readings, recents, ranges) }
 
-                combine(calculation, context) { (lotMovements, biometries, feedings), (tank, readings, recents) ->
+                combine(calculation, context) { (lotMovements, biometries, feedings), (tank, readings, recents, ranges) ->
                     val tankName = tank?.nome.orEmpty()
                     val mortality = LotCalculator.accumulatedMortalityPct(lote, lotMovements)
                     val mortalityAlert = CompositeAlerts
                         .accumulatedMortality(lote.quantidadeInicial, LotCalculator.deadCount(lotMovements))
                         ?.let { AlertItem(lote.tanqueId, tankName, lote.id, AlertKind.MORTALITY, mortality, it, null) }
-                    val waterAlerts = WaterReadingsEvaluator.evaluate(readings).alerts
+                    val waterAlerts = WaterReadingsEvaluator.evaluate(readings, ranges).alerts
                         .filter { it.status.level > AlertLevel.ADEQUADO }
                         .map { AlertItem(lote.tanqueId, tankName, null, it.kind, it.value, it.status, it.measuredAt) }
                     LotDetailUiState(

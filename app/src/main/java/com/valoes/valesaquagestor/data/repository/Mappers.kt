@@ -18,7 +18,8 @@ import java.time.Instant
  * Mapeamento entity <-> modelo de domínio. Datas: epoch millis no banco, Instant no domínio.
  *
  * Os `toEntity` recebem a entity já gravada (`base`, `null` num registro novo) para manter
- * `id`, `uuid` e `excluido`. Todo salvamento grava `atualizadoEm = now` e `sincronizado = false`.
+ * `id`, `uuid`, `excluido` e `criadoPorUserId`; só um registro novo grava [createdBy] (quem está logado).
+ * Todo salvamento grava `atualizadoEm = now` e `sincronizado = false`.
  */
 
 private fun Long.toInstant(): Instant = Instant.ofEpochMilli(this)
@@ -55,14 +56,15 @@ fun QualidadeAguaEntity.toDomain() = QualidadeAgua(
     id = id, uuid = uuid, tanqueId = tanqueId, dataHora = dataHora.toInstant(), momento = momento,
     transparenciaCm = transparenciaCm, temperaturaC = temperaturaC, oxigenioMgL = oxigenioMgL, ph = ph,
     amoniaTotalMgL = amoniaTotalMgL, nitritoMgL = nitritoMgL, alcalinidadeMgL = alcalinidadeMgL,
-    durezaMgL = durezaMgL, diaNublado = diaNublado,
+    durezaMgL = durezaMgL, diaNublado = diaNublado, criadoPorUserId = criadoPorUserId,
 )
 
-fun QualidadeAgua.toEntity(base: QualidadeAguaEntity?, newUuid: String, now: Long) = QualidadeAguaEntity(
+fun QualidadeAgua.toEntity(base: QualidadeAguaEntity?, newUuid: String, now: Long, createdBy: String? = null) = QualidadeAguaEntity(
     id = base?.id ?: 0, tanqueId = tanqueId, dataHora = dataHora.toEpochMilli(), momento = momento,
     transparenciaCm = transparenciaCm, temperaturaC = temperaturaC, oxigenioMgL = oxigenioMgL, ph = ph,
     amoniaTotalMgL = amoniaTotalMgL, nitritoMgL = nitritoMgL, alcalinidadeMgL = alcalinidadeMgL,
     durezaMgL = durezaMgL, diaNublado = diaNublado,
+    criadoPorUserId = base?.criadoPorUserId ?: createdBy,
     uuid = base?.uuid ?: newUuid, atualizadoEm = now, excluido = base?.excluido ?: false, sincronizado = false,
 )
 
@@ -70,35 +72,40 @@ fun ArracoamentoEntity.toDomain() = Arracoamento(
     id = id, uuid = uuid, loteId = loteId, dataHora = dataHora.toInstant(), quantidadeKg = quantidadeKg,
     suspenso = suspenso, motivoSuspensao = motivoSuspensao, marcaRacao = marcaRacao,
     proteinaBrutaPct = proteinaBrutaPct, tamanhoPelletMm = tamanhoPelletMm,
-    comportamento = comportamento, sobraRacao = sobraRacao,
+    comportamento = comportamento, sobraRacao = sobraRacao, criadoPorUserId = criadoPorUserId,
 )
 
-fun Arracoamento.toEntity(base: ArracoamentoEntity?, newUuid: String, now: Long) = ArracoamentoEntity(
+fun Arracoamento.toEntity(base: ArracoamentoEntity?, newUuid: String, now: Long, createdBy: String? = null) = ArracoamentoEntity(
     id = base?.id ?: 0, loteId = loteId, dataHora = dataHora.toEpochMilli(), quantidadeKg = quantidadeKg,
     suspenso = suspenso, motivoSuspensao = motivoSuspensao, marcaRacao = marcaRacao,
     proteinaBrutaPct = proteinaBrutaPct, tamanhoPelletMm = tamanhoPelletMm,
     comportamento = comportamento, sobraRacao = sobraRacao,
+    criadoPorUserId = base?.criadoPorUserId ?: createdBy,
     uuid = base?.uuid ?: newUuid, atualizadoEm = now, excluido = base?.excluido ?: false, sincronizado = false,
 )
 
 fun BiometriaEntity.toDomain() = Biometria(
     id = id, uuid = uuid, loteId = loteId, dataHora = dataHora.toInstant(),
     pesoAmostraKg = pesoAmostraKg, numeroPeixesAmostra = numeroPeixesAmostra, observacaoSaude = observacaoSaude,
+    criadoPorUserId = criadoPorUserId,
 )
 
-fun Biometria.toEntity(base: BiometriaEntity?, newUuid: String, now: Long) = BiometriaEntity(
+fun Biometria.toEntity(base: BiometriaEntity?, newUuid: String, now: Long, createdBy: String? = null) = BiometriaEntity(
     id = base?.id ?: 0, loteId = loteId, dataHora = dataHora.toEpochMilli(),
     pesoAmostraKg = pesoAmostraKg, numeroPeixesAmostra = numeroPeixesAmostra, observacaoSaude = observacaoSaude,
+    criadoPorUserId = base?.criadoPorUserId ?: createdBy,
     uuid = base?.uuid ?: newUuid, atualizadoEm = now, excluido = base?.excluido ?: false, sincronizado = false,
 )
 
 fun MovimentacaoLoteEntity.toDomain() = MovimentacaoLote(
     id = id, uuid = uuid, loteId = loteId, dataHora = dataHora.toInstant(), tipo = tipo,
     quantidade = quantidade, pesoTotalKg = pesoTotalKg, tanqueDestinoId = tanqueDestinoId, observacao = observacao,
+    criadoPorUserId = criadoPorUserId,
 )
 
-fun MovimentacaoLote.toEntity(base: MovimentacaoLoteEntity?, newUuid: String, now: Long) = MovimentacaoLoteEntity(
+fun MovimentacaoLote.toEntity(base: MovimentacaoLoteEntity?, newUuid: String, now: Long, createdBy: String? = null) = MovimentacaoLoteEntity(
     id = base?.id ?: 0, loteId = loteId, dataHora = dataHora.toEpochMilli(), tipo = tipo,
     quantidade = quantidade, pesoTotalKg = pesoTotalKg, tanqueDestinoId = tanqueDestinoId, observacao = observacao,
+    criadoPorUserId = base?.criadoPorUserId ?: createdBy,
     uuid = base?.uuid ?: newUuid, atualizadoEm = now, excluido = base?.excluido ?: false, sincronizado = false,
 )

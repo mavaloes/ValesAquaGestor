@@ -15,6 +15,7 @@ import com.valoes.valesaquagestor.domain.repository.BiometryRepository
 import com.valoes.valesaquagestor.domain.repository.ConnectivityChecker
 import com.valoes.valesaquagestor.domain.repository.LotMovementRepository
 import com.valoes.valesaquagestor.domain.repository.LotRepository
+import com.valoes.valesaquagestor.domain.repository.SettingsRepository
 import com.valoes.valesaquagestor.domain.repository.TankRepository
 import com.valoes.valesaquagestor.domain.repository.WaterQualityRepository
 import com.valoes.valesaquagestor.domain.rules.Plausibility
@@ -105,6 +106,7 @@ class BiometryViewModel @Inject constructor(
     tanks: TankRepository,
     movements: LotMovementRepository,
     private val water: WaterQualityRepository,
+    private val settings: SettingsRepository,
     private val biometry: BiometryRepository,
     private val connectivity: ConnectivityChecker,
     private val clock: Clock,
@@ -199,7 +201,7 @@ class BiometryViewModel @Inject constructor(
     private suspend fun resultFor(state: BiometryUiState, summary: BiometrySummary): BiometryResult {
         val suggestion = if (state.especie == Especie.TILAPIA) {
             val readings = FeedingRecordViewModel.feedingReadings(water.observeLatestReadings(tankId).first())
-            FeedingCalculator.suggest(state.aliveFish, summary.averageWeightG, readings)
+            FeedingCalculator.suggest(state.aliveFish, summary.averageWeightG, readings, settings.waterRanges.first())
         } else {
             null
         }

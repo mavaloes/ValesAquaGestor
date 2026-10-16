@@ -51,7 +51,7 @@ class TankListViewModel @Inject constructor(
                         nome = tank.tanque.nome,
                         tipo = tank.tanque.tipo,
                         lots = tank.lots.map { LotSummary(it.lote.especie, it.currentQuantity) },
-                        worstLevel = AlertAggregator.overallLevel(tank),
+                        worstLevel = AlertAggregator.overallLevel(tank, farm.waterRanges),
                     )
                 },
             )

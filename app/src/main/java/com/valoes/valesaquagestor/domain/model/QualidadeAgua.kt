@@ -13,6 +13,7 @@ import java.time.Instant
  * @property uuid identidade na sincronização; vazio até o primeiro salvamento.
  * @property transparenciaCm transparência no disco de Secchi, em cm.
  * @property temperaturaC temperatura da água, em °C.
+ * @property criadoPorUserId `userId` de quem criou o registro; `null` nos registros anteriores à Fase 08.
  */
 data class QualidadeAgua(
     val id: Long = 0,
@@ -29,6 +30,7 @@ data class QualidadeAgua(
     val alcalinidadeMgL: Double? = null,
     val durezaMgL: Double? = null,
     val diaNublado: Boolean = false,
+    val criadoPorUserId: String? = null,
 ) {
     /** `true` se pelo menos uma medida foi informada. */
     val temAlgumaMedida: Boolean

@@ -1,5 +1,6 @@
 package com.valoes.valesaquagestor.auth
 
+import com.valoes.valesaquagestor.settings.FakeUserRepository
 import com.valoes.valesaquagestor.data.auth.FakeAuthRepository
 import com.valoes.valesaquagestor.domain.model.Papel
 import com.valoes.valesaquagestor.domain.model.Session
@@ -41,7 +42,7 @@ class StartDestinationTest {
 
     @Test
     fun `com sessao salva e sem internet o app abre na Home`() = runBlocking {
-        val repository = FakeAuthRepository(FakeSessionStore(session), FakeConnectivityChecker(online = false))
+        val repository = FakeAuthRepository(FakeSessionStore(session), FakeConnectivityChecker(online = false), FakeUserRepository())
 
         val destination = resolveStartDestination(repository.currentSession.first(), onboardingCompleted = true)
 
@@ -50,7 +51,7 @@ class StartDestinationTest {
 
     @Test
     fun `o AppViewModel entrega a sessao e o primeiro acesso salvos ao abrir`() {
-        val auth = FakeAuthRepository(FakeSessionStore(session), FakeConnectivityChecker(online = false))
+        val auth = FakeAuthRepository(FakeSessionStore(session), FakeConnectivityChecker(online = false), FakeUserRepository())
         val viewModel = AppViewModel(auth, FakeOnboardingRepository(completed = true))
 
         val ready = runBlocking { viewModel.state.first { it is AppState.Ready } }
@@ -61,7 +62,7 @@ class StartDestinationTest {
     @Test
     fun `o AppViewModel acompanha o primeiro acesso sendo concluido`() {
         val onboarding = FakeOnboardingRepository(completed = false)
-        val auth = FakeAuthRepository(FakeSessionStore(session), FakeConnectivityChecker(online = false))
+        val auth = FakeAuthRepository(FakeSessionStore(session), FakeConnectivityChecker(online = false), FakeUserRepository())
         val viewModel = AppViewModel(auth, onboarding)
         assertEquals(AppState.Ready(session, onboardingCompleted = false), runBlocking { viewModel.state.first { it is AppState.Ready } })
 

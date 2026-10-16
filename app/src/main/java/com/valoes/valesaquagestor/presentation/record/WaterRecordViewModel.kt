@@ -9,6 +9,7 @@ import com.valoes.valesaquagestor.domain.model.MomentoMedicao
 import com.valoes.valesaquagestor.domain.model.QualidadeAgua
 import com.valoes.valesaquagestor.domain.model.Reading
 import com.valoes.valesaquagestor.domain.repository.ConnectivityChecker
+import com.valoes.valesaquagestor.domain.repository.SettingsRepository
 import com.valoes.valesaquagestor.domain.repository.TankRepository
 import com.valoes.valesaquagestor.domain.repository.WaterQualityRepository
 import com.valoes.valesaquagestor.domain.rules.AlertKind
@@ -87,6 +88,7 @@ class WaterRecordViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val water: WaterQualityRepository,
     tanks: TankRepository,
+    private val settings: SettingsRepository,
     private val connectivity: ConnectivityChecker,
     private val clock: Clock,
 ) : ViewModel() {
@@ -203,7 +205,7 @@ class WaterRecordViewModel @Inject constructor(
             alcalinidadeMgL = reading(record.alcalinidadeMgL),
             durezaMgL = reading(record.durezaMgL),
         )
-        val report = WaterReadingsEvaluator.evaluate(readings)
+        val report = WaterReadingsEvaluator.evaluate(readings, settings.waterRanges.first())
         val informed = buildSet {
             if (record.transparenciaCm != null) add(AlertKind.TRANSPARENCY)
             if (record.temperaturaC != null) add(AlertKind.TEMPERATURE)

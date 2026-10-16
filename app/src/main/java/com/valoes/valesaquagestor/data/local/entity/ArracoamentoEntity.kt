@@ -22,6 +22,8 @@ import com.valoes.valesaquagestor.domain.model.MotivoSuspensao
  * @property tamanhoPelletMm tamanho do pellet, em mm.
  * @property comportamento comportamento dos peixes no trato.
  * @property sobraRacao se sobrou ração (sobra pede reduzir a próxima refeição, F14 p.46).
+ * @property criadoPorUserId `userId` de quem criou o registro (`specs/06-perfis-permissoes.md`); `null` nos
+ * registros anteriores à Fase 08.
  * @property uuid identidade do registro na sincronização; único no banco.
  * @property atualizadoEm última alteração, em epoch millis; na sincronização vence o maior.
  * @property excluido exclusão lógica: some das listas, mas fica no banco até o servidor confirmar.
@@ -54,6 +56,7 @@ data class ArracoamentoEntity(
     val tamanhoPelletMm: Double? = null,
     val comportamento: ComportamentoPeixe,
     val sobraRacao: Boolean = false,
+    val criadoPorUserId: String? = null,
     override val uuid: String,
     override val atualizadoEm: Long,
     override val excluido: Boolean = false,

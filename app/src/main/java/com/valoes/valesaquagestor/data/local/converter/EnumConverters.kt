@@ -6,8 +6,10 @@ import com.valoes.valesaquagestor.domain.model.Especie
 import com.valoes.valesaquagestor.domain.model.FaseLote
 import com.valoes.valesaquagestor.domain.model.MomentoMedicao
 import com.valoes.valesaquagestor.domain.model.MotivoSuspensao
+import com.valoes.valesaquagestor.domain.model.Papel
 import com.valoes.valesaquagestor.domain.model.StatusLote
 import com.valoes.valesaquagestor.domain.model.StatusTanque
+import com.valoes.valesaquagestor.domain.model.StatusUsuario
 import com.valoes.valesaquagestor.domain.model.TipoMovimentacao
 import com.valoes.valesaquagestor.domain.model.TipoTanque
 
@@ -72,4 +74,16 @@ class EnumConverters {
 
     @TypeConverter
     fun toTipoMovimentacao(value: String): TipoMovimentacao = TipoMovimentacao.valueOf(value)
+
+    @TypeConverter
+    fun fromPapel(value: Papel): String = value.name
+
+    @TypeConverter
+    fun toPapel(value: String): Papel = Papel.valueOf(value)
+
+    @TypeConverter
+    fun fromStatusUsuario(value: StatusUsuario): String = value.name
+
+    @TypeConverter
+    fun toStatusUsuario(value: String): StatusUsuario = StatusUsuario.valueOf(value)
 }

@@ -5,6 +5,7 @@ import com.valoes.valesaquagestor.domain.rules.AlertItem
 import com.valoes.valesaquagestor.domain.rules.AlertKind
 import com.valoes.valesaquagestor.domain.rules.AlertLevel
 import com.valoes.valesaquagestor.domain.rules.CompositeAlerts
+import com.valoes.valesaquagestor.domain.rules.WaterRanges
 import com.valoes.valesaquagestor.domain.rules.WaterReadingsEvaluator
 import com.valoes.valesaquagestor.domain.usecase.FarmOverview
 import com.valoes.valesaquagestor.domain.usecase.TankOverview
@@ -20,9 +21,9 @@ import kotlin.math.abs
 object AlertAggregator {
 
     /** Alertas de um tanque, sem ordem definida. */
-    fun alertsFor(tank: TankOverview): List<AlertItem> {
+    fun alertsFor(tank: TankOverview, ranges: WaterRanges = WaterRanges.DEFAULT): List<AlertItem> {
         val tanque = tank.tanque
-        val water = WaterReadingsEvaluator.evaluate(tank.readings).alerts
+        val water = WaterReadingsEvaluator.evaluate(tank.readings, ranges).alerts
             .filter { it.status.level > AlertLevel.ADEQUADO }
             .map { AlertItem(tanque.id, tanque.nome, null, it.kind, it.value, it.status, it.measuredAt) }
 
@@ -45,18 +46,19 @@ object AlertAggregator {
     }
 
     /** Pior nível de alerta do tanque, ou `null` se não há nenhum alerta. */
-    fun worstLevel(tank: TankOverview): AlertLevel? = alertsFor(tank).maxOfOrNull { it.status.level }
+    fun worstLevel(tank: TankOverview, ranges: WaterRanges = WaterRanges.DEFAULT): AlertLevel? =
+        alertsFor(tank, ranges).maxOfOrNull { it.status.level }
 
     /**
      * Nível que resume o tanque na lista: o pior entre as leituras de água (inclusive ADEQUADO) e os
      * alertas compostos. `null` se o tanque não tem nenhuma medição.
      */
-    fun overallLevel(tank: TankOverview): AlertLevel? =
-        listOfNotNull(WaterReadingsEvaluator.evaluate(tank.readings).worstLevel, worstLevel(tank)).maxOrNull()
+    fun overallLevel(tank: TankOverview, ranges: WaterRanges = WaterRanges.DEFAULT): AlertLevel? =
+        listOfNotNull(WaterReadingsEvaluator.evaluate(tank.readings, ranges).worstLevel, worstLevel(tank, ranges)).maxOrNull()
 
     /** Todos os alertas da fazenda: EMERGENCIA primeiro; no mesmo nível, por tanque e depois por tipo. */
     fun prioritized(farm: FarmOverview): List<AlertItem> = farm.tanks
-        .flatMap { alertsFor(it) }
+        .flatMap { alertsFor(it, farm.waterRanges) }
         .sortedWith(
             compareByDescending<AlertItem> { it.status.level }
                 .thenBy { it.tankName }

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.valoes.valesaquagestor.domain.calc.DailyRoutine
 import com.valoes.valesaquagestor.domain.calc.DailyRoutineBuilder
-import com.valoes.valesaquagestor.domain.calc.MonitoringSchedule
 import com.valoes.valesaquagestor.domain.usecase.ObserveFarmOverview
 import com.valoes.valesaquagestor.domain.usecase.SetupSuggestion
 import com.valoes.valesaquagestor.domain.usecase.resolveSetupSuggestion
@@ -30,22 +29,19 @@ data class HomeUiState(
     val setup: SetupSuggestion = SetupSuggestion.None,
 )
 
-/** Monta a rotina do dia a partir do retrato da fazenda e da agenda de medições. */
+/** Monta a rotina do dia a partir do retrato da fazenda e da agenda de medições (padrão ou ajustada pelo ADMIN). */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     observeFarmOverview: ObserveFarmOverview,
     clock: Clock,
 ) : ViewModel() {
 
-    // A agenda usa os padrões das fontes; a Fase 08 deixa o ADMIN editá-la.
-    private val schedule = MonitoringSchedule()
-
     val state: StateFlow<HomeUiState> = observeFarmOverview()
         .map { farm ->
             HomeUiState(
                 isLoading = false,
                 hasTanks = farm.tanks.isNotEmpty(),
-                routine = DailyRoutineBuilder.build(farm, schedule, clock),
+                routine = DailyRoutineBuilder.build(farm, farm.schedule, clock),
                 setup = resolveSetupSuggestion(farm),
             )
         }

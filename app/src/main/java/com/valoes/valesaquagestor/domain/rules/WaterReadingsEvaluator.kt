@@ -19,28 +19,28 @@ object WaterReadingsEvaluator {
     /** @see specs/03-regras-negocio.md, seção 4.1 — pH e temperatura valem se medidos até 24 h da amônia. */
     const val PH_TEMPERATURE_MAX_AGE_HOURS = 24L
 
-    fun evaluate(readings: LatestWaterReadings): WaterReport {
+    fun evaluate(readings: LatestWaterReadings, ranges: WaterRanges = WaterRanges.DEFAULT): WaterReport {
         val ammonia = readings.amoniaTotalMgL
-        val toxic = ammonia?.let { toxicAlert(it, readings.ph, readings.temperaturaC) }
+        val toxic = ammonia?.let { toxicAlert(it, readings.ph, readings.temperaturaC, ranges) }
 
         val alerts = listOfNotNull(
-            readings.oxigenioMgL?.let { alert(AlertKind.OXYGEN, it, WaterEvaluator.evaluateOxygen(it.value)) },
-            readings.temperaturaC?.let { alert(AlertKind.TEMPERATURE, it, WaterEvaluator.evaluateTemperature(it.value)) },
-            readings.ph?.let { alert(AlertKind.PH, it, WaterEvaluator.evaluatePh(it.value)) },
+            readings.oxigenioMgL?.let { alert(AlertKind.OXYGEN, it, WaterEvaluator.evaluateOxygen(it.value, ranges)) },
+            readings.temperaturaC?.let { alert(AlertKind.TEMPERATURE, it, WaterEvaluator.evaluateTemperature(it.value, ranges)) },
+            readings.ph?.let { alert(AlertKind.PH, it, WaterEvaluator.evaluatePh(it.value, ranges)) },
             toxic,
-            readings.nitritoMgL?.let { alert(AlertKind.NITRITE, it, WaterEvaluator.evaluateNitrite(it.value)) },
-            readings.transparenciaCm?.let { alert(AlertKind.TRANSPARENCY, it, WaterEvaluator.evaluateTransparency(it.value)) },
-            readings.alcalinidadeMgL?.let { alert(AlertKind.ALKALINITY, it, WaterEvaluator.evaluateAlkalinity(it.value)) },
-            readings.durezaMgL?.let { alert(AlertKind.HARDNESS, it, WaterEvaluator.evaluateHardness(it.value)) },
+            readings.nitritoMgL?.let { alert(AlertKind.NITRITE, it, WaterEvaluator.evaluateNitrite(it.value, ranges)) },
+            readings.transparenciaCm?.let { alert(AlertKind.TRANSPARENCY, it, WaterEvaluator.evaluateTransparency(it.value, ranges)) },
+            readings.alcalinidadeMgL?.let { alert(AlertKind.ALKALINITY, it, WaterEvaluator.evaluateAlkalinity(it.value, ranges)) },
+            readings.durezaMgL?.let { alert(AlertKind.HARDNESS, it, WaterEvaluator.evaluateHardness(it.value, ranges)) },
         )
         return WaterReport(alerts, ammoniaNeedsPhAndTemperature = ammonia != null && toxic == null)
     }
 
-    private fun toxicAlert(total: Reading, ph: Reading?, temperature: Reading?): WaterAlert? {
+    private fun toxicAlert(total: Reading, ph: Reading?, temperature: Reading?, ranges: WaterRanges): WaterAlert? {
         val validPh = ph?.takeIf { isRecentEnough(it, total) } ?: return null
         val validTemperature = temperature?.takeIf { isRecentEnough(it, total) } ?: return null
         val toxic = AmmoniaCalculator.toxicMgL(total.value, validPh.value, validTemperature.value)
-        return WaterAlert(AlertKind.TOXIC_AMMONIA, toxic, WaterEvaluator.evaluateToxicAmmonia(toxic), total.dataHora)
+        return WaterAlert(AlertKind.TOXIC_AMMONIA, toxic, WaterEvaluator.evaluateToxicAmmonia(toxic, ranges), total.dataHora)
     }
 
     private fun isRecentEnough(reading: Reading, ammonia: Reading): Boolean =

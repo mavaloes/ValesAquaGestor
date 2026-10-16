@@ -3,6 +3,7 @@ package com.valoes.valesaquagestor.domain.calc
 import com.valoes.valesaquagestor.domain.rules.AlertLevel
 import com.valoes.valesaquagestor.domain.rules.TemperatureThresholds
 import com.valoes.valesaquagestor.domain.rules.WaterEvaluator
+import com.valoes.valesaquagestor.domain.rules.WaterRanges
 
 /**
  * Linha da tabela de ração da tilápia.
@@ -141,18 +142,23 @@ object FeedingCalculator {
      *
      * @return a sugestão, ou `null` se o peso médio estiver fora da tabela (o usuário informa o % do peso vivo).
      */
-    fun suggest(fishCount: Int, avgWeightG: Double, water: WaterReadings = WaterReadings()): FeedSuggestion? {
+    fun suggest(
+        fishCount: Int,
+        avgWeightG: Double,
+        water: WaterReadings = WaterReadings(),
+        ranges: WaterRanges = WaterRanges.DEFAULT,
+    ): FeedSuggestion? {
         val band = TilapiaFeedTable.bandFor(avgWeightG) ?: return null
 
         val blocks = buildList {
-            water.oxygenMgL?.let { if (blocksFeeding(WaterEvaluator.evaluateOxygen(it).level)) add(FeedBlockReason.LOW_OXYGEN) }
-            water.temperatureC?.let { if (blocksFeeding(WaterEvaluator.evaluateTemperature(it).level)) add(FeedBlockReason.TEMPERATURE) }
-            water.toxicAmmoniaMgL?.let { if (blocksFeeding(WaterEvaluator.evaluateToxicAmmonia(it).level)) add(FeedBlockReason.TOXIC_AMMONIA) }
-            water.nitriteMgL?.let { if (blocksFeeding(WaterEvaluator.evaluateNitrite(it).level)) add(FeedBlockReason.NITRITE) }
+            water.oxygenMgL?.let { if (blocksFeeding(WaterEvaluator.evaluateOxygen(it, ranges).level)) add(FeedBlockReason.LOW_OXYGEN) }
+            water.temperatureC?.let { if (blocksFeeding(WaterEvaluator.evaluateTemperature(it, ranges).level)) add(FeedBlockReason.TEMPERATURE) }
+            water.toxicAmmoniaMgL?.let { if (blocksFeeding(WaterEvaluator.evaluateToxicAmmonia(it, ranges).level)) add(FeedBlockReason.TOXIC_AMMONIA) }
+            water.nitriteMgL?.let { if (blocksFeeding(WaterEvaluator.evaluateNitrite(it, ranges).level)) add(FeedBlockReason.NITRITE) }
         }
         val warnings = buildList {
             val oxygen = water.oxygenMgL
-            if (oxygen != null && WaterEvaluator.evaluateOxygen(oxygen).level == AlertLevel.ATENCAO) {
+            if (oxygen != null && WaterEvaluator.evaluateOxygen(oxygen, ranges).level == AlertLevel.ATENCAO) {
                 add(FeedWarning.OXYGEN_ATTENTION)
             }
             if (water.temperatureC == null) add(FeedWarning.TEMPERATURE_MISSING)

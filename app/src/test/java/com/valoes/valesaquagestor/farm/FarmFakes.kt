@@ -1,5 +1,6 @@
 package com.valoes.valesaquagestor.farm
 
+import com.valoes.valesaquagestor.settings.FakeSettingsRepository
 import com.valoes.valesaquagestor.domain.model.Arracoamento
 import com.valoes.valesaquagestor.domain.model.Biometria
 import com.valoes.valesaquagestor.domain.model.ComportamentoPeixe
@@ -206,5 +207,6 @@ class FarmFixture(
     val feeding = FakeFeedingRepository(feedings)
     val biometry = FakeBiometryRepository(biometries)
     val movements = FakeLotMovementRepository(movements)
-    val overview = ObserveFarmOverview(this.tanks, this.lots, water, feeding, biometry, this.movements, clock)
+    val settings = FakeSettingsRepository()
+    val overview = ObserveFarmOverview(this.tanks, this.lots, water, feeding, biometry, this.movements, settings, clock)
 }

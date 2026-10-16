@@ -19,6 +19,8 @@ import androidx.room.PrimaryKey
  * @property pesoAmostraKg peso total dos peixes da amostra, em kg, já sem a tara.
  * @property numeroPeixesAmostra quantidade de peixes pesados.
  * @property observacaoSaude sinais de saúde observados durante a pesagem.
+ * @property criadoPorUserId `userId` de quem criou o registro (`specs/06-perfis-permissoes.md`); `null` nos
+ * registros anteriores à Fase 08.
  * @property uuid identidade do registro na sincronização; único no banco.
  * @property atualizadoEm última alteração, em epoch millis; na sincronização vence o maior.
  * @property excluido exclusão lógica: some das listas, mas fica no banco até o servidor confirmar.
@@ -46,6 +48,7 @@ data class BiometriaEntity(
     val pesoAmostraKg: Double,
     val numeroPeixesAmostra: Int,
     val observacaoSaude: String? = null,
+    val criadoPorUserId: String? = null,
     override val uuid: String,
     override val atualizadoEm: Long,
     override val excluido: Boolean = false,

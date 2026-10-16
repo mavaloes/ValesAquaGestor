@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,19 +44,26 @@ import com.valoes.valesaquagestor.presentation.components.ChoiceGroup
 import com.valoes.valesaquagestor.presentation.components.DateField
 import com.valoes.valesaquagestor.presentation.components.FeedbackEffect
 import com.valoes.valesaquagestor.presentation.components.FeedbackSnackbarHost
+import com.valoes.valesaquagestor.presentation.components.HelpTips
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.components.labelRes
 import com.valoes.valesaquagestor.presentation.components.requiredLabel
+import com.valoes.valesaquagestor.presentation.setup.SetupMode
 import com.valoes.valesaquagestor.presentation.theme.AquaGestorTheme
 import com.valoes.valesaquagestor.presentation.util.formatNumber
 import com.valoes.valesaquagestor.presentation.util.stringRes
 import java.time.LocalDate
 
-/** Formulário de novo lote. Mostra a capacidade do viveiro e avisa se o povoamento passar dela. */
+/**
+ * Formulário de novo lote. Mostra a capacidade do viveiro e avisa se o povoamento passar dela.
+ *
+ * @param setup não `null` quando é o passo 2 da configuração guiada: mostra o título do passo, a dica e "Pular".
+ */
 @Composable
 fun LotFormScreen(
     onBack: () -> Unit,
     onSaved: (lotId: Long) -> Unit,
+    setup: SetupMode? = null,
     viewModel: LotFormViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -78,6 +86,9 @@ fun LotFormScreen(
         onOriginChange = viewModel::onOriginChange,
         onStockingDateChange = viewModel::onStockingDateChange,
         onSave = viewModel::onSave,
+        title = stringResource(if (setup != null) R.string.setup_lot_title else R.string.lot_form_title),
+        setupHint = setup?.let { stringResource(R.string.setup_lot_hint) },
+        onSkip = setup?.onSkip,
     )
 }
 
@@ -94,10 +105,20 @@ internal fun LotFormContent(
     onOriginChange: (String) -> Unit,
     onStockingDateChange: (LocalDate) -> Unit,
     onSave: () -> Unit,
+    title: String = stringResource(R.string.lot_form_title),
+    setupHint: String? = null,
+    onSkip: (() -> Unit)? = null,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { AppTopBar(title = stringResource(R.string.lot_form_title), onBack = onBack) },
+        topBar = {
+            AppTopBar(
+                title = title,
+                onBack = onBack,
+                help = HelpTips.LotForm,
+                actions = { if (onSkip != null) TextButton(onClick = onSkip) { Text(stringResource(R.string.setup_skip)) } },
+            )
+        },
         snackbarHost = { FeedbackSnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(
@@ -108,6 +129,7 @@ internal fun LotFormContent(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
+            if (setupHint != null) Text(text = setupHint, style = MaterialTheme.typography.bodyLarge)
             Text(text = stringResource(R.string.lot_in_tank, state.tankName), style = MaterialTheme.typography.bodyLarge)
             Text(text = stringResource(R.string.form_required_legend), style = MaterialTheme.typography.bodyMedium)
             ChoiceGroup(

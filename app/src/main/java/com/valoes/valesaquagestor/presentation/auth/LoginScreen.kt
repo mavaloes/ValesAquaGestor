@@ -18,6 +18,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.valoes.valesaquagestor.R
 import com.valoes.valesaquagestor.presentation.components.AppTextField
 import com.valoes.valesaquagestor.presentation.components.FeedbackEffect
+import com.valoes.valesaquagestor.presentation.components.HelpTips
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.components.LinkButton
 import com.valoes.valesaquagestor.presentation.components.PasswordTextField
@@ -63,6 +64,7 @@ internal fun LoginContent(
         title = stringResource(R.string.login_title),
         subtitle = stringResource(R.string.login_subtitle),
         snackbarHostState = snackbarHostState,
+        help = HelpTips.Login,
     ) {
         AppTextField(
             value = state.email,

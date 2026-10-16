@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,7 +33,10 @@ import com.valoes.valesaquagestor.domain.model.MomentoMedicao
 import com.valoes.valesaquagestor.domain.rules.AlertItem
 import com.valoes.valesaquagestor.domain.rules.AlertKind
 import com.valoes.valesaquagestor.domain.rules.WaterEvaluator
+import com.valoes.valesaquagestor.domain.usecase.SetupSuggestion
 import com.valoes.valesaquagestor.presentation.components.AppTopBar
+import com.valoes.valesaquagestor.presentation.components.HelpTips
+import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.components.EmptyMessage
 import com.valoes.valesaquagestor.presentation.components.SectionTitle
 import com.valoes.valesaquagestor.presentation.components.StatusCard
@@ -54,6 +60,7 @@ fun HomeScreen(
     onRegisterWater: (tankId: Long) -> Unit,
     onRegisterFeeding: (lotId: Long) -> Unit,
     onRegisterBiometry: (lotId: Long) -> Unit,
+    onSetupFarm: (tankId: Long?) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -64,6 +71,7 @@ fun HomeScreen(
         onRegisterWater = onRegisterWater,
         onRegisterFeeding = onRegisterFeeding,
         onRegisterBiometry = onRegisterBiometry,
+        onSetupFarm = onSetupFarm,
     )
 }
 
@@ -75,20 +83,35 @@ internal fun HomeContent(
     onRegisterWater: (Long) -> Unit = {},
     onRegisterFeeding: (Long) -> Unit = {},
     onRegisterBiometry: (Long) -> Unit = {},
+    onSetupFarm: (Long?) -> Unit = {},
 ) {
     val zone = remember { ZoneId.systemDefault() }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { AppTopBar(title = stringResource(R.string.home_title)) },
+        topBar = { AppTopBar(title = stringResource(R.string.home_title), help = HelpTips.Home) },
     ) { innerPadding ->
         LazyColumn(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.padding(innerPadding),
         ) {
-            if (!state.isLoading && !state.hasTanks) {
-                item { EmptyMessage(text = stringResource(R.string.home_no_tanks)) }
-                return@LazyColumn
+            // Fazenda ainda sem tanque ou sem lote: atalho para a configuração guiada (pode ter sido pulada).
+            if (!state.isLoading) {
+                when (val setup = state.setup) {
+                    SetupSuggestion.CreateTank -> {
+                        item { SetupCard(stringResource(R.string.home_setup_tank), stringResource(R.string.home_setup_tank_button)) { onSetupFarm(null) } }
+                        return@LazyColumn
+                    }
+
+                    is SetupSuggestion.CreateLot -> item {
+                        SetupCard(
+                            stringResource(R.string.home_setup_lot, setup.tankName),
+                            stringResource(R.string.home_setup_lot_button),
+                        ) { onSetupFarm(setup.tankId) }
+                    }
+
+                    SetupSuggestion.None -> Unit
+                }
             }
 
             item { SectionTitle(text = stringResource(R.string.home_alerts_title)) }
@@ -132,6 +155,17 @@ internal fun HomeContent(
                     )
                 }
             }
+        }
+    }
+}
+
+/** Convite para continuar a configuração da fazenda. */
+@Composable
+private fun SetupCard(text: String, buttonText: String, onClick: () -> Unit) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text(text = text, style = MaterialTheme.typography.bodyLarge)
+            LargeButton(text = buttonText, icon = Icons.Default.Add, onClick = onClick)
         }
     }
 }
@@ -196,5 +230,19 @@ private fun HomePreview() {
 @Preview(name = "Home sem tanques", showBackground = true, fontScale = 2f)
 @Composable
 private fun HomeEmptyPreview() {
-    AquaGestorTheme { HomeContent(HomeUiState(isLoading = false), onOpenTank = {}, onOpenLot = {}) }
+    AquaGestorTheme {
+        HomeContent(HomeUiState(isLoading = false, setup = SetupSuggestion.CreateTank), onOpenTank = {}, onOpenLot = {})
+    }
+}
+
+@Preview(name = "Home com tanque sem lote", showBackground = true, fontScale = 2f)
+@Composable
+private fun HomeNoLotPreview() {
+    AquaGestorTheme {
+        HomeContent(
+            HomeUiState(isLoading = false, hasTanks = true, setup = SetupSuggestion.CreateLot(1, "Viveiro 1")),
+            onOpenTank = {},
+            onOpenLot = {},
+        )
+    }
 }

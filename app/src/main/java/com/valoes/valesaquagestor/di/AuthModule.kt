@@ -8,12 +8,14 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.valoes.valesaquagestor.BuildConfig
 import com.valoes.valesaquagestor.data.auth.FakeAuthRepository
 import com.valoes.valesaquagestor.data.connectivity.AndroidConnectivityChecker
+import com.valoes.valesaquagestor.data.onboarding.DataStoreOnboardingRepository
 import com.valoes.valesaquagestor.data.session.EncryptedSessionStore
 import com.valoes.valesaquagestor.data.session.KeystoreSessionCipher
 import com.valoes.valesaquagestor.data.session.SessionCipher
 import com.valoes.valesaquagestor.data.session.SessionStore
 import com.valoes.valesaquagestor.domain.repository.AuthRepository
 import com.valoes.valesaquagestor.domain.repository.ConnectivityChecker
+import com.valoes.valesaquagestor.domain.repository.OnboardingRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -23,7 +25,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Provider
 import javax.inject.Singleton
 
-/** Liga sessão e verificação de conexão às suas implementações. */
+/** Liga sessão, verificação de conexão e primeiro acesso às suas implementações. */
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AuthBindingsModule {
@@ -36,6 +38,9 @@ abstract class AuthBindingsModule {
 
     @Binds
     abstract fun bindConnectivityChecker(impl: AndroidConnectivityChecker): ConnectivityChecker
+
+    @Binds
+    abstract fun bindOnboardingRepository(impl: DataStoreOnboardingRepository): OnboardingRepository
 }
 
 @Module

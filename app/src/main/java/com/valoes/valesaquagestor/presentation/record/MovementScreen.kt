@@ -34,6 +34,7 @@ import com.valoes.valesaquagestor.presentation.components.ChoiceGroup
 import com.valoes.valesaquagestor.presentation.components.ConfirmDialog
 import com.valoes.valesaquagestor.presentation.components.DateTimeField
 import com.valoes.valesaquagestor.presentation.components.FeedbackEffect
+import com.valoes.valesaquagestor.presentation.components.HelpTips
 import com.valoes.valesaquagestor.presentation.components.FeedbackSnackbarHost
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.components.WarningCard
@@ -108,7 +109,7 @@ internal fun MovementContent(
     }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { AppTopBar(title = stringResource(R.string.movement_title), onBack = onBack) },
+        topBar = { AppTopBar(title = stringResource(R.string.movement_title), onBack = onBack, help = HelpTips.Movement) },
         snackbarHost = { FeedbackSnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(

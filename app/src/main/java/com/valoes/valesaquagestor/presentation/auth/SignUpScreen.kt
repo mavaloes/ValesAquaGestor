@@ -17,6 +17,7 @@ import com.valoes.valesaquagestor.R
 import com.valoes.valesaquagestor.domain.validation.AuthFieldError
 import com.valoes.valesaquagestor.presentation.components.AppTextField
 import com.valoes.valesaquagestor.presentation.components.FeedbackEffect
+import com.valoes.valesaquagestor.presentation.components.HelpTips
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.components.LinkButton
 import com.valoes.valesaquagestor.presentation.components.PasswordTextField
@@ -62,6 +63,7 @@ internal fun SignUpContent(
         title = stringResource(R.string.signup_title),
         subtitle = stringResource(R.string.signup_subtitle),
         snackbarHostState = snackbarHostState,
+        help = HelpTips.SignUp,
     ) {
         AppTextField(
             value = state.name,

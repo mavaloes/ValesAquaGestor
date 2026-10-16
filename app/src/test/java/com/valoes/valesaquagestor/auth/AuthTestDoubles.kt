@@ -92,3 +92,12 @@ class ScriptedAuthRepository(
 
     override suspend fun signOut() = Unit
 }
+
+/** "Primeiro acesso concluído" guardado só na memória. */
+class FakeOnboardingRepository(completed: Boolean = false) : com.valoes.valesaquagestor.domain.repository.OnboardingRepository {
+    private val state = MutableStateFlow(completed)
+    override val isCompleted: Flow<Boolean> = state
+    override suspend fun markCompleted() {
+        state.value = true
+    }
+}

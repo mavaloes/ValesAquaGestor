@@ -44,6 +44,7 @@ import com.valoes.valesaquagestor.presentation.components.DeleteRecordDialog
 import com.valoes.valesaquagestor.presentation.components.DeleteRequest
 import com.valoes.valesaquagestor.presentation.components.EmptyMessage
 import com.valoes.valesaquagestor.presentation.components.FeedbackSnackbarHost
+import com.valoes.valesaquagestor.presentation.components.HelpTips
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.components.RecordRow
 import com.valoes.valesaquagestor.presentation.components.SavedMessageEffect
@@ -117,6 +118,7 @@ internal fun LotDetailContent(
                     stringResource(R.string.lot_detail_title, stringResource(lot.lote.especie.labelRes()), stringResource(lot.lote.fase.labelRes()))
                 },
                 onBack = onBack,
+                help = HelpTips.LotDetail,
             )
         },
     ) { innerPadding ->

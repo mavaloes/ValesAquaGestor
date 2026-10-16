@@ -20,6 +20,7 @@ import com.valoes.valesaquagestor.R
 import com.valoes.valesaquagestor.domain.validation.AuthFieldError
 import com.valoes.valesaquagestor.presentation.components.AppTextField
 import com.valoes.valesaquagestor.presentation.components.FeedbackEffect
+import com.valoes.valesaquagestor.presentation.components.HelpTips
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.theme.AquaGestorTheme
 
@@ -57,6 +58,7 @@ internal fun ForgotPasswordContent(
         title = stringResource(R.string.forgot_title),
         subtitle = if (state.linkSent) null else stringResource(R.string.forgot_subtitle),
         snackbarHostState = snackbarHostState,
+        help = HelpTips.ForgotPassword,
     ) {
         if (state.linkSent) {
             Text(

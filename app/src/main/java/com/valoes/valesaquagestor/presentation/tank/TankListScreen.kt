@@ -29,6 +29,7 @@ import com.valoes.valesaquagestor.domain.model.Especie
 import com.valoes.valesaquagestor.domain.model.TipoTanque
 import com.valoes.valesaquagestor.domain.rules.AlertLevel
 import com.valoes.valesaquagestor.presentation.components.AppTopBar
+import com.valoes.valesaquagestor.presentation.components.HelpTips
 import com.valoes.valesaquagestor.presentation.components.EmptyMessage
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.components.LevelBadge
@@ -54,7 +55,7 @@ internal fun TankListContent(
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { AppTopBar(title = stringResource(R.string.tanks_title)) },
+        topBar = { AppTopBar(title = stringResource(R.string.tanks_title), help = HelpTips.Tanks) },
     ) { innerPadding ->
         LazyColumn(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),

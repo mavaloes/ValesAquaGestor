@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import com.valoes.valesaquagestor.R
 import com.valoes.valesaquagestor.domain.validation.PasswordRules
 import com.valoes.valesaquagestor.presentation.components.FeedbackSnackbarHost
+import com.valoes.valesaquagestor.presentation.components.HelpButton
+import com.valoes.valesaquagestor.presentation.components.HelpTip
 
 /**
  * Estrutura comum das telas de autenticação: título, subtítulo, conteúdo rolável (para fonte
@@ -41,6 +43,7 @@ fun AuthScaffold(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
+    help: HelpTip? = null,
     content: @Composable () -> Unit,
 ) {
     Scaffold(
@@ -55,11 +58,14 @@ fun AuthScaffold(
                 .padding(horizontal = 24.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.semantics { heading() },
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier.weight(1f).semantics { heading() },
+                )
+                if (help != null) HelpButton(help)
+            }
             if (subtitle != null) {
                 Text(text = subtitle, style = MaterialTheme.typography.bodyLarge)
             }

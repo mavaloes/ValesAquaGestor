@@ -10,6 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -38,12 +39,16 @@ import com.valoes.valesaquagestor.presentation.home.HomeScreen
 import com.valoes.valesaquagestor.presentation.lot.LotDetailScreen
 import com.valoes.valesaquagestor.presentation.lot.LotFormScreen
 import com.valoes.valesaquagestor.presentation.components.FeedbackSnackbarHost
+import com.valoes.valesaquagestor.presentation.components.LocalOpenHelp
+import com.valoes.valesaquagestor.presentation.help.HelpScreen
 import com.valoes.valesaquagestor.presentation.main.MoreScreen
 import com.valoes.valesaquagestor.presentation.main.RegisterScreen
+import com.valoes.valesaquagestor.presentation.onboarding.OnboardingScreen
 import com.valoes.valesaquagestor.presentation.record.BiometryScreen
 import com.valoes.valesaquagestor.presentation.record.FeedingRecordScreen
 import com.valoes.valesaquagestor.presentation.record.MovementScreen
 import com.valoes.valesaquagestor.presentation.record.WaterRecordScreen
+import com.valoes.valesaquagestor.presentation.setup.SetupFarmScreen
 import com.valoes.valesaquagestor.presentation.tank.TankDetailScreen
 import com.valoes.valesaquagestor.presentation.tank.TankFormScreen
 import com.valoes.valesaquagestor.presentation.tank.TankListScreen
@@ -61,17 +66,19 @@ fun AquaGestorApp(viewModel: AppViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     when (val current = state) {
         AppState.Loading -> LoadingScreen()
-        is AppState.Ready -> AppNavigation(session = current.session)
+        is AppState.Ready -> AppNavigation(session = current.session, onboardingCompleted = current.onboardingCompleted)
     }
 }
 
 @Composable
-private fun AppNavigation(session: Session?) {
+private fun AppNavigation(session: Session?, onboardingCompleted: Boolean) {
     val navController = rememberNavController()
-    // A tela inicial é decidida uma vez, pela sessão lida ao abrir.
-    val startDestination = remember { resolveStartDestination(session) }
+    // A tela inicial é decidida uma vez, pelo que foi lido ao abrir: sessão e primeiro acesso.
+    val startDestination = remember { resolveStartDestination(session, onboardingCompleted) }
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
+
+    val openHelp: () -> Unit = { navController.navigate(Help) }
 
     // Aviso de "Registro salvo" (ou "Sem conexão: dados guardados no aparelho") que continua na tela
     // para onde o formulário volta.
@@ -85,111 +92,136 @@ private fun AppNavigation(session: Session?) {
 
     // O menu inferior só aparece nas quatro abas. As telas cuidam das próprias margens do sistema;
     // o `consumeWindowInsets` evita somar a margem de baixo duas vezes quando o menu está visível.
-    Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        snackbarHost = { FeedbackSnackbarHost(snackbarHostState) },
-        bottomBar = {
-            if (currentDestination.isTopLevel()) {
-                AppBottomBar(currentDestination = currentDestination, onNavigate = navController::navigateToTab)
-            }
-        },
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = when (startDestination) {
-                StartDestination.LOGIN -> Login
-                StartDestination.HOME -> Home
+    CompositionLocalProvider(LocalOpenHelp provides openHelp) {
+        Scaffold(
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            snackbarHost = { FeedbackSnackbarHost(snackbarHostState) },
+            bottomBar = {
+                if (currentDestination.isTopLevel()) {
+                    AppBottomBar(currentDestination = currentDestination, onNavigate = navController::navigateToTab)
+                }
             },
-            modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding),
-        ) {
-            composable<Login> {
-                LoginScreen(
-                    onForgotPassword = { navController.navigate(ForgotPassword) },
-                    onSignUp = { navController.navigate(SignUp) },
-                )
-            }
-            composable<SignUp> { SignUpScreen(onBackToLogin = { navController.popBackStack() }) }
-            composable<ForgotPassword> { ForgotPasswordScreen(onBackToLogin = { navController.popBackStack() }) }
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = when (startDestination) {
+                    StartDestination.LOGIN -> Login
+                    StartDestination.ONBOARDING -> Onboarding
+                    StartDestination.HOME -> Home
+                },
+                modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding),
+            ) {
+                composable<Login> {
+                    LoginScreen(
+                        onForgotPassword = { navController.navigate(ForgotPassword) },
+                        onSignUp = { navController.navigate(SignUp) },
+                    )
+                }
+                composable<SignUp> { SignUpScreen(onBackToLogin = { navController.popBackStack() }) }
+                composable<ForgotPassword> { ForgotPasswordScreen(onBackToLogin = { navController.popBackStack() }) }
 
-            composable<Home> {
-                HomeScreen(
-                    onOpenTank = { navController.navigate(TankDetail(it)) },
-                    onOpenLot = { navController.navigate(LotDetail(it)) },
-                    onRegisterWater = { navController.navigate(WaterRecord(it)) },
-                    onRegisterFeeding = { navController.navigate(FeedingRecord(it)) },
-                    onRegisterBiometry = { navController.navigate(Biometry(it)) },
-                )
-            }
-            composable<Tanques> {
-                TankListScreen(
-                    onOpenTank = { navController.navigate(TankDetail(it)) },
-                    onNewTank = { navController.navigate(NewTank) },
-                )
-            }
-            composable<Registrar> {
-                RegisterScreen(
-                    onRegisterWater = { navController.navigate(WaterRecord(it)) },
-                    onRegisterFeeding = { navController.navigate(FeedingRecord(it)) },
-                    onRegisterBiometry = { navController.navigate(Biometry(it)) },
-                    onRegisterMovement = { navController.navigate(MortalityRecord(it)) },
-                )
-            }
-            composable<Mais> { MoreScreen() }
+                composable<Home> {
+                    HomeScreen(
+                        onOpenTank = { navController.navigate(TankDetail(it)) },
+                        onOpenLot = { navController.navigate(LotDetail(it)) },
+                        onRegisterWater = { navController.navigate(WaterRecord(it)) },
+                        onRegisterFeeding = { navController.navigate(FeedingRecord(it)) },
+                        onRegisterBiometry = { navController.navigate(Biometry(it)) },
+                        onSetupFarm = { navController.navigate(SetupFarm(it)) },
+                    )
+                }
+                composable<Tanques> {
+                    TankListScreen(
+                        onOpenTank = { navController.navigate(TankDetail(it)) },
+                        onNewTank = { navController.navigate(NewTank) },
+                    )
+                }
+                composable<Registrar> {
+                    RegisterScreen(
+                        onRegisterWater = { navController.navigate(WaterRecord(it)) },
+                        onRegisterFeeding = { navController.navigate(FeedingRecord(it)) },
+                        onRegisterBiometry = { navController.navigate(Biometry(it)) },
+                        onRegisterMovement = { navController.navigate(MortalityRecord(it)) },
+                    )
+                }
+                composable<Mais> { MoreScreen(onOpenHelp = openHelp) }
+                composable<Help> { HelpScreen(onBack = { navController.popBackStack() }) }
 
-            composable<TankDetail> { entry ->
-                TankDetailScreen(
-                    onBack = { navController.popBackStack() },
-                    onOpenLot = { navController.navigate(LotDetail(it)) },
-                    onNewLot = { navController.navigate(NewLot(it)) },
-                    onRegisterWater = { navController.navigate(WaterRecord(it)) },
-                    onRegisterFeeding = { navController.navigate(FeedingRecord(it)) },
-                    showSavedMessage = entry.toRoute<TankDetail>().saved,
-                )
-            }
-            composable<LotDetail> { entry ->
-                LotDetailScreen(
-                    onBack = { navController.popBackStack() },
-                    onRegisterFeeding = { navController.navigate(FeedingRecord(it)) },
-                    onRegisterBiometry = { navController.navigate(Biometry(it)) },
-                    onRegisterMovement = { navController.navigate(MortalityRecord(it)) },
-                    showSavedMessage = entry.toRoute<LotDetail>().saved,
-                )
-            }
-            composable<NewTank> {
-                TankFormScreen(
-                    onBack = { navController.popBackStack() },
-                    onSaved = { id ->
-                        navController.navigate(TankDetail(id, saved = true)) { popUpTo<NewTank> { inclusive = true } }
-                    },
-                )
-            }
-            composable<NewLot> {
-                LotFormScreen(
-                    onBack = { navController.popBackStack() },
-                    onSaved = { id ->
-                        navController.navigate(LotDetail(id, saved = true)) { popUpTo<NewLot> { inclusive = true } }
-                    },
-                )
-            }
-            composable<WaterRecord> {
-                WaterRecordScreen(onBack = { navController.popBackStack() }, onDone = finishRecord)
-            }
-            composable<FeedingRecord> {
-                FeedingRecordScreen(onBack = { navController.popBackStack() }, onDone = finishRecord)
-            }
-            composable<Biometry> { entry ->
-                BiometryScreen(
-                    onBack = { navController.popBackStack() },
-                    onDone = finishRecord,
-                    // Depois da biometria, o atalho leva direto à ração (com o peso médio novo).
-                    onRegisterFeeding = { feedback ->
-                        scope.launch { snackbarHostState.showSnackbar(savedMessages.getValue(feedback)) }
-                        navController.navigate(FeedingRecord(entry.toRoute<Biometry>().lotId)) { popUpTo<Biometry> { inclusive = true } }
-                    },
-                )
-            }
-            composable<MortalityRecord> {
-                MovementScreen(onBack = { navController.popBackStack() }, onDone = finishRecord)
+                composable<Onboarding> {
+                    OnboardingScreen(
+                        // Concluiu o tutorial: segue para a configuração da fazenda (que também pode ser pulada).
+                        onCompleted = { navController.navigate(SetupFarm()) { popUpTo<Onboarding> { inclusive = true } } },
+                        // Pulou: vai direto para a Home, que oferece retomar a configuração.
+                        onSkipped = { navController.navigate(Home) { popUpTo<Onboarding> { inclusive = true } } },
+                    )
+                }
+                composable<SetupFarm> { entry ->
+                    SetupFarmScreen(
+                        tankId = entry.toRoute<SetupFarm>().tankId,
+                        onTankSaved = { id -> navController.navigate(SetupFarm(tankId = id)) { popUpTo<SetupFarm> { inclusive = true } } },
+                        onLotSaved = {
+                            scope.launch { snackbarHostState.showSnackbar(savedMessages.getValue(SaveFeedback.SAVED)) }
+                            navController.navigateClearingStack(Home)
+                        },
+                        onSkip = { navController.navigateClearingStack(Home) },
+                    )
+                }
+
+                composable<TankDetail> { entry ->
+                    TankDetailScreen(
+                        onBack = { navController.popBackStack() },
+                        onOpenLot = { navController.navigate(LotDetail(it)) },
+                        onNewLot = { navController.navigate(NewLot(it)) },
+                        onRegisterWater = { navController.navigate(WaterRecord(it)) },
+                        onRegisterFeeding = { navController.navigate(FeedingRecord(it)) },
+                        showSavedMessage = entry.toRoute<TankDetail>().saved,
+                    )
+                }
+                composable<LotDetail> { entry ->
+                    LotDetailScreen(
+                        onBack = { navController.popBackStack() },
+                        onRegisterFeeding = { navController.navigate(FeedingRecord(it)) },
+                        onRegisterBiometry = { navController.navigate(Biometry(it)) },
+                        onRegisterMovement = { navController.navigate(MortalityRecord(it)) },
+                        showSavedMessage = entry.toRoute<LotDetail>().saved,
+                    )
+                }
+                composable<NewTank> {
+                    TankFormScreen(
+                        onBack = { navController.popBackStack() },
+                        onSaved = { id ->
+                            navController.navigate(TankDetail(id, saved = true)) { popUpTo<NewTank> { inclusive = true } }
+                        },
+                    )
+                }
+                composable<NewLot> {
+                    LotFormScreen(
+                        onBack = { navController.popBackStack() },
+                        onSaved = { id ->
+                            navController.navigate(LotDetail(id, saved = true)) { popUpTo<NewLot> { inclusive = true } }
+                        },
+                    )
+                }
+                composable<WaterRecord> {
+                    WaterRecordScreen(onBack = { navController.popBackStack() }, onDone = finishRecord)
+                }
+                composable<FeedingRecord> {
+                    FeedingRecordScreen(onBack = { navController.popBackStack() }, onDone = finishRecord)
+                }
+                composable<Biometry> { entry ->
+                    BiometryScreen(
+                        onBack = { navController.popBackStack() },
+                        onDone = finishRecord,
+                        // Depois da biometria, o atalho leva direto à ração (com o peso médio novo).
+                        onRegisterFeeding = { feedback ->
+                            scope.launch { snackbarHostState.showSnackbar(savedMessages.getValue(feedback)) }
+                            navController.navigate(FeedingRecord(entry.toRoute<Biometry>().lotId)) { popUpTo<Biometry> { inclusive = true } }
+                        },
+                    )
+                }
+                composable<MortalityRecord> {
+                    MovementScreen(onBack = { navController.popBackStack() }, onDone = finishRecord)
+                }
             }
         }
     }
@@ -199,8 +231,9 @@ private fun AppNavigation(session: Session?) {
         val destination = navController.currentDestination ?: return@LaunchedEffect
         val onAuthScreen = destination.hasRoute<Login>() || destination.hasRoute<SignUp>() ||
             destination.hasRoute<ForgotPassword>()
-        when (resolveSessionNavigation(session, onAuthScreen)) {
+        when (resolveSessionNavigation(session, onAuthScreen, onboardingCompleted)) {
             SessionNavigation.GO_TO_LOGIN -> navController.navigateClearingStack(Login)
+            SessionNavigation.GO_TO_ONBOARDING -> navController.navigateClearingStack(Onboarding)
             SessionNavigation.GO_TO_HOME -> navController.navigateClearingStack(Home)
             SessionNavigation.STAY -> Unit
         }

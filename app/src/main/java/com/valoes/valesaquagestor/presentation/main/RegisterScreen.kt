@@ -30,6 +30,7 @@ import com.valoes.valesaquagestor.domain.model.FaseLote
 import com.valoes.valesaquagestor.domain.usecase.ObserveFarmOverview
 import com.valoes.valesaquagestor.presentation.components.AppTopBar
 import com.valoes.valesaquagestor.presentation.components.EmptyMessage
+import com.valoes.valesaquagestor.presentation.components.HelpTips
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.components.labelRes
 import com.valoes.valesaquagestor.presentation.theme.AquaGestorTheme
@@ -103,7 +104,7 @@ internal fun RegisterContent(
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { AppTopBar(title = stringResource(R.string.register_title)) },
+        topBar = { AppTopBar(title = stringResource(R.string.register_title), help = HelpTips.Register) },
     ) { innerPadding ->
         LazyColumn(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),

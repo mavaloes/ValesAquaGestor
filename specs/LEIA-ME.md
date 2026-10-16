@@ -38,6 +38,7 @@ com.valoes.valesaquagestor
 │   ├── repository          Implementações dos repositórios do domínio (Fase 03).
 │   ├── session             Sessão salva no aparelho, criptografada com chave do Keystore (Fase 04).
 │   ├── auth                FakeAuthRepository; o backend real entra na Fase 09.
+│   ├── onboarding          "Primeiro acesso concluído" guardado no aparelho (Fase 07).
 │   └── connectivity        Verifica se há internet, para as mensagens de "Sem conexão".
 ├── domain                  Kotlin puro: regras do negócio, sem Android.
 │   ├── model               Enums e modelos do domínio (TipoTanque, FaseLote, ...).
@@ -55,6 +56,9 @@ com.valoes.valesaquagestor
 │   ├── tank                Lista de tanques, novo tanque e detalhe do tanque.
 │   ├── lot                 Detalhe do lote e novo lote (com a capacidade do viveiro).
 │   ├── record              Telas de registro: água, ração, biometria e mortalidade/despesca (Fase 06).
+│   ├── onboarding          Tutorial de primeiro acesso: 3 telas curtas com "Pular" (Fase 07).
+│   ├── setup               Configuração guiada: primeiro tanque e primeiro lote, reaproveitando os formulários.
+│   ├── help                Tela de Ajuda: passo a passo e palavras do campo.
 │   ├── main                Aba "Registrar" (escolher onde registrar) e aba "Mais" (Sair provisório).
 │   └── util                Formatação (padrão brasileiro) e validação de campos de formulário.
 └── di                      (Fase 03) Módulos Hilt.

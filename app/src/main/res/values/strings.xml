@@ -129,7 +129,6 @@
     <string name="home_no_alerts">Nenhum alerta no momento.</string>
     <string name="home_tasks_title">Para fazer hoje</string>
     <string name="home_all_done">Tudo em dia hoje.</string>
-    <string name="home_no_tanks">Cadastre seu primeiro tanque na aba Tanques.</string>
     <string name="home_alert_title">%1$s: %2$s</string>
     <string name="task_measure_daily">Medir %1$s (%2$s)</string>
     <string name="task_measure_weekly">Medir %1$s (semanal)</string>
@@ -369,4 +368,118 @@
     <string name="record_biometry_line">%1$s · %2$s g · %3$s</string>
     <string name="record_movement_line">%1$s · %2$s · %3$s</string>
     <string name="record_water_line">%1$s · %2$s · %3$s</string>
+
+    <!-- Fase 07: primeiro acesso -->
+    <string name="onboarding_skip">Pular</string>
+    <string name="onboarding_next">Próximo</string>
+    <string name="onboarding_back">Voltar</string>
+    <string name="onboarding_start">Começar</string>
+    <string name="onboarding_page_counter">%1$d de %2$d</string>
+    <string name="onboarding_page1_title">Cuide dos seus peixes</string>
+    <string name="onboarding_page1_text">O app guarda a água, a ração, as pesagens e as perdas de cada tanque, e avisa o que fazer.</string>
+    <string name="onboarding_page2_title">Registre em poucos toques</string>
+    <string name="onboarding_page2_text">Toque em Registrar, escolha o tanque ou o lote e salve. A data e a hora já vêm preenchidas.</string>
+    <string name="onboarding_page3_title">Funciona sem internet</string>
+    <string name="onboarding_page3_text">Você registra tudo sem internet: os dados ficam guardados no aparelho. Só o cadastro e o primeiro login precisam de conexão.</string>
+
+    <!-- Configuração guiada da fazenda -->
+    <string name="setup_tank_title">Passo 1 de 2: seu primeiro tanque</string>
+    <string name="setup_tank_hint">Dê um nome ao tanque e diga o tipo e o tamanho. Cada campo tem um exemplo. Você pode pular e fazer isso depois, pela tela inicial.</string>
+    <string name="setup_lot_title">Passo 2 de 2: seu primeiro lote</string>
+    <string name="setup_lot_hint">Agora diga quais peixes estão no tanque. Cada campo tem um exemplo. Você pode pular e fazer isso depois, pela tela inicial.</string>
+    <string name="setup_skip">Pular</string>
+    <string name="home_setup_tank">Vamos configurar sua fazenda: crie o primeiro tanque.</string>
+    <string name="home_setup_tank_button">Configurar minha fazenda</string>
+    <string name="home_setup_lot">O tanque %1$s ainda não tem lote.</string>
+    <string name="home_setup_lot_button">Criar o primeiro lote</string>
+
+    <!-- Ajuda: botão "?" -->
+    <string name="help_symbol" formatted="false">?</string>
+    <string name="help_button_description">Ajuda desta tela</string>
+    <string name="help_dialog_close">Entendi</string>
+    <string name="help_dialog_more">Mais ajuda</string>
+
+    <!-- Ajuda: dicas curtas, uma por tela -->
+    <string name="tip_home_title">Tela inicial</string>
+    <string name="tip_home_text">Aqui aparece o que fazer hoje. Toque num alerta ou numa tarefa para agir. Exemplo: toque em \"Medir Oxigênio (manhã)\" para registrar a medição.</string>
+    <string name="tip_tanks_title">Tanques</string>
+    <string name="tip_tanks_text">Cada tanque mostra o seu pior alerta. Toque nele para ver as medições e os lotes. Exemplo: \"Viveiro 1, Crítico\" pede ação hoje.</string>
+    <string name="tip_tank_form_title">Novo tanque</string>
+    <string name="tip_tank_form_text">Viveiro escavado e açude pedem a área. Exemplo: um viveiro de 20 m por 50 m tem 1000 m².</string>
+    <string name="tip_tank_detail_title">Tanque</string>
+    <string name="tip_tank_detail_text">Veja as últimas medições da água e os lotes do tanque. Exemplo: oxigênio, meça de manhã, antes de dar ração. Abaixo de 3 mg/L, não alimente.</string>
+    <string name="tip_lot_detail_title">Lote</string>
+    <string name="tip_lot_detail_text" formatted="false">Mostra quantos peixes estão vivos, a biomassa e a mortalidade. Exemplo: 1000 peixes povoados e 40 mortos dão 4% de mortalidade.</string>
+    <string name="tip_lot_form_title">Novo lote</string>
+    <string name="tip_lot_form_text">O app avisa se há peixes demais para o viveiro. Exemplo: num viveiro de 225 m² sem aerador, cabem 1350 alevinos de 20 g.</string>
+    <string name="tip_register_title">Registrar</string>
+    <string name="tip_register_text">Escolha o tanque ou o lote e o que registrar. Exemplo: para dar ração, toque em Registrar ração no lote e depois em Salvar.</string>
+    <string name="tip_water_title">Registrar água</string>
+    <string name="tip_water_text">Preencha só o que você mediu. Oxigênio: meça de manhã, antes de dar ração. Abaixo de 3 mg/L, não alimente.</string>
+    <string name="tip_feeding_title">Registrar ração</string>
+    <string name="tip_feeding_text">A quantidade já vem calculada pela tabela e você pode mudar. Exemplo: 500 peixes de 43 g recebem cerca de 0,32 kg por refeição, 3 vezes ao dia.</string>
+    <string name="tip_biometry_title">Biometria</string>
+    <string name="tip_biometry_text" formatted="false">Pese uma amostra: em lote de até 2000 peixes, cerca de 10%. Exemplo: num lote de 1000 peixes, pese uns 100.</string>
+    <string name="tip_movement_title">Mortalidade e despesca</string>
+    <string name="tip_movement_text" formatted="false">Conte os peixes mortos todo dia. Exemplo: 12 peixes mortos hoje, escolha Mortalidade, digite 12 e salve. Com mais de 10% de perdas, chame um técnico.</string>
+    <string name="tip_more_title">Mais</string>
+    <string name="tip_more_text">Aqui você acha a ajuda e sai da conta. Seus registros continuam guardados no aparelho.</string>
+    <string name="tip_login_title">Entrar</string>
+    <string name="tip_login_text">Use o e-mail e a senha da sua conta. Só o primeiro acesso precisa de internet; depois o app abre sem conexão.</string>
+    <string name="tip_signup_title">Criar conta</string>
+    <string name="tip_signup_text">A senha precisa de 8 caracteres, com letra e número. Exemplo: tilapia2026.</string>
+    <string name="tip_forgot_title">Esqueci minha senha</string>
+    <string name="tip_forgot_text">Digite o e-mail da conta e enviaremos um link para criar uma nova senha.</string>
+
+    <!-- Tela Ajuda -->
+    <string name="help_title">Ajuda</string>
+    <string name="more_help">Ajuda</string>
+    <string name="help_tutorials_title">Passo a passo</string>
+    <string name="help_glossary_title">Palavras do campo</string>
+    <string name="help_feed_title">Como registrar a ração</string>
+    <string name="help_feed_step1">Toque em Registrar e, no lote, em Registrar ração.</string>
+    <string name="help_feed_step2">Confira a quantidade sugerida. Você pode mudar.</string>
+    <string name="help_feed_step3">Se a água estiver ruim, o app sugere 0 kg e marca a ração como suspensa.</string>
+    <string name="help_feed_step4">Toque em Salvar.</string>
+    <string name="help_water_title">Como medir a água</string>
+    <string name="help_water_step1">Meça com o kit ou o aparelho, na beira do tanque.</string>
+    <string name="help_water_step2">Toque em Registrar e, no tanque, em Registrar água.</string>
+    <string name="help_water_step3">Preencha só o que você mediu e toque em Salvar. Oxigênio: meça de manhã, antes de dar ração. Abaixo de 3 mg/L, não alimente.</string>
+    <string name="help_water_step4">O app mostra o que cada valor significa e o que fazer.</string>
+    <string name="help_biometry_title">Como fazer a biometria</string>
+    <string name="help_biometry_step1" formatted="false">Pegue uma amostra de peixes: em lote de até 2000 peixes, cerca de 10%.</string>
+    <string name="help_biometry_step2">Pese em um balde com água e anote a tara, que é o balde sozinho.</string>
+    <string name="help_biometry_step3">Toque em Registrar e, no lote, em Biometria. Digite o peso com os peixes, a tara e quantos peixes pesou.</string>
+    <string name="help_biometry_step4">O app calcula o peso médio e sugere a ração nova.</string>
+    <string name="help_step_number">%1$d. %2$s</string>
+    <string name="glossary_viveiro_term">Viveiro</string>
+    <string name="glossary_viveiro_text">Tanque de terra escavado, o mais comum no Brasil.</string>
+    <string name="glossary_acude_term">Açude</string>
+    <string name="glossary_acude_text">Represa feita com aterro. O formato depende do terreno.</string>
+    <string name="glossary_tanque_rede_term">Tanque-rede</string>
+    <string name="glossary_tanque_rede_text">Gaiola flutuante em represa ou lago.</string>
+    <string name="glossary_fases_term">Alevinagem, recria e engorda</string>
+    <string name="glossary_fases_text">As 3 fases do cultivo. Na fazenda, também se diz berçário, recria e terminação.</string>
+    <string name="glossary_povoamento_term">Povoamento</string>
+    <string name="glossary_povoamento_text">Colocar os alevinos no viveiro.</string>
+    <string name="glossary_biometria_term">Biometria</string>
+    <string name="glossary_biometria_text">Pesar uma amostra de peixes para saber o peso médio.</string>
+    <string name="glossary_biomassa_term">Biomassa</string>
+    <string name="glossary_biomassa_text">Peso total dos peixes do viveiro, em kg.</string>
+    <string name="glossary_arracoamento_term">Arraçoamento</string>
+    <string name="glossary_arracoamento_text">Dar ração. A quantidade é uma porcentagem do peso total dos peixes.</string>
+    <string name="glossary_pb_term">Proteína bruta (PB)</string>
+    <string name="glossary_pb_text" formatted="false">Quanta proteína a ração tem, em %.</string>
+    <string name="glossary_tca_term">TCA</string>
+    <string name="glossary_tca_text">Taxa de conversão alimentar: quantos kg de ração são gastos para cada kg de peixe que ganhou peso.</string>
+    <string name="glossary_od_term">Oxigênio dissolvido (OD)</string>
+    <string name="glossary_od_text">O oxigênio que está na água, em mg/L.</string>
+    <string name="glossary_secchi_term">Secchi</string>
+    <string name="glossary_secchi_text">Disco preto e branco que mede a transparência da água, em cm.</string>
+    <string name="glossary_amonia_term">Amônia total e amônia tóxica</string>
+    <string name="glossary_amonia_text">O kit mede a amônia total. A tóxica é a parte que depende do pH e da temperatura, e é a que mata. O app calcula a tóxica para você.</string>
+    <string name="glossary_alcalinidade_term">Alcalinidade</string>
+    <string name="glossary_alcalinidade_text">Capacidade da água de segurar o pH, em mg/L de CaCO₃.</string>
+    <string name="glossary_despesca_term">Despesca</string>
+    <string name="glossary_despesca_text">Retirar peixes do viveiro, para vender, separar por tamanho ou diminuir a quantidade.</string>
 </resources>

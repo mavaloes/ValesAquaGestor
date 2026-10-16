@@ -3,6 +3,7 @@ package com.valoes.valesaquagestor.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -45,11 +46,23 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 
-/** Barra de cima das telas internas, com o botão Voltar quando [onBack] é informado. */
+/**
+ * Barra de cima das telas internas, com o botão Voltar quando [onBack] é informado e o botão "?"
+ * com a dica da tela quando [help] é informado. [actions] acrescenta botões depois do "?".
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTopBar(title: String, onBack: (() -> Unit)? = null) {
+fun AppTopBar(
+    title: String,
+    onBack: (() -> Unit)? = null,
+    help: HelpTip? = null,
+    actions: @Composable RowScope.() -> Unit = {},
+) {
     TopAppBar(
+        actions = {
+            if (help != null) HelpButton(help)
+            actions()
+        },
         title = { Text(text = title, maxLines = 2, modifier = Modifier.semantics { heading() }) },
         navigationIcon = {
             if (onBack != null) {

@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,19 +33,26 @@ import com.valoes.valesaquagestor.presentation.components.AppTopBar
 import com.valoes.valesaquagestor.presentation.components.ChoiceGroup
 import com.valoes.valesaquagestor.presentation.components.FeedbackEffect
 import com.valoes.valesaquagestor.presentation.components.FeedbackSnackbarHost
+import com.valoes.valesaquagestor.presentation.components.HelpTips
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.components.SwitchRow
 import com.valoes.valesaquagestor.presentation.components.labelRes
 import com.valoes.valesaquagestor.presentation.components.requiredLabel
+import com.valoes.valesaquagestor.presentation.setup.SetupMode
 import com.valoes.valesaquagestor.presentation.theme.AquaGestorTheme
 import com.valoes.valesaquagestor.presentation.util.FormError
 import com.valoes.valesaquagestor.presentation.util.stringRes
 
-/** Formulário de novo tanque. Ao salvar com sucesso, chama [onSaved] para voltar à lista. */
+/**
+ * Formulário de novo tanque. Ao salvar com sucesso, chama [onSaved].
+ *
+ * @param setup não `null` quando é o passo 1 da configuração guiada: mostra o título do passo, a dica e "Pular".
+ */
 @Composable
 fun TankFormScreen(
     onBack: () -> Unit,
     onSaved: (tankId: Long) -> Unit,
+    setup: SetupMode? = null,
     viewModel: TankFormViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -68,6 +76,9 @@ fun TankFormScreen(
         onAeratorPowerChange = viewModel::onAeratorPowerChange,
         onRenewalChange = viewModel::onRenewalChange,
         onSave = viewModel::onSave,
+        title = stringResource(if (setup != null) R.string.setup_tank_title else R.string.tank_form_title),
+        setupHint = setup?.let { stringResource(R.string.setup_tank_hint) },
+        onSkip = setup?.onSkip,
     )
 }
 
@@ -85,10 +96,20 @@ internal fun TankFormContent(
     onAeratorPowerChange: (String) -> Unit,
     onRenewalChange: (String) -> Unit,
     onSave: () -> Unit,
+    title: String = stringResource(R.string.tank_form_title),
+    setupHint: String? = null,
+    onSkip: (() -> Unit)? = null,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { AppTopBar(title = stringResource(R.string.tank_form_title), onBack = onBack) },
+        topBar = {
+            AppTopBar(
+                title = title,
+                onBack = onBack,
+                help = HelpTips.TankForm,
+                actions = { if (onSkip != null) TextButton(onClick = onSkip) { Text(stringResource(R.string.setup_skip)) } },
+            )
+        },
         snackbarHost = { FeedbackSnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(
@@ -99,6 +120,7 @@ internal fun TankFormContent(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
+            if (setupHint != null) Text(text = setupHint, style = MaterialTheme.typography.bodyLarge)
             Text(text = stringResource(R.string.form_required_legend), style = MaterialTheme.typography.bodyMedium)
             AppTextField(
                 value = state.name,

@@ -18,6 +18,21 @@ data object SignUp
 @Serializable
 data object ForgotPassword
 
+/** Tutorial de primeiro acesso: no máximo 3 telas curtas, com "Pular". */
+@Serializable
+data object Onboarding
+
+/**
+ * Configuração guiada da fazenda. Sem [tankId], é o passo 1 (criar o primeiro tanque); com [tankId],
+ * é o passo 2 (criar o primeiro lote nesse tanque).
+ */
+@Serializable
+data class SetupFarm(val tankId: Long? = null)
+
+/** Ajuda: passo a passo e palavras do campo. */
+@Serializable
+data object Help
+
 /** Aba "Início": a rotina diária. */
 @Serializable
 data object Home

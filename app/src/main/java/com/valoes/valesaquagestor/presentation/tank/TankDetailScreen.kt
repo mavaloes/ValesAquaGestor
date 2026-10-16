@@ -37,6 +37,7 @@ import com.valoes.valesaquagestor.domain.model.TipoTanque
 import com.valoes.valesaquagestor.domain.rules.WaterReadingsEvaluator
 import com.valoes.valesaquagestor.domain.usecase.LotOverview
 import com.valoes.valesaquagestor.presentation.components.AppTopBar
+import com.valoes.valesaquagestor.presentation.components.HelpTips
 import com.valoes.valesaquagestor.presentation.components.DeleteRecordDialog
 import com.valoes.valesaquagestor.presentation.components.DeleteRequest
 import com.valoes.valesaquagestor.presentation.components.EmptyMessage
@@ -100,7 +101,7 @@ internal fun TankDetailContent(
     DeleteRecordDialog(request = pendingDelete, onDismiss = { pendingDelete = null })
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { AppTopBar(title = tank?.tanque?.nome ?: stringResource(R.string.tanks_title), onBack = onBack) },
+        topBar = { AppTopBar(title = tank?.tanque?.nome ?: stringResource(R.string.tanks_title), onBack = onBack, help = HelpTips.TankDetail) },
         snackbarHost = { FeedbackSnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(

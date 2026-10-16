@@ -35,6 +35,7 @@ import com.valoes.valesaquagestor.presentation.components.AppTopBar
 import com.valoes.valesaquagestor.presentation.components.ChoiceGroup
 import com.valoes.valesaquagestor.presentation.components.DateTimeField
 import com.valoes.valesaquagestor.presentation.components.FeedbackEffect
+import com.valoes.valesaquagestor.presentation.components.HelpTips
 import com.valoes.valesaquagestor.presentation.components.FeedbackSnackbarHost
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.components.StatusCard
@@ -122,6 +123,7 @@ internal fun WaterRecordContent(
             AppTopBar(
                 title = stringResource(if (result != null) R.string.water_result_title else R.string.water_title),
                 onBack = onBack,
+                help = HelpTips.Water,
             )
         },
         snackbarHost = { FeedbackSnackbarHost(snackbarHostState) },

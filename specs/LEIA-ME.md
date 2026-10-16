@@ -35,16 +35,23 @@ com.valoes.valesaquagestor
 │   │   ├── relation        Classes @Relation (TanqueComLotes, LoteComArracoamentos, LoteCompleto).
 │   │   ├── dao             (Fase 03) DAOs com consultas em Flow, sempre filtrando excluido = 0.
 │   │   └── database        (Fase 03) AppDatabase.
-│   └── repository          (Fase 03) Implementações dos repositórios do domínio.
+│   ├── repository          Implementações dos repositórios do domínio (Fase 03).
+│   ├── session             Sessão salva no aparelho, criptografada com chave do Keystore (Fase 04).
+│   ├── auth                FakeAuthRepository; o backend real entra na Fase 09.
+│   └── connectivity        Verifica se há internet, para as mensagens de "Sem conexão".
 ├── domain                  Kotlin puro: regras do negócio, sem Android.
 │   ├── model               Enums e modelos do domínio (TipoTanque, FaseLote, ...).
 │   ├── rules               (Fase 02) Faixas de água e avaliação dos níveis de alerta.
 │   ├── calc                (Fase 02) Cálculos: amônia tóxica, ração, capacidade, oxigênio.
-│   ├── repository          (Fase 03) Interfaces dos repositórios.
+│   ├── repository          Interfaces dos repositórios, de autenticação e de conexão.
+│   ├── validation          Validação dos campos de login e cadastro (Kotlin puro).
 │   └── usecase             (Fase 04 em diante) Casos de uso; a permissão é checada aqui.
 ├── presentation            Telas Compose, ViewModels e UiState.
 │   ├── theme               Tema Material 3 (cores e tipografia).
-│   └── components          (Fase 04) Componentes reutilizáveis (botão grande, StatusCard, ...).
+│   ├── components          Componentes reutilizáveis (botão grande, campos, Snackbar; StatusCard na Fase 05).
+│   ├── auth                Telas de login, cadastro e recuperação de senha, com ViewModel e UiState.
+│   ├── navigation          Rotas type-safe, tela inicial decidida pela sessão e NavHost.
+│   └── home                Home (provisória e vazia até a Fase 05).
 └── di                      (Fase 03) Módulos Hilt.
 ```
 

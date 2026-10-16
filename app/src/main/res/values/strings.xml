@@ -1,3 +1,67 @@
 <resources>
     <string name="app_name">Valões AquaGestor</string>
+
+    <!-- Geral -->
+    <string name="loading">Carregando</string>
+    <string name="password_show">Mostrar</string>
+    <string name="password_hide">Ocultar</string>
+    <string name="password_show_description">Mostrar a senha</string>
+    <string name="password_hide_description">Ocultar a senha</string>
+
+    <!-- Campos -->
+    <string name="field_name">Nome</string>
+    <string name="field_name_example">Ex.: Maria Silva</string>
+    <string name="field_email">E-mail</string>
+    <string name="field_email_example">nome@exemplo.com</string>
+    <string name="field_password">Senha</string>
+    <string name="field_confirm_password">Confirmar senha</string>
+
+    <!-- Login -->
+    <string name="login_title">Entrar</string>
+    <string name="login_subtitle">Entre com seu e-mail e sua senha.</string>
+    <string name="login_first_access_note">O primeiro acesso precisa de internet. Depois, o app funciona sem conexão.</string>
+    <string name="login_button">Entrar</string>
+    <string name="login_forgot_password">Esqueci minha senha</string>
+    <string name="login_create_account">Criar conta</string>
+
+    <!-- Cadastro -->
+    <string name="signup_title">Criar conta</string>
+    <string name="signup_subtitle">Você será o administrador da sua fazenda.</string>
+    <string name="signup_button">Criar conta</string>
+    <string name="signup_have_account">Já tenho conta</string>
+    <string name="password_rules_title">A senha precisa ter:</string>
+    <string name="password_rule_length">Pelo menos 8 caracteres</string>
+    <string name="password_rule_letter">Pelo menos uma letra</string>
+    <string name="password_rule_digit">Pelo menos um número</string>
+    <string name="password_rule_met">Atendido</string>
+    <string name="password_rule_missing">Ainda falta</string>
+
+    <!-- Esqueci minha senha -->
+    <string name="forgot_title">Esqueci minha senha</string>
+    <string name="forgot_subtitle">Digite seu e-mail e enviaremos um link para criar uma nova senha.</string>
+    <string name="forgot_button">Enviar link</string>
+    <string name="forgot_back_to_login">Voltar para entrar</string>
+
+    <!-- Erros de campo -->
+    <string name="error_invalid_email">Digite um e-mail válido, como nome@exemplo.com.</string>
+    <string name="error_weak_password">A senha precisa de pelo menos 8 caracteres, com letra e número.</string>
+    <string name="error_passwords_differ">As senhas não são iguais.</string>
+    <string name="error_empty_password">Digite sua senha.</string>
+    <string name="error_empty_name">Digite seu nome.</string>
+
+    <!-- Mensagens de feedback (Snackbar) -->
+    <string name="message_invalid_credentials">E-mail ou senha incorretos.</string>
+    <string name="message_email_taken">Já existe uma conta com esse e-mail. Tente entrar.</string>
+    <string name="message_no_connection_first_login">Sem conexão. Conecte-se à internet para entrar pela primeira vez.</string>
+    <string name="message_no_connection">Sem conexão. Conecte-se à internet para continuar.</string>
+    <string name="message_too_many_attempts">Muitas tentativas. Tente de novo em alguns minutos.</string>
+    <string name="message_unknown_error">Algo deu errado. Tente de novo.</string>
+    <string name="message_reset_link_sent">Se esse e-mail estiver cadastrado, enviamos um link para criar uma nova senha.</string>
+    <string name="message_account_created">Conta criada! Vamos configurar sua fazenda.</string>
+
+    <!-- Home provisória (Fase 04) -->
+    <string name="home_title">Início</string>
+    <string name="home_greeting">Olá, %1$s</string>
+    <string name="home_placeholder">Em breve: a rotina do dia.</string>
+    <string name="home_sign_out">Sair</string>
 </resources>

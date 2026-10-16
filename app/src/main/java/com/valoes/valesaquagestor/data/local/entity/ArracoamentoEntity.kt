@@ -10,7 +10,7 @@ import com.valoes.valesaquagestor.domain.model.MotivoSuspensao
 /**
  * Trato (arraçoamento) de um lote, com os campos da Planilha 4 (F01 p.153).
  *
- * FK para [Lote] com `RESTRICT`: a exclusão é sempre lógica.
+ * FK para [LoteEntity] com `RESTRICT`: a exclusão é sempre lógica.
  *
  * @property loteId lote alimentado.
  * @property dataHora horário do trato, em epoch millis.
@@ -31,7 +31,7 @@ import com.valoes.valesaquagestor.domain.model.MotivoSuspensao
     tableName = "arracoamento",
     foreignKeys = [
         ForeignKey(
-            entity = Lote::class,
+            entity = LoteEntity::class,
             parentColumns = ["id"],
             childColumns = ["loteId"],
             onDelete = ForeignKey.RESTRICT,
@@ -42,8 +42,8 @@ import com.valoes.valesaquagestor.domain.model.MotivoSuspensao
         Index(value = ["loteId"]),
     ],
 )
-data class Arracoamento(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+data class ArracoamentoEntity(
+    @PrimaryKey(autoGenerate = true) override val id: Long = 0,
     val loteId: Long,
     val dataHora: Long,
     val quantidadeKg: Double,
@@ -54,8 +54,8 @@ data class Arracoamento(
     val tamanhoPelletMm: Double? = null,
     val comportamento: ComportamentoPeixe,
     val sobraRacao: Boolean = false,
-    val uuid: String,
-    val atualizadoEm: Long,
-    val excluido: Boolean = false,
-    val sincronizado: Boolean = false,
-)
+    override val uuid: String,
+    override val atualizadoEm: Long,
+    override val excluido: Boolean = false,
+    override val sincronizado: Boolean = false,
+) : SyncEntity

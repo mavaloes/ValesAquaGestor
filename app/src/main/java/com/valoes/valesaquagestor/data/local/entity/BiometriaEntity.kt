@@ -10,9 +10,9 @@ import androidx.room.PrimaryKey
  *
  * A tela pode ter várias pesagens (balde com água, peixes por balde); aqui ficam só os totais.
  * O peso médio é calculado a partir de [pesoAmostraKg] e [numeroPeixesAmostra], e ao salvar a
- * biometria o repositório atualiza [Lote.pesoMedioAtualG].
+ * biometria o repositório atualiza [LoteEntity.pesoMedioAtualG].
  *
- * FK para [Lote] com `RESTRICT`: a exclusão é sempre lógica.
+ * FK para [LoteEntity] com `RESTRICT`: a exclusão é sempre lógica.
  *
  * @property loteId lote pesado.
  * @property dataHora momento da pesagem, em epoch millis.
@@ -28,7 +28,7 @@ import androidx.room.PrimaryKey
     tableName = "biometria",
     foreignKeys = [
         ForeignKey(
-            entity = Lote::class,
+            entity = LoteEntity::class,
             parentColumns = ["id"],
             childColumns = ["loteId"],
             onDelete = ForeignKey.RESTRICT,
@@ -39,15 +39,15 @@ import androidx.room.PrimaryKey
         Index(value = ["loteId"]),
     ],
 )
-data class Biometria(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+data class BiometriaEntity(
+    @PrimaryKey(autoGenerate = true) override val id: Long = 0,
     val loteId: Long,
     val dataHora: Long,
     val pesoAmostraKg: Double,
     val numeroPeixesAmostra: Int,
     val observacaoSaude: String? = null,
-    val uuid: String,
-    val atualizadoEm: Long,
-    val excluido: Boolean = false,
-    val sincronizado: Boolean = false,
-)
+    override val uuid: String,
+    override val atualizadoEm: Long,
+    override val excluido: Boolean = false,
+    override val sincronizado: Boolean = false,
+) : SyncEntity

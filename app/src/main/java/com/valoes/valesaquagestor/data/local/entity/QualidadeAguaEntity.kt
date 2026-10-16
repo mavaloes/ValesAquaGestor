@@ -16,7 +16,7 @@ import com.valoes.valesaquagestor.domain.model.MomentoMedicao
  * é calculada com pH e temperatura (`specs/03-regras-negocio.md`, seção 4.1).
  * "ppm" e "mg/L" são a mesma unidade (F07 p.7); o app usa sempre mg/L.
  *
- * FK para [Tanque] com `RESTRICT`: a exclusão é sempre lógica.
+ * FK para [TanqueEntity] com `RESTRICT`: a exclusão é sempre lógica.
  *
  * @property tanqueId tanque medido.
  * @property dataHora momento da medição, em epoch millis.
@@ -39,7 +39,7 @@ import com.valoes.valesaquagestor.domain.model.MomentoMedicao
     tableName = "qualidade_agua",
     foreignKeys = [
         ForeignKey(
-            entity = Tanque::class,
+            entity = TanqueEntity::class,
             parentColumns = ["id"],
             childColumns = ["tanqueId"],
             onDelete = ForeignKey.RESTRICT,
@@ -50,8 +50,8 @@ import com.valoes.valesaquagestor.domain.model.MomentoMedicao
         Index(value = ["tanqueId"]),
     ],
 )
-data class QualidadeAgua(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+data class QualidadeAguaEntity(
+    @PrimaryKey(autoGenerate = true) override val id: Long = 0,
     val tanqueId: Long,
     val dataHora: Long,
     val momento: MomentoMedicao,
@@ -64,8 +64,8 @@ data class QualidadeAgua(
     val alcalinidadeMgL: Double? = null,
     val durezaMgL: Double? = null,
     val diaNublado: Boolean = false,
-    val uuid: String,
-    val atualizadoEm: Long,
-    val excluido: Boolean = false,
-    val sincronizado: Boolean = false,
-)
+    override val uuid: String,
+    override val atualizadoEm: Long,
+    override val excluido: Boolean = false,
+    override val sincronizado: Boolean = false,
+) : SyncEntity

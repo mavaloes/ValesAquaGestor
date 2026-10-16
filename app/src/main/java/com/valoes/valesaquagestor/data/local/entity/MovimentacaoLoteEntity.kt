@@ -31,13 +31,13 @@ import com.valoes.valesaquagestor.domain.model.TipoMovimentacao
     tableName = "movimentacao_lote",
     foreignKeys = [
         ForeignKey(
-            entity = Lote::class,
+            entity = LoteEntity::class,
             parentColumns = ["id"],
             childColumns = ["loteId"],
             onDelete = ForeignKey.RESTRICT,
         ),
         ForeignKey(
-            entity = Tanque::class,
+            entity = TanqueEntity::class,
             parentColumns = ["id"],
             childColumns = ["tanqueDestinoId"],
             onDelete = ForeignKey.RESTRICT,
@@ -49,8 +49,8 @@ import com.valoes.valesaquagestor.domain.model.TipoMovimentacao
         Index(value = ["tanqueDestinoId"]),
     ],
 )
-data class MovimentacaoLote(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+data class MovimentacaoLoteEntity(
+    @PrimaryKey(autoGenerate = true) override val id: Long = 0,
     val loteId: Long,
     val dataHora: Long,
     val tipo: TipoMovimentacao,
@@ -58,8 +58,8 @@ data class MovimentacaoLote(
     val pesoTotalKg: Double? = null,
     val tanqueDestinoId: Long? = null,
     val observacao: String? = null,
-    val uuid: String,
-    val atualizadoEm: Long,
-    val excluido: Boolean = false,
-    val sincronizado: Boolean = false,
-)
+    override val uuid: String,
+    override val atualizadoEm: Long,
+    override val excluido: Boolean = false,
+    override val sincronizado: Boolean = false,
+) : SyncEntity

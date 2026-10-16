@@ -34,8 +34,8 @@ import com.valoes.valesaquagestor.domain.model.TipoTanque
     tableName = "tanque",
     indices = [Index(value = ["uuid"], unique = true)],
 )
-data class Tanque(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+data class TanqueEntity(
+    @PrimaryKey(autoGenerate = true) override val id: Long = 0,
     val nome: String,
     val tipo: TipoTanque,
     val areaM2: Double? = null,
@@ -45,8 +45,8 @@ data class Tanque(
     val aeradorPotenciaHp: Double? = null,
     val renovacaoAguaPctDia: Double,
     val status: StatusTanque = StatusTanque.ATIVO,
-    val uuid: String,
-    val atualizadoEm: Long,
-    val excluido: Boolean = false,
-    val sincronizado: Boolean = false,
-)
+    override val uuid: String,
+    override val atualizadoEm: Long,
+    override val excluido: Boolean = false,
+    override val sincronizado: Boolean = false,
+) : SyncEntity

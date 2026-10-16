@@ -12,17 +12,17 @@ import com.valoes.valesaquagestor.domain.model.StatusLote
  * Lote de peixes povoado num tanque.
  *
  * Quantidade atual, biomassa, mortalidade acumulada e TCA real **não são gravadas**: são calculadas
- * a partir de [quantidadeInicial], [pesoMedioAtualG] e das [MovimentacaoLote]. Assim nenhum número
+ * a partir de [quantidadeInicial], [pesoMedioAtualG] e das [MovimentacaoLoteEntity]. Assim nenhum número
  * fica errado depois de uma edição feita offline.
  *
- * FK para [Tanque] com `RESTRICT`: a exclusão é sempre lógica, então o banco nunca deve apagar de
+ * FK para [TanqueEntity] com `RESTRICT`: a exclusão é sempre lógica, então o banco nunca deve apagar de
  * verdade um tanque que ainda tem lotes.
  *
  * @property tanqueId tanque onde o lote está.
  * @property quantidadeInicial número de peixes no povoamento.
  * @property pesoMedioInicialG peso médio no povoamento, em g.
  * @property dataPovoamento data do povoamento, em epoch millis.
- * @property pesoMedioAtualG peso médio mais recente, em g; atualizado a cada [Biometria].
+ * @property pesoMedioAtualG peso médio mais recente, em g; atualizado a cada [BiometriaEntity].
  * @property origemAlevinos fornecedor ou origem dos alevinos.
  * @property status [StatusLote.ENCERRADO] depois da despesca final.
  * @property dataEncerramento data da despesca final, em epoch millis.
@@ -35,7 +35,7 @@ import com.valoes.valesaquagestor.domain.model.StatusLote
     tableName = "lote",
     foreignKeys = [
         ForeignKey(
-            entity = Tanque::class,
+            entity = TanqueEntity::class,
             parentColumns = ["id"],
             childColumns = ["tanqueId"],
             onDelete = ForeignKey.RESTRICT,
@@ -46,8 +46,8 @@ import com.valoes.valesaquagestor.domain.model.StatusLote
         Index(value = ["tanqueId"]),
     ],
 )
-data class Lote(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+data class LoteEntity(
+    @PrimaryKey(autoGenerate = true) override val id: Long = 0,
     val tanqueId: Long,
     val especie: Especie,
     val fase: FaseLote,
@@ -58,8 +58,8 @@ data class Lote(
     val origemAlevinos: String? = null,
     val status: StatusLote = StatusLote.ATIVO,
     val dataEncerramento: Long? = null,
-    val uuid: String,
-    val atualizadoEm: Long,
-    val excluido: Boolean = false,
-    val sincronizado: Boolean = false,
-)
+    override val uuid: String,
+    override val atualizadoEm: Long,
+    override val excluido: Boolean = false,
+    override val sincronizado: Boolean = false,
+) : SyncEntity

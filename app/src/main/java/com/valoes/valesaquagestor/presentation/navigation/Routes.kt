@@ -26,7 +26,7 @@ data object Home
 @Serializable
 data object Tanques
 
-/** Aba "Registrar". Provisória até a Fase 06. */
+/** Aba "Registrar": escolher onde registrar. */
 @Serializable
 data object Registrar
 
@@ -52,10 +52,18 @@ data object NewTank
 @Serializable
 data class NewLot(val tankId: Long)
 
-/** Registrar água (Fase 06). Provisória até lá. */
+/** Registrar água no tanque [tankId]. */
 @Serializable
 data class WaterRecord(val tankId: Long)
 
-/** Registrar ração (Fase 06). Provisória até lá. */
+/** Registrar ração no lote [lotId]. */
 @Serializable
 data class FeedingRecord(val lotId: Long)
+
+/** Biometria do lote [lotId]. */
+@Serializable
+data class Biometry(val lotId: Long)
+
+/** Mortalidade e despesca do lote [lotId]. */
+@Serializable
+data class MortalityRecord(val lotId: Long)

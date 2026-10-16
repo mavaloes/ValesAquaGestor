@@ -23,7 +23,7 @@ class DetailViewModelsTest {
     val mainDispatcher = MainDispatcherRule()
 
     private fun tankDetail(farm: FarmFixture, id: Long = 1) =
-        TankDetailViewModel(SavedStateHandle(mapOf(TankDetailViewModel.TANK_ID_ARG to id)), farm.overview)
+        TankDetailViewModel(SavedStateHandle(mapOf(TankDetailViewModel.TANK_ID_ARG to id)), farm.overview, farm.water)
 
     private fun lotDetail(farm: FarmFixture, id: Long = 1) = LotDetailViewModel(
         SavedStateHandle(mapOf(LotDetailViewModel.LOT_ID_ARG to id)),

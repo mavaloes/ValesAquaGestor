@@ -94,7 +94,7 @@ fun requiredLabel(label: String): String = stringResource(R.string.label_require
 fun <T> ChoiceGroup(
     label: String,
     options: List<T>,
-    selected: T,
+    selected: T?,
     optionLabel: @Composable (T) -> String,
     onSelect: (T) -> Unit,
     modifier: Modifier = Modifier,
@@ -156,7 +156,7 @@ fun DateField(
         readOnly = true,
         singleLine = true,
         label = { Text(label) },
-        trailingIcon = { TextButton(onClick = { showPicker = true }) { Text(stringResource(R.string.action_change)) } },
+        trailingIcon = { TextButton(onClick = { showPicker = true }) { Text(stringResource(R.string.action_change_date)) } },
         modifier = modifier.fillMaxWidth(),
     )
     if (showPicker) {

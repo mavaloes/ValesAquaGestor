@@ -67,7 +67,6 @@
     <string name="action_back">Voltar</string>
     <string name="action_save">Salvar</string>
     <string name="action_save_anyway">Salvar mesmo assim</string>
-    <string name="action_change">Alterar</string>
     <string name="action_cancel">Cancelar</string>
     <string name="action_ok">OK</string>
 
@@ -97,6 +96,7 @@
     <string name="unit_m2">m²</string>
     <string name="unit_m">m</string>
     <string name="unit_m3">m³</string>
+    <string name="unit_mm" formatted="false">mm</string>
     <string name="unit_hp">HP</string>
     <string name="unit_percent_per_day" formatted="false">% ao dia</string>
     <string name="unit_fish">peixes</string>
@@ -223,8 +223,150 @@
 
     <!-- Abas provisórias -->
     <string name="register_title">Registrar</string>
-    <string name="coming_soon_title">Em breve</string>
-    <string name="coming_soon_text">Esta tela chega na próxima fase do app.</string>
     <string name="more_title">Mais</string>
     <string name="more_sign_out">Sair</string>
+
+    <!-- Fase 06: telas de registro -->
+    <string name="message_saved_offline">Sem conexão: dados guardados no aparelho</string>
+    <string name="action_done">Concluir</string>
+    <string name="action_delete">Excluir</string>
+    <string name="action_change_date">Alterar data</string>
+    <string name="action_change_time">Alterar hora</string>
+    <string name="field_date">Data</string>
+    <string name="field_time">Hora</string>
+    <string name="error_negative">Digite um número igual ou maior que zero.</string>
+    <string name="error_ph_scale">O pH vai de 0 a 14.</string>
+    <string name="error_exceeds_alive">Não há tantos peixes vivos no lote.</string>
+    <string name="error_gross_below_tare">O peso com os peixes precisa ser maior que a tara.</string>
+
+    <!-- Avisos de valor improvável -->
+    <string name="warning_ph_very_high">O pH está acima de 10. Confira o valor antes de salvar.</string>
+    <string name="warning_oxygen_supersaturated">O oxigênio está acima de 15 mg/L (supersaturação). Confira o valor antes de salvar.</string>
+    <string name="warning_weight_jump">O peso médio está 10 vezes maior (ou mais) que o do lote. Confira as pesagens antes de salvar.</string>
+
+    <!-- Excluir registro -->
+    <string name="dialog_delete_title">Excluir este registro?</string>
+    <string name="dialog_delete_text">Será apagado: %1$s.</string>
+    <string name="dialog_delete_note_biometry">O peso médio do lote não volta ao valor anterior.</string>
+    <string name="dialog_delete_note_final">O lote continua encerrado.</string>
+    <string name="dialog_delete_confirm">Excluir</string>
+
+    <!-- Registrar água -->
+    <string name="water_title">Registrar água</string>
+    <string name="water_hint">Preencha só o que você mediu.</string>
+    <string name="field_transparency">Transparência</string>
+    <string name="field_transparency_example">Ex.: 35</string>
+    <string name="field_temperature">Temperatura</string>
+    <string name="field_temperature_example">Ex.: 28</string>
+    <string name="field_oxygen">Oxigênio</string>
+    <string name="field_oxygen_example">Ex.: 5</string>
+    <string name="field_ph">pH</string>
+    <string name="field_ph_example">Ex.: 7,5</string>
+    <string name="field_total_ammonia">Amônia total</string>
+    <string name="field_total_ammonia_example">Ex.: 0,5</string>
+    <string name="field_nitrite">Nitrito</string>
+    <string name="field_nitrite_example">Ex.: 0,02</string>
+    <string name="field_alkalinity">Alcalinidade</string>
+    <string name="field_alkalinity_example">Ex.: 40</string>
+    <string name="field_hardness">Dureza</string>
+    <string name="field_hardness_example">Ex.: 40</string>
+    <string name="field_cloudy">Dia nublado</string>
+    <string name="field_moment">Momento da medição</string>
+    <string name="water_result_title">Medição salva</string>
+    <string name="water_result_none">Nenhum valor para avaliar.</string>
+
+    <!-- Registrar ração -->
+    <string name="feeding_title">Registrar ração</string>
+    <string name="feeding_for_lot">Lote: %1$s</string>
+    <string name="feeding_suggestion">Sugestão: %1$s kg por refeição (%2$s kg no dia, %3$d refeições).</string>
+    <string name="feeding_no_table">Sem tabela de ração para este lote. Informe a quantidade.</string>
+    <string name="feeding_block_title">Não alimente agora</string>
+    <string name="feeding_block_oxygen">Oxigênio baixo.</string>
+    <string name="feeding_block_temperature">Temperatura fora da faixa para alimentar.</string>
+    <string name="feeding_block_ammonia">Amônia tóxica alta.</string>
+    <string name="feeding_block_nitrite">Nitrito alto.</string>
+    <string name="feeding_warning_oxygen">Oxigênio perto do limite. Reduza a ração e observe os peixes.</string>
+    <string name="feeding_warning_temperature_missing">Sem temperatura medida: a sugestão usa o valor base da tabela.</string>
+    <string name="feeding_leftover_warning">A última refeição teve sobra. Reduza esta.</string>
+    <string name="field_feed_quantity">Quantidade de ração</string>
+    <string name="field_feed_quantity_example">Ex.: 1,5</string>
+    <string name="field_suspended">Ração suspensa</string>
+    <string name="field_suspension_reason">Motivo da suspensão</string>
+    <string name="reason_oxigenio_baixo">Oxigênio baixo</string>
+    <string name="reason_amonia_alta">Amônia alta</string>
+    <string name="reason_nitrito_alto">Nitrito alto</string>
+    <string name="reason_temperatura">Temperatura</string>
+    <string name="reason_sobra_racao">Sobra de ração</string>
+    <string name="reason_doenca">Doença</string>
+    <string name="reason_outro">Outro</string>
+    <string name="field_brand">Marca da ração</string>
+    <string name="field_brand_optional">Opcional</string>
+    <string name="field_protein">Proteína bruta</string>
+    <string name="field_protein_example">Ex.: 36</string>
+    <string name="field_pellet">Tamanho do pellet</string>
+    <string name="field_pellet_example">Ex.: 3</string>
+    <string name="field_behavior">Comportamento dos peixes</string>
+    <string name="behavior_voraz">Voraz</string>
+    <string name="behavior_normal">Normal</string>
+    <string name="behavior_lento">Lento</string>
+    <string name="behavior_boquejando">Boqueando na superfície</string>
+    <string name="behavior_sem_apetite">Sem apetite</string>
+    <string name="field_leftover">Sobrou ração</string>
+
+    <!-- Biometria -->
+    <string name="biometry_title">Biometria</string>
+    <string name="biometry_weighing_title">Pesagem %1$d</string>
+    <string name="field_gross_weight">Peso com os peixes</string>
+    <string name="field_gross_weight_example">Ex.: 5</string>
+    <string name="field_tare">Tara (balde ou puçá)</string>
+    <string name="field_tare_example">Ex.: 1 (vazio = 0)</string>
+    <string name="field_fish_in_weighing">Peixes pesados</string>
+    <string name="field_fish_in_weighing_example">Ex.: 20</string>
+    <string name="biometry_add_weighing">Adicionar pesagem</string>
+    <string name="biometry_remove_weighing">Remover a pesagem %1$d</string>
+    <string name="biometry_summary_title">Resultado das pesagens</string>
+    <string name="biometry_summary_none">Preencha as pesagens para ver o peso médio.</string>
+    <string name="biometry_summary_average">Peso médio: %1$s g</string>
+    <string name="biometry_summary_totals">%1$s kg em %2$s</string>
+    <string name="biometry_sample_warning">A amostra tem %1$s. O recomendado é cerca de %2$s.</string>
+    <string name="field_health_notes">Observação de saúde</string>
+    <string name="field_health_notes_optional">Opcional</string>
+    <string name="biometry_result_title">Biometria salva</string>
+    <string name="biometry_result_suggestion">Ração sugerida agora: %1$s kg no dia (%2$s kg por refeição, %3$d refeições).</string>
+    <string name="biometry_result_no_suggestion">Sem tabela de ração para este lote.</string>
+
+    <!-- Mortalidade e despesca -->
+    <string name="movement_title">Mortalidade e despesca</string>
+    <string name="field_movement_type">O que aconteceu</string>
+    <string name="movement_mortalidade">Mortalidade (peixes mortos)</string>
+    <string name="movement_despesca_parcial">Despesca parcial</string>
+    <string name="movement_despesca_final">Despesca final (encerra o lote)</string>
+    <string name="movement_transferencia">Transferência</string>
+    <string name="field_movement_quantity">Quantidade de peixes</string>
+    <string name="field_movement_quantity_example">Ex.: 12</string>
+    <string name="field_total_weight">Peso total retirado</string>
+    <string name="field_total_weight_example">Ex.: 150</string>
+    <string name="field_notes">Observação</string>
+    <string name="field_notes_optional">Opcional (ex.: sinais nos peixes mortos)</string>
+    <string name="movement_alive">Peixes vivos agora: %1$s</string>
+    <string name="movement_projected_mortality">Mortalidade acumulada com este registro: %1$s</string>
+    <string name="movement_final_all">Todos os peixes vivos saem do lote: %1$s.</string>
+    <string name="movement_confirm_final_title">Encerrar o lote?</string>
+    <string name="movement_confirm_final_text">A despesca final retira %1$s e encerra o lote. Isso não pode ser desfeito.</string>
+    <string name="movement_confirm_final_button">Encerrar o lote</string>
+
+    <!-- Aba Registrar -->
+    <string name="register_empty">Cadastre um tanque e um lote para começar a registrar.</string>
+    <string name="register_biometry">Biometria</string>
+    <string name="register_movement">Mortalidade e despesca</string>
+
+    <!-- Últimos registros -->
+    <string name="lot_recent_title">Últimos registros</string>
+    <string name="lot_recent_empty">Nenhum registro ainda.</string>
+    <string name="tank_recent_title">Últimas medições registradas</string>
+    <string name="record_feeding_line">%1$s · %2$s kg</string>
+    <string name="record_feeding_suspended">%1$s · ração suspensa</string>
+    <string name="record_biometry_line">%1$s · %2$s g · %3$s</string>
+    <string name="record_movement_line">%1$s · %2$s · %3$s</string>
+    <string name="record_water_line">%1$s · %2$s · %3$s</string>
 </resources>

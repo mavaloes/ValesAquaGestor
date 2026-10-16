@@ -51,10 +51,20 @@ import java.time.ZoneId
 fun HomeScreen(
     onOpenTank: (Long) -> Unit,
     onOpenLot: (Long) -> Unit,
+    onRegisterWater: (tankId: Long) -> Unit,
+    onRegisterFeeding: (lotId: Long) -> Unit,
+    onRegisterBiometry: (lotId: Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    HomeContent(state = state, onOpenTank = onOpenTank, onOpenLot = onOpenLot)
+    HomeContent(
+        state = state,
+        onOpenTank = onOpenTank,
+        onOpenLot = onOpenLot,
+        onRegisterWater = onRegisterWater,
+        onRegisterFeeding = onRegisterFeeding,
+        onRegisterBiometry = onRegisterBiometry,
+    )
 }
 
 @Composable
@@ -62,6 +72,9 @@ internal fun HomeContent(
     state: HomeUiState,
     onOpenTank: (Long) -> Unit,
     onOpenLot: (Long) -> Unit,
+    onRegisterWater: (Long) -> Unit = {},
+    onRegisterFeeding: (Long) -> Unit = {},
+    onRegisterBiometry: (Long) -> Unit = {},
 ) {
     val zone = remember { ZoneId.systemDefault() }
     Scaffold(
@@ -110,9 +123,10 @@ internal fun HomeContent(
                         text = taskText(task),
                         onClick = {
                             when (task) {
-                                is PendingTask.Measurement -> onOpenTank(task.tankId)
-                                is PendingTask.Feeding -> onOpenLot(task.lotId)
-                                is PendingTask.Biometry -> onOpenLot(task.lotId)
+                                // Cada tarefa abre direto a tela de registro: menos toques até salvar.
+                                is PendingTask.Measurement -> onRegisterWater(task.tankId)
+                                is PendingTask.Feeding -> onRegisterFeeding(task.lotId)
+                                is PendingTask.Biometry -> onRegisterBiometry(task.lotId)
                             }
                         },
                     )

@@ -48,6 +48,9 @@ class WaterQualityRepositoryImpl @Inject constructor(
     override fun observeBetween(tankId: Long, from: Instant, to: Instant): Flow<List<QualidadeAgua>> =
         dao.observeBetween(tankId, from.toEpochMilli(), to.toEpochMilli()).map { list -> list.map { it.toDomain() } }
 
+    override fun observeRecent(tankId: Long, limit: Int): Flow<List<QualidadeAgua>> =
+        dao.observeRecent(tankId, limit).map { list -> list.map { it.toDomain() } }
+
     override suspend fun save(medicao: QualidadeAgua): Long {
         require(medicao.temAlgumaMedida) { "Informe pelo menos uma medida." }
         val now = clock.millis()

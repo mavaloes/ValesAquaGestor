@@ -21,6 +21,11 @@ class FeedingRepositoryImpl @Inject constructor(
     override fun observeByLot(lotId: Long, from: Instant, to: Instant): Flow<List<Arracoamento>> =
         dao.observeByLote(lotId, from.toEpochMilli(), to.toEpochMilli()).map { list -> list.map { it.toDomain() } }
 
+    override fun observeRecent(lotId: Long, limit: Int): Flow<List<Arracoamento>> =
+        dao.observeRecent(lotId, limit).map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getLast(lotId: Long): Arracoamento? = dao.getLast(lotId)?.toDomain()
+
     override suspend fun save(arracoamento: Arracoamento): Long {
         val now = clock.millis()
         if (arracoamento.id == 0L) return dao.insert(arracoamento.toEntity(null, UUID.randomUUID().toString(), now))

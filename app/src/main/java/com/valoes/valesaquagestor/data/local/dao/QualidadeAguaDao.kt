@@ -46,6 +46,10 @@ interface QualidadeAguaDao {
     @Query("SELECT * FROM qualidade_agua WHERE tanqueId = :tanqueId AND excluido = 0 AND durezaMgL IS NOT NULL ORDER BY dataHora DESC, id DESC LIMIT 1")
     fun observeLatestDureza(tanqueId: Long): Flow<QualidadeAguaEntity?>
 
+    /** As [limit] medições mais recentes do tanque, da mais nova à mais antiga. */
+    @Query("SELECT * FROM qualidade_agua WHERE tanqueId = :tanqueId AND excluido = 0 ORDER BY dataHora DESC, id DESC LIMIT :limit")
+    fun observeRecent(tanqueId: Long, limit: Int): Flow<List<QualidadeAguaEntity>>
+
     @Insert
     suspend fun insert(entity: QualidadeAguaEntity): Long
 

@@ -16,7 +16,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -35,10 +37,13 @@ import com.valoes.valesaquagestor.domain.model.TipoTanque
 import com.valoes.valesaquagestor.domain.rules.WaterReadingsEvaluator
 import com.valoes.valesaquagestor.domain.usecase.LotOverview
 import com.valoes.valesaquagestor.presentation.components.AppTopBar
+import com.valoes.valesaquagestor.presentation.components.DeleteRecordDialog
+import com.valoes.valesaquagestor.presentation.components.DeleteRequest
 import com.valoes.valesaquagestor.presentation.components.EmptyMessage
 import com.valoes.valesaquagestor.presentation.components.FeedbackSnackbarHost
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.components.LinkButton
+import com.valoes.valesaquagestor.presentation.components.RecordRow
 import com.valoes.valesaquagestor.presentation.components.SavedMessageEffect
 import com.valoes.valesaquagestor.presentation.components.SectionTitle
 import com.valoes.valesaquagestor.presentation.components.StatusCard
@@ -46,6 +51,7 @@ import com.valoes.valesaquagestor.presentation.components.actionRes
 import com.valoes.valesaquagestor.presentation.components.alertValueText
 import com.valoes.valesaquagestor.presentation.components.labelRes
 import com.valoes.valesaquagestor.presentation.components.messageRes
+import com.valoes.valesaquagestor.presentation.components.waterLine
 import com.valoes.valesaquagestor.presentation.theme.AquaGestorTheme
 import com.valoes.valesaquagestor.presentation.util.formatDateTime
 import com.valoes.valesaquagestor.presentation.util.formatNumber
@@ -74,6 +80,7 @@ fun TankDetailScreen(
         onNewLot = onNewLot,
         onRegisterWater = onRegisterWater,
         onRegisterFeeding = onRegisterFeeding,
+        onDeleteWaterRecord = viewModel::deleteWaterRecord,
     )
 }
 
@@ -86,8 +93,11 @@ internal fun TankDetailContent(
     onNewLot: (Long) -> Unit,
     onRegisterWater: (Long) -> Unit,
     onRegisterFeeding: (Long) -> Unit,
+    onDeleteWaterRecord: (Long) -> Unit = {},
 ) {
     val tank = state.tank
+    var pendingDelete by remember { mutableStateOf<DeleteRequest?>(null) }
+    DeleteRecordDialog(request = pendingDelete, onDismiss = { pendingDelete = null })
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = { AppTopBar(title = tank?.tanque?.nome ?: stringResource(R.string.tanks_title), onBack = onBack) },
@@ -132,6 +142,13 @@ internal fun TankDetailContent(
                     text = stringResource(R.string.ammonia_needs_ph_temperature),
                     style = MaterialTheme.typography.bodyLarge,
                 )
+            }
+
+            SectionTitle(text = stringResource(R.string.tank_recent_title))
+            if (tank.recentRecords.isEmpty()) EmptyMessage(text = stringResource(R.string.lot_recent_empty))
+            tank.recentRecords.forEach { record ->
+                val line = waterLine(record, zone)
+                RecordRow(text = line, onDelete = { pendingDelete = DeleteRequest(line, null) { onDeleteWaterRecord(record.id) } })
             }
 
             SectionTitle(text = stringResource(R.string.tank_lots_title))

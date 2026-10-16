@@ -14,6 +14,9 @@ interface WaterQualityRepository {
     /** Medições do tanque entre [from] (inclusivo) e [to] (exclusivo), da mais antiga à mais nova. */
     fun observeBetween(tankId: Long, from: Instant, to: Instant): Flow<List<QualidadeAgua>>
 
+    /** As [limit] medições mais recentes do tanque, da mais nova à mais antiga. */
+    fun observeRecent(tankId: Long, limit: Int): Flow<List<QualidadeAgua>>
+
     /**
      * Salva a medição (nova se `id == 0`) e devolve o id.
      *

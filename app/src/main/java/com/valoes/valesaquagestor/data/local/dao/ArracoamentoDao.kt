@@ -14,6 +14,14 @@ interface ArracoamentoDao {
     @Query("SELECT * FROM arracoamento WHERE loteId = :loteId AND excluido = 0 AND dataHora >= :from AND dataHora < :to ORDER BY dataHora, id")
     fun observeByLote(loteId: Long, from: Long, to: Long): Flow<List<ArracoamentoEntity>>
 
+    /** Os [limit] tratos mais recentes do lote, do mais novo ao mais antigo. */
+    @Query("SELECT * FROM arracoamento WHERE loteId = :loteId AND excluido = 0 ORDER BY dataHora DESC, id DESC LIMIT :limit")
+    fun observeRecent(loteId: Long, limit: Int): Flow<List<ArracoamentoEntity>>
+
+    /** O trato mais recente do lote, ou `null`. */
+    @Query("SELECT * FROM arracoamento WHERE loteId = :loteId AND excluido = 0 ORDER BY dataHora DESC, id DESC LIMIT 1")
+    suspend fun getLast(loteId: Long): ArracoamentoEntity?
+
     @Insert
     suspend fun insert(entity: ArracoamentoEntity): Long
 

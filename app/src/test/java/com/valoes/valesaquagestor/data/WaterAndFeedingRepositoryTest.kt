@@ -97,4 +97,40 @@ class WaterAndFeedingRepositoryTest {
         assertEquals(listOf(1.0, 2.0), list.map { it.quantidadeKg })
         assertNotNull(list.firstOrNull { it.id == second })
     }
+
+    @Test
+    fun `ultimas medicoes do tanque vem da mais nova a mais antiga, com limite e sem excluidas`() = runBlocking {
+        val tank = env.tanques.save(env.newTank())
+        val otherTank = env.tanques.save(env.newTank("Outro"))
+        env.agua.save(water(tank, 1_000L) { copy(ph = 7.1) })
+        env.agua.save(water(tank, 3_000L) { copy(ph = 7.3) })
+        env.agua.save(water(tank, 2_000L) { copy(ph = 7.2) })
+        val removed = env.agua.save(water(tank, 4_000L) { copy(ph = 9.9) })
+        env.agua.delete(removed)
+        env.agua.save(water(otherTank, 5_000L) { copy(ph = 8.0) })
+
+        val recent = env.agua.observeRecent(tank, limit = 2).first()
+
+        assertEquals(listOf(7.3, 7.2), recent.map { it.ph })
+    }
+
+    @Test
+    fun `ultimos tratos e ultimo trato do lote ignoram excluidos e outros lotes`() = runBlocking {
+        val tank = env.tanques.save(env.newTank())
+        val lot = env.lotes.save(env.newLot(tank))
+        val otherLot = env.lotes.save(env.newLot(tank))
+        fun feed(loteId: Long, at: Long, kg: Double) = Arracoamento(
+            loteId = loteId, dataHora = Instant.ofEpochMilli(at), quantidadeKg = kg,
+            comportamento = TestEnvironment.behavior,
+        )
+        env.arracoamentos.save(feed(lot, 1_000L, 1.0))
+        env.arracoamentos.save(feed(lot, 3_000L, 3.0))
+        val removed = env.arracoamentos.save(feed(lot, 4_000L, 9.0))
+        env.arracoamentos.delete(removed)
+        env.arracoamentos.save(feed(otherLot, 5_000L, 7.0))
+
+        assertEquals(listOf(3.0, 1.0), env.arracoamentos.observeRecent(lot, limit = 5).first().map { it.quantidadeKg })
+        assertEquals(3.0, env.arracoamentos.getLast(lot)!!.quantidadeKg, 0.0)
+        assertNull(env.arracoamentos.getLast(lotId = 999))
+    }
 }

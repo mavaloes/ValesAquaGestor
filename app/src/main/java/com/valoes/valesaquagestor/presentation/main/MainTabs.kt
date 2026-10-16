@@ -15,28 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.valoes.valesaquagestor.R
 import com.valoes.valesaquagestor.presentation.components.AppTopBar
-import com.valoes.valesaquagestor.presentation.components.EmptyMessage
 import com.valoes.valesaquagestor.presentation.components.LargeButton
 import com.valoes.valesaquagestor.presentation.theme.AquaGestorTheme
-
-/**
- * Tela provisória das telas de registro (Fase 06): aba "Registrar" e os destinos de registrar
- * água e ração. Só avisa que a tela chega na próxima fase.
- *
- * @param title título da barra de cima.
- * @param onBack botão Voltar; `null` nas abas do menu.
- */
-@Composable
-fun ComingSoonScreen(title: String, onBack: (() -> Unit)? = null) {
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = { AppTopBar(title = title, onBack = onBack) },
-    ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding).padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            EmptyMessage(text = stringResource(R.string.coming_soon_text))
-        }
-    }
-}
 
 /**
  * Aba "Mais". Na Fase 04 o "Sair" ficava na Home; agora fica aqui até as Configurações (Fase 08),
@@ -61,12 +41,6 @@ internal fun MoreContent(onSignOut: () -> Unit) {
             )
         }
     }
-}
-
-@Preview(name = "Em breve", showBackground = true, fontScale = 2f)
-@Composable
-private fun ComingSoonPreview() {
-    AquaGestorTheme { ComingSoonScreen(title = stringResource(R.string.register_title)) }
 }
 
 @Preview(name = "Mais", showBackground = true, fontScale = 2f)

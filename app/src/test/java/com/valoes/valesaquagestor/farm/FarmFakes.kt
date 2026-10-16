@@ -135,6 +135,10 @@ class FakeWaterQualityRepository(initial: List<QualidadeAgua> = emptyList()) : W
         all.filter { it.tanqueId == tankId && !it.dataHora.isBefore(from) && it.dataHora.isBefore(to) }.sortedBy { it.dataHora }
     }
 
+    override fun observeRecent(tankId: Long, limit: Int): Flow<List<QualidadeAgua>> = records.map { all ->
+        all.filter { it.tanqueId == tankId }.sortedByDescending { it.dataHora }.take(limit)
+    }
+
     override suspend fun save(medicao: QualidadeAgua): Long {
         records.update { it + medicao }
         return medicao.id
@@ -148,6 +152,13 @@ class FakeFeedingRepository(initial: List<Arracoamento> = emptyList()) : Feeding
     override fun observeByLot(lotId: Long, from: Instant, to: Instant): Flow<List<Arracoamento>> = feedings.map { all ->
         all.filter { it.loteId == lotId && !it.dataHora.isBefore(from) && it.dataHora.isBefore(to) }.sortedBy { it.dataHora }
     }
+    override fun observeRecent(lotId: Long, limit: Int): Flow<List<Arracoamento>> = feedings.map { all ->
+        all.filter { it.loteId == lotId }.sortedByDescending { it.dataHora }.take(limit)
+    }
+
+    override suspend fun getLast(lotId: Long): Arracoamento? =
+        feedings.value.filter { it.loteId == lotId }.maxByOrNull { it.dataHora }
+
     override suspend fun save(arracoamento: Arracoamento): Long {
         feedings.update { it + arracoamento }
         return arracoamento.id

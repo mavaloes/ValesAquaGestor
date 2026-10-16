@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,12 +37,20 @@ import com.valoes.valesaquagestor.presentation.auth.SignUpScreen
 import com.valoes.valesaquagestor.presentation.home.HomeScreen
 import com.valoes.valesaquagestor.presentation.lot.LotDetailScreen
 import com.valoes.valesaquagestor.presentation.lot.LotFormScreen
-import com.valoes.valesaquagestor.presentation.main.ComingSoonScreen
+import com.valoes.valesaquagestor.presentation.components.FeedbackSnackbarHost
 import com.valoes.valesaquagestor.presentation.main.MoreScreen
+import com.valoes.valesaquagestor.presentation.main.RegisterScreen
+import com.valoes.valesaquagestor.presentation.record.BiometryScreen
+import com.valoes.valesaquagestor.presentation.record.FeedingRecordScreen
+import com.valoes.valesaquagestor.presentation.record.MovementScreen
+import com.valoes.valesaquagestor.presentation.record.WaterRecordScreen
 import com.valoes.valesaquagestor.presentation.tank.TankDetailScreen
 import com.valoes.valesaquagestor.presentation.tank.TankFormScreen
 import com.valoes.valesaquagestor.presentation.tank.TankListScreen
 import com.valoes.valesaquagestor.presentation.theme.AquaGestorTheme
+import com.valoes.valesaquagestor.presentation.util.SaveFeedback
+import com.valoes.valesaquagestor.presentation.util.stringRes
+import kotlinx.coroutines.launch
 
 /**
  * Raiz do app. Lê a sessão salva (sem internet) e só então monta a navegação, já na tela certa:
@@ -63,10 +73,21 @@ private fun AppNavigation(session: Session?) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
 
+    // Aviso de "Registro salvo" (ou "Sem conexão: dados guardados no aparelho") que continua na tela
+    // para onde o formulário volta.
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val savedMessages = SaveFeedback.entries.associateWith { stringResource(it.stringRes()) }
+    val finishRecord: (SaveFeedback) -> Unit = { feedback ->
+        navController.popBackStack()
+        scope.launch { snackbarHostState.showSnackbar(savedMessages.getValue(feedback)) }
+    }
+
     // O menu inferior só aparece nas quatro abas. As telas cuidam das próprias margens do sistema;
     // o `consumeWindowInsets` evita somar a margem de baixo duas vezes quando o menu está visível.
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        snackbarHost = { FeedbackSnackbarHost(snackbarHostState) },
         bottomBar = {
             if (currentDestination.isTopLevel()) {
                 AppBottomBar(currentDestination = currentDestination, onNavigate = navController::navigateToTab)
@@ -94,6 +115,9 @@ private fun AppNavigation(session: Session?) {
                 HomeScreen(
                     onOpenTank = { navController.navigate(TankDetail(it)) },
                     onOpenLot = { navController.navigate(LotDetail(it)) },
+                    onRegisterWater = { navController.navigate(WaterRecord(it)) },
+                    onRegisterFeeding = { navController.navigate(FeedingRecord(it)) },
+                    onRegisterBiometry = { navController.navigate(Biometry(it)) },
                 )
             }
             composable<Tanques> {
@@ -102,7 +126,14 @@ private fun AppNavigation(session: Session?) {
                     onNewTank = { navController.navigate(NewTank) },
                 )
             }
-            composable<Registrar> { ComingSoonScreen(title = stringResource(R.string.register_title)) }
+            composable<Registrar> {
+                RegisterScreen(
+                    onRegisterWater = { navController.navigate(WaterRecord(it)) },
+                    onRegisterFeeding = { navController.navigate(FeedingRecord(it)) },
+                    onRegisterBiometry = { navController.navigate(Biometry(it)) },
+                    onRegisterMovement = { navController.navigate(MortalityRecord(it)) },
+                )
+            }
             composable<Mais> { MoreScreen() }
 
             composable<TankDetail> { entry ->
@@ -118,6 +149,9 @@ private fun AppNavigation(session: Session?) {
             composable<LotDetail> { entry ->
                 LotDetailScreen(
                     onBack = { navController.popBackStack() },
+                    onRegisterFeeding = { navController.navigate(FeedingRecord(it)) },
+                    onRegisterBiometry = { navController.navigate(Biometry(it)) },
+                    onRegisterMovement = { navController.navigate(MortalityRecord(it)) },
                     showSavedMessage = entry.toRoute<LotDetail>().saved,
                 )
             }
@@ -138,10 +172,24 @@ private fun AppNavigation(session: Session?) {
                 )
             }
             composable<WaterRecord> {
-                ComingSoonScreen(title = stringResource(R.string.tank_register_water), onBack = { navController.popBackStack() })
+                WaterRecordScreen(onBack = { navController.popBackStack() }, onDone = finishRecord)
             }
             composable<FeedingRecord> {
-                ComingSoonScreen(title = stringResource(R.string.lot_register_feeding), onBack = { navController.popBackStack() })
+                FeedingRecordScreen(onBack = { navController.popBackStack() }, onDone = finishRecord)
+            }
+            composable<Biometry> { entry ->
+                BiometryScreen(
+                    onBack = { navController.popBackStack() },
+                    onDone = finishRecord,
+                    // Depois da biometria, o atalho leva direto à ração (com o peso médio novo).
+                    onRegisterFeeding = { feedback ->
+                        scope.launch { snackbarHostState.showSnackbar(savedMessages.getValue(feedback)) }
+                        navController.navigate(FeedingRecord(entry.toRoute<Biometry>().lotId)) { popUpTo<Biometry> { inclusive = true } }
+                    },
+                )
+            }
+            composable<MortalityRecord> {
+                MovementScreen(onBack = { navController.popBackStack() }, onDone = finishRecord)
             }
         }
     }

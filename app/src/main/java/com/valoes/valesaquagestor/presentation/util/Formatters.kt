@@ -32,3 +32,14 @@ fun formatDateTime(instant: Instant, zone: ZoneId): String =
 
 /** Data completa, como "16/10/2026". */
 fun formatDate(date: LocalDate): String = DateTimeFormatter.ofPattern("dd/MM/yyyy", ptBr).format(date)
+
+/**
+ * Formata um número para **preencher um campo de texto**: vírgula decimal e **sem** separador de
+ * milhar, para o [parseDecimal] conseguir ler de volta ("1.234,5" não seria lido).
+ */
+fun formatInput(value: Double, decimals: Int): String =
+    NumberFormat.getInstance(ptBr).apply {
+        isGroupingUsed = false
+        minimumFractionDigits = 0
+        maximumFractionDigits = decimals
+    }.format(value)

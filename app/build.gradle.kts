@@ -1,6 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -11,7 +15,8 @@ android {
 
     defaultConfig {
         applicationId = "com.valoes.valesaquagestor"
-        minSdk = 24
+        // specs/01-visao-e-stack.md: minSdk 26 (java.time nativo no domínio).
+        minSdk = 26
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
@@ -36,16 +41,37 @@ android {
     }
 }
 
+room {
+    // Schema exportado e versionado no git (usado nas migrações; o AppDatabase vem na Fase 03).
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
-    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.navigation.compose)
+
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.compose.material3)
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)

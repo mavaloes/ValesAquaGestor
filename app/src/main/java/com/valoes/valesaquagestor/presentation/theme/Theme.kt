@@ -1,4 +1,4 @@
-package com.valoes.valesaquagestor.ui.theme
+package com.valoes.valesaquagestor.presentation.theme
 
 import android.app.Activity
 import android.os.Build

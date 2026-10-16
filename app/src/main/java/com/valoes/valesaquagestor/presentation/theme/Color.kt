@@ -1,4 +1,4 @@
-package com.valoes.valesaquagestor.ui.theme
+package com.valoes.valesaquagestor.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

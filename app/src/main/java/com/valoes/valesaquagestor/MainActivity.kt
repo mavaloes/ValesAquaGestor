@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.valoes.valesaquagestor.ui.theme.ValõesAquaGestorTheme
+import com.valoes.valesaquagestor.presentation.theme.ValõesAquaGestorTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

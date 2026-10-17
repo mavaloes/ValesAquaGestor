@@ -32,6 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.valoes.valesaquagestor.R
 import com.valoes.valesaquagestor.domain.model.Session
+import com.valoes.valesaquagestor.presentation.activities.ActivitiesScreen
 import com.valoes.valesaquagestor.presentation.auth.ForgotPasswordScreen
 import com.valoes.valesaquagestor.presentation.auth.LoginScreen
 import com.valoes.valesaquagestor.presentation.auth.SignUpScreen
@@ -136,9 +137,12 @@ private fun AppNavigation(session: Session?, onboardingCompleted: Boolean) {
                         onSetupFarm = { navController.navigate(SetupFarm(it)) },
                         onRegisterMovement = { navController.navigate(MortalityRecord(it)) },
                         onNewLot = { navController.navigate(NewLot(it)) },
+                        onOpenActivities = { navController.navigate(Atividades) },
                         onScanQr = { navController.navigate(ScanQr) },
+                        onOpenHelp = openHelp,
                     )
                 }
+                composable<Atividades> { ActivitiesScreen(onBack = { navController.popBackStack() }) }
                 composable<Tanques> {
                     TankListScreen(
                         onOpenTank = { navController.navigate(TankDetail(it)) },

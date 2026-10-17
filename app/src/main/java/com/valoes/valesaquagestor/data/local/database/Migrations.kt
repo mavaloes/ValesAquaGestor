@@ -23,3 +23,18 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         }
     }
 }
+
+/**
+ * Versão 2 para 3: cria a tabela `atividade` (atividades diárias do calendário, só do aparelho).
+ * Não mexe em nenhuma tabela que já existia. Testada em `MigrationTest` com o schema exportado.
+ */
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `atividade` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                "`titulo` TEXT NOT NULL, `dataEpochDia` INTEGER NOT NULL, `horaMinutos` INTEGER, " +
+                "`observacao` TEXT, `concluida` INTEGER NOT NULL)",
+        )
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_atividade_dataEpochDia` ON `atividade` (`dataEpochDia`)")
+    }
+}

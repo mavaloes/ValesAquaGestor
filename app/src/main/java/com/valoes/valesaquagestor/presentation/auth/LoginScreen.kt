@@ -72,6 +72,7 @@ internal fun LoginContent(
         subtitle = stringResource(R.string.login_subtitle),
         snackbarHostState = snackbarHostState,
         centerVertically = true,
+        accentBackground = true,
         logo = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -80,6 +81,7 @@ internal fun LoginContent(
                 Text(
                     text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.semantics { heading() },
                 )

@@ -8,6 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.valoes.valesaquagestor.data.local.database.AppDatabase
 import com.valoes.valesaquagestor.data.local.database.AppDatabase_Impl
 import com.valoes.valesaquagestor.data.local.database.MIGRATION_1_2
+import com.valoes.valesaquagestor.data.local.database.MIGRATION_2_3
 import java.io.File
 import java.util.UUID
 import org.junit.After
@@ -88,6 +89,35 @@ class MigrationTest {
                 db.prepare("SELECT criadoPorUserId FROM $table").close()
             }
             assertEquals(1L, count(db, "usuario"))
+        }
+    }
+
+    @Test
+    fun `a migracao 2 para 3 cria a tabela atividade e mantem os registros`() {
+        helper.createDatabase(2).use { db ->
+            db.execSQL(
+                "INSERT INTO tanque (id, nome, tipo, usaAerador, renovacaoAguaPctDia, status, uuid, atualizadoEm, excluido, sincronizado) " +
+                    "VALUES (1, 'Viveiro 1', 'ESCAVADO', 0, 0.0, 'ATIVO', 'tanque-1', 1000, 0, 1)",
+            )
+        }
+
+        helper.runMigrationsAndValidate(3, listOf(MIGRATION_2_3)).use { db ->
+            db.prepare("SELECT nome FROM tanque").use { statement ->
+                assertTrue(statement.step())
+                assertEquals("Viveiro 1", statement.getText(0))
+            }
+            assertEquals(0L, count(db, "atividade"))
+            db.execSQL(
+                "INSERT INTO atividade (titulo, dataEpochDia, horaMinutos, observacao, concluida) " +
+                    "VALUES ('Limpar os bebedouros', 20743, 420, NULL, 0)",
+            )
+            db.prepare("SELECT titulo, horaMinutos, observacao, concluida FROM atividade").use { statement ->
+                assertTrue(statement.step())
+                assertEquals("Limpar os bebedouros", statement.getText(0))
+                assertEquals(420L, statement.getLong(1))
+                assertTrue("a observação é opcional", statement.isNull(2))
+                assertEquals(0L, statement.getLong(3))
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.valoes.valesaquagestor.presentation.auth
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
@@ -48,7 +51,8 @@ import com.valoes.valesaquagestor.presentation.theme.confirmedColor
  *
  * Com [centerVertically], o conteúdo fica no meio da tela quando cabe; se não couber (fonte
  * ampliada ou teclado aberto), a tela rola normalmente. [logo] é o espaço da logomarca, no topo.
- * Sem [title], o cabeçalho (e o botão de ajuda que fica nele) não aparece.
+ * Sem [title], o cabeçalho (e o botão de ajuda que fica nele) não aparece. Com [accentBackground],
+ * o fundo vai da cor de destaque do tema (no alto) até a cor de fundo normal (embaixo).
  */
 @Composable
 fun AuthScaffold(
@@ -59,14 +63,19 @@ fun AuthScaffold(
     help: HelpTip? = null,
     centerVertically: Boolean = false,
     logo: (@Composable () -> Unit)? = null,
+    accentBackground: Boolean = false,
     content: @Composable () -> Unit,
 ) {
+    val accent = MaterialTheme.colorScheme.primaryContainer
+    val base = MaterialTheme.colorScheme.background
     Scaffold(
         modifier = modifier.fillMaxSize(),
         snackbarHost = { FeedbackSnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         BoxWithConstraints(
             modifier = Modifier
+                .fillMaxSize()
+                .then(if (accentBackground) Modifier.background(Brush.verticalGradient(listOf(accent, base))) else Modifier)
                 .padding(innerPadding)
                 .imePadding(),
         ) {
@@ -86,7 +95,12 @@ fun AuthScaffold(
                 if (logo != null) {
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) { logo() }
                 }
-                AuthHeader(title = title, subtitle = subtitle, help = help)
+                AuthHeader(
+                    title = title,
+                    subtitle = subtitle,
+                    help = help,
+                    titleColor = if (accentBackground) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                )
                 Spacer(Modifier.height(4.dp))
                 content()
             }
@@ -98,25 +112,29 @@ fun AuthScaffold(
  * Espaço reservado para a logomarca do app (um quadrado). Trocar o conteúdo por a imagem
  * definitiva quando a marca estiver pronta.
  */
+private const val LOGO_FILL_ALPHA = 0.6f
+
 @Composable
 fun LogoPlaceholder(modifier: Modifier = Modifier) {
     val description = stringResource(R.string.logo_placeholder_description)
     Box(
         modifier = modifier
             .size(120.dp)
-            .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = LOGO_FILL_ALPHA), RoundedCornerShape(8.dp))
+            .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp))
             .semantics { contentDescription = description },
     )
 }
 
 @Composable
-private fun AuthHeader(title: String?, subtitle: String?, help: HelpTip?) {
+private fun AuthHeader(title: String?, subtitle: String?, help: HelpTip?, titleColor: Color) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         if (title != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = title,
                     style = MaterialTheme.typography.headlineMedium,
+                    color = titleColor,
                     modifier = Modifier.weight(1f).semantics { heading() },
                 )
                 if (help != null) HelpButton(help)

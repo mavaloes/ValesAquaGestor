@@ -1,0 +1,920 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "3aec84ac303f78e215cb989f6fabc6c5",
+    "entities": [
+      {
+        "tableName": "tanque",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nome` TEXT NOT NULL, `tipo` TEXT NOT NULL, `areaM2` REAL, `profundidadeMediaM` REAL, `volumeM3` REAL, `usaAerador` INTEGER NOT NULL, `aeradorPotenciaHp` REAL, `renovacaoAguaPctDia` REAL NOT NULL, `status` TEXT NOT NULL, `uuid` TEXT NOT NULL, `atualizadoEm` INTEGER NOT NULL, `excluido` INTEGER NOT NULL, `sincronizado` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nome",
+            "columnName": "nome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tipo",
+            "columnName": "tipo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "areaM2",
+            "columnName": "areaM2",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "profundidadeMediaM",
+            "columnName": "profundidadeMediaM",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "volumeM3",
+            "columnName": "volumeM3",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "usaAerador",
+            "columnName": "usaAerador",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "aeradorPotenciaHp",
+            "columnName": "aeradorPotenciaHp",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "renovacaoAguaPctDia",
+            "columnName": "renovacaoAguaPctDia",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "atualizadoEm",
+            "columnName": "atualizadoEm",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "excluido",
+            "columnName": "excluido",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sincronizado",
+            "columnName": "sincronizado",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_tanque_uuid",
+            "unique": true,
+            "columnNames": [
+              "uuid"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_tanque_uuid` ON `${TABLE_NAME}` (`uuid`)"
+          }
+        ]
+      },
+      {
+        "tableName": "lote",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tanqueId` INTEGER NOT NULL, `especie` TEXT NOT NULL, `fase` TEXT NOT NULL, `quantidadeInicial` INTEGER NOT NULL, `pesoMedioInicialG` REAL NOT NULL, `dataPovoamento` INTEGER NOT NULL, `pesoMedioAtualG` REAL NOT NULL, `origemAlevinos` TEXT, `status` TEXT NOT NULL, `dataEncerramento` INTEGER, `uuid` TEXT NOT NULL, `atualizadoEm` INTEGER NOT NULL, `excluido` INTEGER NOT NULL, `sincronizado` INTEGER NOT NULL, FOREIGN KEY(`tanqueId`) REFERENCES `tanque`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tanqueId",
+            "columnName": "tanqueId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "especie",
+            "columnName": "especie",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fase",
+            "columnName": "fase",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantidadeInicial",
+            "columnName": "quantidadeInicial",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pesoMedioInicialG",
+            "columnName": "pesoMedioInicialG",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataPovoamento",
+            "columnName": "dataPovoamento",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pesoMedioAtualG",
+            "columnName": "pesoMedioAtualG",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "origemAlevinos",
+            "columnName": "origemAlevinos",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataEncerramento",
+            "columnName": "dataEncerramento",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "atualizadoEm",
+            "columnName": "atualizadoEm",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "excluido",
+            "columnName": "excluido",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sincronizado",
+            "columnName": "sincronizado",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_lote_uuid",
+            "unique": true,
+            "columnNames": [
+              "uuid"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_lote_uuid` ON `${TABLE_NAME}` (`uuid`)"
+          },
+          {
+            "name": "index_lote_tanqueId",
+            "unique": false,
+            "columnNames": [
+              "tanqueId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_lote_tanqueId` ON `${TABLE_NAME}` (`tanqueId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "tanque",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tanqueId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "qualidade_agua",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tanqueId` INTEGER NOT NULL, `dataHora` INTEGER NOT NULL, `momento` TEXT NOT NULL, `transparenciaCm` REAL, `temperaturaC` REAL, `oxigenioMgL` REAL, `ph` REAL, `amoniaTotalMgL` REAL, `nitritoMgL` REAL, `alcalinidadeMgL` REAL, `durezaMgL` REAL, `diaNublado` INTEGER NOT NULL, `criadoPorUserId` TEXT, `uuid` TEXT NOT NULL, `atualizadoEm` INTEGER NOT NULL, `excluido` INTEGER NOT NULL, `sincronizado` INTEGER NOT NULL, FOREIGN KEY(`tanqueId`) REFERENCES `tanque`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tanqueId",
+            "columnName": "tanqueId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataHora",
+            "columnName": "dataHora",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "momento",
+            "columnName": "momento",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transparenciaCm",
+            "columnName": "transparenciaCm",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "temperaturaC",
+            "columnName": "temperaturaC",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "oxigenioMgL",
+            "columnName": "oxigenioMgL",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "ph",
+            "columnName": "ph",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "amoniaTotalMgL",
+            "columnName": "amoniaTotalMgL",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nitritoMgL",
+            "columnName": "nitritoMgL",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "alcalinidadeMgL",
+            "columnName": "alcalinidadeMgL",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "durezaMgL",
+            "columnName": "durezaMgL",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "diaNublado",
+            "columnName": "diaNublado",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "criadoPorUserId",
+            "columnName": "criadoPorUserId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "atualizadoEm",
+            "columnName": "atualizadoEm",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "excluido",
+            "columnName": "excluido",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sincronizado",
+            "columnName": "sincronizado",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_qualidade_agua_uuid",
+            "unique": true,
+            "columnNames": [
+              "uuid"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_qualidade_agua_uuid` ON `${TABLE_NAME}` (`uuid`)"
+          },
+          {
+            "name": "index_qualidade_agua_tanqueId",
+            "unique": false,
+            "columnNames": [
+              "tanqueId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_qualidade_agua_tanqueId` ON `${TABLE_NAME}` (`tanqueId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "tanque",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tanqueId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "arracoamento",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `loteId` INTEGER NOT NULL, `dataHora` INTEGER NOT NULL, `quantidadeKg` REAL NOT NULL, `suspenso` INTEGER NOT NULL, `motivoSuspensao` TEXT, `marcaRacao` TEXT, `proteinaBrutaPct` REAL, `tamanhoPelletMm` REAL, `comportamento` TEXT NOT NULL, `sobraRacao` INTEGER NOT NULL, `criadoPorUserId` TEXT, `uuid` TEXT NOT NULL, `atualizadoEm` INTEGER NOT NULL, `excluido` INTEGER NOT NULL, `sincronizado` INTEGER NOT NULL, FOREIGN KEY(`loteId`) REFERENCES `lote`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loteId",
+            "columnName": "loteId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataHora",
+            "columnName": "dataHora",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantidadeKg",
+            "columnName": "quantidadeKg",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "suspenso",
+            "columnName": "suspenso",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "motivoSuspensao",
+            "columnName": "motivoSuspensao",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "marcaRacao",
+            "columnName": "marcaRacao",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "proteinaBrutaPct",
+            "columnName": "proteinaBrutaPct",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "tamanhoPelletMm",
+            "columnName": "tamanhoPelletMm",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "comportamento",
+            "columnName": "comportamento",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sobraRacao",
+            "columnName": "sobraRacao",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "criadoPorUserId",
+            "columnName": "criadoPorUserId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "atualizadoEm",
+            "columnName": "atualizadoEm",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "excluido",
+            "columnName": "excluido",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sincronizado",
+            "columnName": "sincronizado",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_arracoamento_uuid",
+            "unique": true,
+            "columnNames": [
+              "uuid"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_arracoamento_uuid` ON `${TABLE_NAME}` (`uuid`)"
+          },
+          {
+            "name": "index_arracoamento_loteId",
+            "unique": false,
+            "columnNames": [
+              "loteId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_arracoamento_loteId` ON `${TABLE_NAME}` (`loteId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "lote",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "loteId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "biometria",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `loteId` INTEGER NOT NULL, `dataHora` INTEGER NOT NULL, `pesoAmostraKg` REAL NOT NULL, `numeroPeixesAmostra` INTEGER NOT NULL, `observacaoSaude` TEXT, `criadoPorUserId` TEXT, `uuid` TEXT NOT NULL, `atualizadoEm` INTEGER NOT NULL, `excluido` INTEGER NOT NULL, `sincronizado` INTEGER NOT NULL, FOREIGN KEY(`loteId`) REFERENCES `lote`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loteId",
+            "columnName": "loteId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataHora",
+            "columnName": "dataHora",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pesoAmostraKg",
+            "columnName": "pesoAmostraKg",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "numeroPeixesAmostra",
+            "columnName": "numeroPeixesAmostra",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "observacaoSaude",
+            "columnName": "observacaoSaude",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "criadoPorUserId",
+            "columnName": "criadoPorUserId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "atualizadoEm",
+            "columnName": "atualizadoEm",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "excluido",
+            "columnName": "excluido",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sincronizado",
+            "columnName": "sincronizado",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_biometria_uuid",
+            "unique": true,
+            "columnNames": [
+              "uuid"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_biometria_uuid` ON `${TABLE_NAME}` (`uuid`)"
+          },
+          {
+            "name": "index_biometria_loteId",
+            "unique": false,
+            "columnNames": [
+              "loteId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_biometria_loteId` ON `${TABLE_NAME}` (`loteId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "lote",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "loteId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "movimentacao_lote",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `loteId` INTEGER NOT NULL, `dataHora` INTEGER NOT NULL, `tipo` TEXT NOT NULL, `quantidade` INTEGER NOT NULL, `pesoTotalKg` REAL, `tanqueDestinoId` INTEGER, `observacao` TEXT, `criadoPorUserId` TEXT, `uuid` TEXT NOT NULL, `atualizadoEm` INTEGER NOT NULL, `excluido` INTEGER NOT NULL, `sincronizado` INTEGER NOT NULL, FOREIGN KEY(`loteId`) REFERENCES `lote`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`tanqueDestinoId`) REFERENCES `tanque`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loteId",
+            "columnName": "loteId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataHora",
+            "columnName": "dataHora",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tipo",
+            "columnName": "tipo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantidade",
+            "columnName": "quantidade",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pesoTotalKg",
+            "columnName": "pesoTotalKg",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "tanqueDestinoId",
+            "columnName": "tanqueDestinoId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "observacao",
+            "columnName": "observacao",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "criadoPorUserId",
+            "columnName": "criadoPorUserId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "atualizadoEm",
+            "columnName": "atualizadoEm",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "excluido",
+            "columnName": "excluido",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sincronizado",
+            "columnName": "sincronizado",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_movimentacao_lote_uuid",
+            "unique": true,
+            "columnNames": [
+              "uuid"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_movimentacao_lote_uuid` ON `${TABLE_NAME}` (`uuid`)"
+          },
+          {
+            "name": "index_movimentacao_lote_loteId",
+            "unique": false,
+            "columnNames": [
+              "loteId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_movimentacao_lote_loteId` ON `${TABLE_NAME}` (`loteId`)"
+          },
+          {
+            "name": "index_movimentacao_lote_tanqueDestinoId",
+            "unique": false,
+            "columnNames": [
+              "tanqueDestinoId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_movimentacao_lote_tanqueDestinoId` ON `${TABLE_NAME}` (`tanqueDestinoId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "lote",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "loteId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "tanque",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tanqueDestinoId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "usuario",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nome` TEXT NOT NULL, `email` TEXT NOT NULL, `papel` TEXT NOT NULL, `status` TEXT NOT NULL, `uuid` TEXT NOT NULL, `atualizadoEm` INTEGER NOT NULL, `excluido` INTEGER NOT NULL, `sincronizado` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nome",
+            "columnName": "nome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "papel",
+            "columnName": "papel",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "atualizadoEm",
+            "columnName": "atualizadoEm",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "excluido",
+            "columnName": "excluido",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sincronizado",
+            "columnName": "sincronizado",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_usuario_uuid",
+            "unique": true,
+            "columnNames": [
+              "uuid"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_usuario_uuid` ON `${TABLE_NAME}` (`uuid`)"
+          },
+          {
+            "name": "index_usuario_email",
+            "unique": true,
+            "columnNames": [
+              "email"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_usuario_email` ON `${TABLE_NAME}` (`email`)"
+          }
+        ]
+      },
+      {
+        "tableName": "atividade",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `dataEpochDia` INTEGER NOT NULL, `horaMinutos` INTEGER, `observacao` TEXT, `concluida` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titulo",
+            "columnName": "titulo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataEpochDia",
+            "columnName": "dataEpochDia",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "horaMinutos",
+            "columnName": "horaMinutos",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "observacao",
+            "columnName": "observacao",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "concluida",
+            "columnName": "concluida",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_atividade_dataEpochDia",
+            "unique": false,
+            "columnNames": [
+              "dataEpochDia"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_atividade_dataEpochDia` ON `${TABLE_NAME}` (`dataEpochDia`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3aec84ac303f78e215cb989f6fabc6c5')"
+    ]
+  }
+}

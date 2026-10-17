@@ -1,8 +1,10 @@
 package com.valoes.valesaquagestor.farm
 
+import com.valoes.valesaquagestor.activities.FakeActivityRepository
 import com.valoes.valesaquagestor.auth.MainDispatcherRule
 import com.valoes.valesaquagestor.domain.calc.MeasuredParameter
 import com.valoes.valesaquagestor.domain.calc.PendingTask
+import com.valoes.valesaquagestor.domain.model.Atividade
 import com.valoes.valesaquagestor.domain.model.Especie
 import com.valoes.valesaquagestor.domain.model.MomentoMedicao
 import com.valoes.valesaquagestor.domain.model.TipoMovimentacao
@@ -10,6 +12,8 @@ import com.valoes.valesaquagestor.domain.rules.AlertKind
 import com.valoes.valesaquagestor.domain.rules.AlertLevel
 import com.valoes.valesaquagestor.presentation.home.HomeViewModel
 import com.valoes.valesaquagestor.presentation.tank.TankListViewModel
+import java.time.LocalDate
+import java.time.ZoneId
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -29,13 +33,29 @@ class HomeAndTankListViewModelTest {
 
     @Test
     fun `fazenda sem tanques avisa para cadastrar o primeiro`() = runBlocking {
-        val viewModel = HomeViewModel(FarmFixture().overview, FIXED_CLOCK)
+        val viewModel = HomeViewModel(FarmFixture().overview, FIXED_CLOCK, FakeActivityRepository())
 
         val state = viewModel.state.first { !it.isLoading }
 
         assertFalse(state.hasTanks)
         assertTrue(state.routine.alerts.isEmpty())
         assertTrue(state.routine.tasks.isEmpty())
+    }
+
+    @Test
+    fun `o quadro de avisos traz so as atividades de hoje ainda nao feitas`() = runBlocking {
+        val today = LocalDate.now(FIXED_CLOCK.withZone(ZoneId.systemDefault()))
+        val activities = FakeActivityRepository(
+            listOf(
+                Atividade(titulo = "Limpar os bebedouros", data = today),
+                Atividade(titulo = "Conferir o aerador", data = today, concluida = true),
+                Atividade(titulo = "Pedir ração", data = today.plusDays(1)),
+            ),
+        )
+
+        val state = HomeViewModel(FarmFixture().overview, FIXED_CLOCK, activities).state.first { !it.isLoading }
+
+        assertEquals(listOf("Limpar os bebedouros"), state.todayActivities.map { it.titulo })
     }
 
     @Test
@@ -50,7 +70,7 @@ class HomeAndTankListViewModelTest {
             ),
         )
 
-        val alerts = HomeViewModel(farm.overview, FIXED_CLOCK).state.first { !it.isLoading }.routine.alerts
+        val alerts = HomeViewModel(farm.overview, FIXED_CLOCK, FakeActivityRepository()).state.first { !it.isLoading }.routine.alerts
 
         assertEquals(
             listOf("Beta" to AlertLevel.EMERGENCIA, "Gama" to AlertLevel.CRITICO, "Alfa" to AlertLevel.ATENCAO),
@@ -66,7 +86,7 @@ class HomeAndTankListViewModelTest {
             movements = listOf(movement(1, quantity = 150, tipo = TipoMovimentacao.MORTALIDADE)),
         )
 
-        val alert = HomeViewModel(farm.overview, FIXED_CLOCK).state.first { !it.isLoading }.routine.alerts.single()
+        val alert = HomeViewModel(farm.overview, FIXED_CLOCK, FakeActivityRepository()).state.first { !it.isLoading }.routine.alerts.single()
 
         assertEquals(AlertKind.MORTALITY, alert.kind)
         assertEquals(1L, alert.lotId)
@@ -81,7 +101,7 @@ class HomeAndTankListViewModelTest {
             feedings = listOf(feeding(1, at = hoursAgo(5))),
         )
 
-        val tasks = HomeViewModel(farm.overview, FIXED_CLOCK).state.first { !it.isLoading }.routine.tasks
+        val tasks = HomeViewModel(farm.overview, FIXED_CLOCK, FakeActivityRepository()).state.first { !it.isLoading }.routine.tasks
 
         val measurements = tasks.filterIsInstance<PendingTask.Measurement>().map { it.parameter to it.moment }
         assertTrue((MeasuredParameter.OXYGEN to MomentoMedicao.MANHA) !in measurements)
@@ -93,7 +113,7 @@ class HomeAndTankListViewModelTest {
     @Test
     fun `registrar algo atualiza a rotina sem reabrir a tela`() = runBlocking {
         val farm = FarmFixture(tanks = listOf(tank(1)), lots = listOf(lot(1)))
-        val viewModel = HomeViewModel(farm.overview, FIXED_CLOCK)
+        val viewModel = HomeViewModel(farm.overview, FIXED_CLOCK, FakeActivityRepository())
         assertEquals(2, viewModel.state.first { !it.isLoading }.routine.tasks.filterIsInstance<PendingTask.Feeding>().single().missingMeals)
 
         farm.feeding.save(feeding(1, at = hoursAgo(1)))

@@ -3,6 +3,7 @@ package com.valoes.valesaquagestor.di
 import android.content.Context
 import androidx.room.Room
 import com.valoes.valesaquagestor.data.local.dao.ArracoamentoDao
+import com.valoes.valesaquagestor.data.local.dao.AtividadeDao
 import com.valoes.valesaquagestor.data.local.dao.BiometriaDao
 import com.valoes.valesaquagestor.data.local.dao.LoteDao
 import com.valoes.valesaquagestor.data.local.dao.MovimentacaoLoteDao
@@ -11,6 +12,7 @@ import com.valoes.valesaquagestor.data.local.dao.TanqueDao
 import com.valoes.valesaquagestor.data.local.dao.UsuarioDao
 import com.valoes.valesaquagestor.data.local.database.AppDatabase
 import com.valoes.valesaquagestor.data.local.database.MIGRATION_1_2
+import com.valoes.valesaquagestor.data.local.database.MIGRATION_2_3
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,7 +35,7 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
-            .addMigrations(MIGRATION_1_2)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
             .build()
 
     @Provides
@@ -56,6 +58,9 @@ object DatabaseModule {
 
     @Provides
     fun provideUsuarioDao(database: AppDatabase): UsuarioDao = database.usuarioDao()
+
+    @Provides
+    fun provideAtividadeDao(database: AppDatabase): AtividadeDao = database.atividadeDao()
 
     /** Relógio do sistema; os testes trocam por um relógio fixo. */
     @Provides

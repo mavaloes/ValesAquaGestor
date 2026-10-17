@@ -65,6 +65,10 @@ data object Registrar
 @Serializable
 data object Mais
 
+/** Atividades diárias: calendário e cadastro (aberta pelo botão da Home). */
+@Serializable
+data object Atividades
+
 /**
  * Detalhe do tanque. [saved] vale `true` logo depois de criar o tanque, para mostrar "Registro salvo".
  */

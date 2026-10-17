@@ -3,6 +3,7 @@ package com.valoes.valesaquagestor.onboarding
 import com.valoes.valesaquagestor.auth.MainDispatcherRule
 import com.valoes.valesaquagestor.domain.usecase.SetupSuggestion
 import com.valoes.valesaquagestor.domain.usecase.resolveSetupSuggestion
+import com.valoes.valesaquagestor.activities.FakeActivityRepository
 import com.valoes.valesaquagestor.farm.FIXED_CLOCK
 import com.valoes.valesaquagestor.farm.FarmFixture
 import com.valoes.valesaquagestor.farm.lot
@@ -47,7 +48,7 @@ class SetupAndHelpTest {
     @Test
     fun `a Home oferece o atalho e some quando a configuracao termina`() = runBlocking {
         val farm = FarmFixture()
-        val viewModel = HomeViewModel(farm.overview, FIXED_CLOCK)
+        val viewModel = HomeViewModel(farm.overview, FIXED_CLOCK, FakeActivityRepository())
         assertEquals(SetupSuggestion.CreateTank, viewModel.state.first { !it.isLoading }.setup)
 
         farm.tanks.save(tank(1, "Viveiro 1"))

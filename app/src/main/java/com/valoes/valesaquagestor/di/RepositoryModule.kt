@@ -2,6 +2,7 @@ package com.valoes.valesaquagestor.di
 
 import com.valoes.valesaquagestor.data.local.database.RoomTransactionRunner
 import com.valoes.valesaquagestor.data.local.database.TransactionRunner
+import com.valoes.valesaquagestor.data.repository.ActivityRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.BiometryRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.FeedingRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.LotMovementRepositoryImpl
@@ -10,6 +11,7 @@ import com.valoes.valesaquagestor.data.repository.PendingSyncRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.TankRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.UserRepositoryImpl
 import com.valoes.valesaquagestor.data.repository.WaterQualityRepositoryImpl
+import com.valoes.valesaquagestor.domain.repository.ActivityRepository
 import com.valoes.valesaquagestor.domain.repository.BiometryRepository
 import com.valoes.valesaquagestor.domain.repository.FeedingRepository
 import com.valoes.valesaquagestor.domain.repository.LotMovementRepository
@@ -63,4 +65,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindPendingSyncRepository(impl: PendingSyncRepositoryImpl): PendingSyncRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindActivityRepository(impl: ActivityRepositoryImpl): ActivityRepository
 }

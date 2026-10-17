@@ -64,6 +64,7 @@ internal fun SignUpContent(
         subtitle = stringResource(R.string.signup_subtitle),
         snackbarHostState = snackbarHostState,
         help = HelpTips.SignUp,
+        accentBackground = true,
     ) {
         AppTextField(
             value = state.name,

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fase 10: QR Code dos tanques e leitura de sensor (specs/07-automacoes.md). -->
+<resources>
+    <!-- QR Code do tanque -->
+    <string name="tank_qr_button">QR Code do tanque</string>
+    <string name="qr_title">QR Code do tanque</string>
+    <string name="qr_hint">Imprima e cole no tanque. Quem ler com o app abre direto este tanque.</string>
+    <string name="qr_image_description">QR Code do tanque %1$s</string>
+    <string name="qr_share">Compartilhar</string>
+    <string name="qr_print">Imprimir</string>
+    <string name="qr_share_chooser">Compartilhar QR Code</string>
+    <string name="qr_print_job">QR Code do tanque %1$s</string>
+    <string name="qr_unavailable">Não foi possível gerar o QR Code deste tanque.</string>
+
+    <!-- Leitura do QR Code -->
+    <string name="tanks_scan">Ler QR Code do tanque</string>
+    <string name="scan_title">Ler QR Code</string>
+    <string name="scan_hint">Aponte a câmera para o QR Code colado no tanque.</string>
+    <string name="scan_prompt">Aponte para o QR Code do tanque</string>
+    <string name="scan_button">Ler QR Code</string>
+    <string name="scan_choose_list">Escolher o tanque na lista</string>
+    <string name="scan_error_camera_denied">Sem permissão para usar a câmera. Escolha o tanque na lista ou libere a câmera nas configurações do aparelho.</string>
+    <string name="scan_error_no_camera">Este aparelho não tem câmera. Escolha o tanque na lista.</string>
+    <string name="scan_error_invalid">Este não é um QR Code de tanque do AquaGestor. Tente outro código ou escolha o tanque na lista.</string>
+    <string name="scan_error_unknown_tank">Esse tanque não está neste aparelho. Escolha o tanque na lista.</string>
+
+    <!-- Sensor -->
+    <string name="water_sensor_banner">Valores preenchidos pelo sensor. Confira e corrija se precisar.</string>
+    <string name="field_from_sensor">Vinda do sensor</string>
+
+    <!-- Dicas do "?" -->
+    <string name="tip_tank_qr_title">QR Code do tanque</string>
+    <string name="tip_tank_qr_text">Imprima o código e cole no tanque, por exemplo no Viveiro 1. Depois é só ler com o app para abrir o tanque, sem procurar na lista.</string>
+    <string name="tip_scan_title">Ler QR Code</string>
+    <string name="tip_scan_text">Aponte a câmera para o código colado no tanque. Se não der certo, escolha o tanque na lista.</string>
+</resources>

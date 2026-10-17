@@ -1,0 +1,151 @@
+package com.valoes.valesaquagestor.domain.calc
+
+import com.valoes.valesaquagestor.domain.model.FaseLote
+import com.valoes.valesaquagestor.domain.model.Tanque
+import com.valoes.valesaquagestor.domain.model.TipoTanque
+import kotlin.math.floor
+
+/**
+ * Condição de criação do viveiro (1 a 4 da tabela F03 p.15), derivada de aeração e troca de água.
+ */
+enum class RearingCondition {
+    /** Sem aerador, sem troca de água. */
+    NO_AERATOR_NO_EXCHANGE,
+
+    /** Com aerador, sem troca de água. */
+    AERATOR_NO_EXCHANGE,
+
+    /** Sem aerador, com troca de 5 a 10% ao dia. */
+    NO_AERATOR_WITH_EXCHANGE,
+
+    /** Com aerador e troca de 5 a 10% ao dia. */
+    AERATOR_WITH_EXCHANGE,
+}
+
+/**
+ * Produtividade em kg de peixe por 1.000 m².
+ *
+ * @property minKg limite inferior (mais conservador).
+ * @property maxKg limite superior (padrão do app, como nos exemplos do manual; 🔶 `08`, conflito 9).
+ */
+data class CapacityRange(val minKg: Double, val maxKg: Double)
+
+/**
+ * Capacidade do viveiro e número máximo de peixes (`specs/03-regras-negocio.md`, seção 4.5).
+ * A capacidade é por **área**; vale para viveiro escavado e açude.
+ */
+object CapacityCalculator {
+
+    /** @see F03 p.15 — troca de água a partir de 5% ao dia conta como "com troca". */
+    const val WATER_EXCHANGE_MIN_PCT_DAY = 5.0
+
+    /** Tabela F03 p.15 (colunas conferidas olhando a imagem), em kg por 1.000 m². */
+    private val table: Map<RearingCondition, Map<FaseLote, CapacityRange>> = mapOf(
+        RearingCondition.NO_AERATOR_NO_EXCHANGE to mapOf(
+            FaseLote.ALEVINAGEM to CapacityRange(100.0, 120.0),
+            FaseLote.RECRIA to CapacityRange(200.0, 250.0),
+            FaseLote.ENGORDA to CapacityRange(500.0, 600.0),
+        ),
+        RearingCondition.AERATOR_NO_EXCHANGE to mapOf(
+            FaseLote.ALEVINAGEM to CapacityRange(140.0, 180.0),
+            FaseLote.RECRIA to CapacityRange(280.0, 330.0),
+            FaseLote.ENGORDA to CapacityRange(800.0, 1000.0),
+        ),
+        RearingCondition.NO_AERATOR_WITH_EXCHANGE to mapOf(
+            FaseLote.ALEVINAGEM to CapacityRange(140.0, 180.0),
+            FaseLote.RECRIA to CapacityRange(280.0, 330.0),
+            FaseLote.ENGORDA to CapacityRange(800.0, 1000.0),
+        ),
+        RearingCondition.AERATOR_WITH_EXCHANGE to mapOf(
+            FaseLote.ALEVINAGEM to CapacityRange(200.0, 350.0),
+            FaseLote.RECRIA to CapacityRange(350.0, 600.0),
+            FaseLote.ENGORDA to CapacityRange(1000.0, 2000.0),
+        ),
+    )
+
+    /** Condição de criação: `usaAerador` × (`renovacaoAguaPctDia` ≥ 5). */
+    fun condition(usesAerator: Boolean, waterExchangePctDay: Double): RearingCondition {
+        val exchange = waterExchangePctDay >= WATER_EXCHANGE_MIN_PCT_DAY
+        return when {
+            usesAerator && exchange -> RearingCondition.AERATOR_WITH_EXCHANGE
+            usesAerator -> RearingCondition.AERATOR_NO_EXCHANGE
+            exchange -> RearingCondition.NO_AERATOR_WITH_EXCHANGE
+            else -> RearingCondition.NO_AERATOR_NO_EXCHANGE
+        }
+    }
+
+    /** Faixa de produtividade (kg por 1.000 m²) da condição e da fase. */
+    fun productivityRange(condition: RearingCondition, phase: FaseLote): CapacityRange =
+        table.getValue(condition).getValue(phase)
+
+    /**
+     * Capacidade em kg: `produtividade (kg/1.000 m²) × areaM2 / 1000`. Com [useUpperLimit] `true`
+     * (padrão) usa o limite superior da faixa; com `false`, o inferior (mais conservador).
+     */
+    fun capacityKg(areaM2: Double, condition: RearingCondition, phase: FaseLote, useUpperLimit: Boolean = true): Double {
+        val range = productivityRange(condition, phase)
+        val productivity = if (useUpperLimit) range.maxKg else range.minKg
+        return productivity * areaM2 / 1000.0
+    }
+
+    /**
+     * Número máximo de peixes: `capacidadeKg / pesoFinal`, arredondado para baixo. O peso final
+     * entra em gramas para a divisão ser exata (ex.: 27 kg e 20 g dão exatamente 1.350).
+     */
+    fun maxFish(capacityKg: Double, finalWeightG: Double): Int =
+        floor(capacityKg * 1000.0 / finalWeightG + ROUNDING_GUARD).toInt()
+
+    /**
+     * Peso final típico de cada fase, em g, só como exemplo no formulário. Engorda: `null`, porque
+     * o peso final é o peso de mercado, que o produtor informa.
+     *
+     * @see F03 p.16 — alevinagem 20 a 30 g; recria 300 a 400 g.
+     */
+    fun typicalFinalWeightG(phase: FaseLote): ClosedFloatingPointRange<Double>? = when (phase) {
+        FaseLote.ALEVINAGEM -> 20.0..30.0
+        FaseLote.RECRIA -> 300.0..400.0
+        FaseLote.ENGORDA -> null
+    }
+
+    /**
+     * Confere um povoamento contra a capacidade do viveiro. Só vale para viveiro escavado e açude
+     * com área informada (a capacidade dos outros tipos não está definida nas fontes): nos demais
+     * casos devolve `null`.
+     *
+     * @param fishCount número de peixes que se quer povoar.
+     * @param finalWeightG peso final esperado, em g.
+     */
+    fun check(tank: Tanque, phase: FaseLote, fishCount: Int, finalWeightG: Double): CapacityCheck? {
+        val area = tank.areaM2 ?: return null
+        if (tank.tipo != TipoTanque.ESCAVADO && tank.tipo != TipoTanque.ACUDE) return null
+        val condition = condition(tank.usaAerador, tank.renovacaoAguaPctDia)
+        val capacityKg = capacityKg(area, condition, phase)
+        val maxFish = maxFish(capacityKg, finalWeightG)
+        return CapacityCheck(
+            condition = condition,
+            range = productivityRange(condition, phase),
+            capacityKg = capacityKg,
+            maxFish = maxFish,
+            exceeds = fishCount > maxFish,
+        )
+    }
+
+    /** Tolerância para o erro de ponto flutuante não derrubar um resultado exato para o inteiro abaixo. */
+    private const val ROUNDING_GUARD = 1e-9
+}
+
+/**
+ * Resultado da conferência de capacidade.
+ *
+ * @property range faixa de produtividade da condição e da fase, em kg por 1.000 m².
+ * @property capacityKg capacidade do viveiro, em kg (limite superior da faixa, 🔶 `specs/08`, conflito 9).
+ * @property maxFish número máximo de peixes para o peso final informado.
+ * @property exceeds `true` se o povoamento passa da capacidade.
+ */
+data class CapacityCheck(
+    val condition: RearingCondition,
+    val range: CapacityRange,
+    val capacityKg: Double,
+    val maxFish: Int,
+    val exceeds: Boolean,
+)

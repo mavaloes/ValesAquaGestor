@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fase 08: perfis, usuários e configurações (specs/06 e specs/11). -->
+<resources>
+    <!-- Perfis e status -->
+    <string name="role_admin">Administrador</string>
+    <string name="role_employee">Funcionário</string>
+    <string name="user_status_active">Ativo</string>
+    <string name="user_status_invited">Convite pendente</string>
+    <string name="user_status_deactivated">Desativado</string>
+    <string name="user_waiting_sync">Aguardando envio</string>
+    <string name="user_name_you">%1$s (você)</string>
+    <string name="user_role_status">%1$s · %2$s</string>
+
+    <!-- Mais -->
+    <string name="more_settings">Configurações</string>
+    <string name="more_users">Usuários</string>
+
+    <!-- Configurações -->
+    <string name="settings_title">Configurações</string>
+    <string name="settings_account_title">Minha conta</string>
+    <string name="settings_account_name">Nome: %1$s</string>
+    <string name="settings_account_email">E-mail: %1$s</string>
+    <string name="settings_account_role">Perfil: %1$s</string>
+    <string name="settings_farm_title">Ajustes da fazenda</string>
+    <string name="settings_water_ranges">Faixas da água</string>
+    <string name="settings_schedule">Agenda de medições</string>
+    <string name="settings_sign_out">Sair da conta</string>
+    <string name="sign_out_title">Sair da conta?</string>
+    <string name="sign_out_text">Registros não enviados continuam guardados no aparelho.</string>
+    <plurals name="sign_out_pending">
+        <item quantity="one">Atenção: %d registro ainda não foi enviado.</item>
+        <item quantity="other">Atenção: %d registros ainda não foram enviados.</item>
+    </plurals>
+    <string name="sign_out_confirm">Sair</string>
+    <string name="no_permission">Só o administrador pode fazer isso.</string>
+
+    <!-- Faixas da água -->
+    <string name="water_ranges_title">Faixas da água</string>
+    <string name="water_ranges_intro">Os valores de fábrica vêm dos manuais. Mude só se o técnico da fazenda orientar. Em cada grupo, cada valor precisa ser maior que o de cima.</string>
+    <string name="water_ranges_group_oxygen">Oxigênio</string>
+    <string name="water_ranges_group_ph">pH</string>
+    <string name="water_ranges_group_temperature">Temperatura</string>
+    <string name="water_ranges_group_ammonia">Amônia tóxica (NH₃)</string>
+    <string name="water_ranges_group_nitrite">Nitrito</string>
+    <string name="water_ranges_group_transparency">Transparência</string>
+    <string name="water_ranges_group_alkalinity">Alcalinidade</string>
+    <string name="water_ranges_group_hardness">Dureza</string>
+    <string name="range_label_emergency_below">Emergência abaixo de</string>
+    <string name="range_label_emergency_above">Emergência acima de</string>
+    <string name="range_label_emergency_from">Emergência a partir de</string>
+    <string name="range_label_critical_below">Crítico abaixo de</string>
+    <string name="range_label_critical_above">Crítico acima de</string>
+    <string name="range_label_critical_from">Crítico a partir de</string>
+    <string name="range_label_adequate_from">Adequado a partir de</string>
+    <string name="range_label_adequate_until">Adequado até</string>
+    <string name="range_label_adequate_below">Adequado abaixo de</string>
+    <string name="error_range_order">Confira a ordem: o valor precisa ser maior que o de cima e positivo. O pH vai de 0 a 14.</string>
+    <string name="water_ranges_save">Salvar faixas</string>
+    <string name="water_ranges_saved">Faixas salvas.</string>
+    <string name="settings_restore_defaults">Restaurar valores de fábrica</string>
+    <string name="settings_restore_title">Voltar aos valores de fábrica?</string>
+    <string name="settings_restore_text">Os ajustes feitos nesta tela serão apagados.</string>
+    <string name="settings_restore_confirm">Restaurar</string>
+    <string name="settings_restored">Valores de fábrica restaurados.</string>
+
+    <!-- Agenda de medições -->
+    <string name="schedule_title">Agenda de medições</string>
+    <string name="schedule_intro">Horários e intervalos da rotina diária. Os valores de fábrica vêm dos manuais.</string>
+    <string name="schedule_group_hours">Horários</string>
+    <string name="schedule_group_intervals">Intervalos</string>
+    <string name="schedule_oxygen_morning">Oxigênio e pH de manhã</string>
+    <string name="schedule_oxygen_afternoon">Oxigênio e pH à tarde</string>
+    <string name="schedule_transparency_from">Transparência: início</string>
+    <string name="schedule_transparency_to">Transparência: fim</string>
+    <string name="schedule_high_load_ammonia_hour">Amônia com carga alta de ração</string>
+    <string name="schedule_high_load_ammonia_interval">Amônia com carga alta: a cada</string>
+    <string name="schedule_recria_biometry">Biometria na recria: a cada</string>
+    <string name="schedule_engorda_biometry">Biometria na engorda: a cada</string>
+    <string name="schedule_alevinagem_readjust">Reajuste da ração na alevinagem: a cada</string>
+    <string name="schedule_feed_readjust">Reajuste da ração nas outras fases: a cada</string>
+    <string name="schedule_weekly_day">Dia das medições semanais</string>
+    <string name="schedule_save">Salvar agenda</string>
+    <string name="schedule_saved">Agenda salva.</string>
+    <string name="error_schedule_value">Hora de 0 a 23, manhã antes da tarde e início antes do fim. Intervalo de pelo menos 1 dia.</string>
+    <string name="unit_hour" formatted="false">h</string>
+    <string name="unit_days">dias</string>
+    <string name="weekday_monday">Segunda-feira</string>
+    <string name="weekday_tuesday">Terça-feira</string>
+    <string name="weekday_wednesday">Quarta-feira</string>
+    <string name="weekday_thursday">Quinta-feira</string>
+    <string name="weekday_friday">Sexta-feira</string>
+    <string name="weekday_saturday">Sábado</string>
+    <string name="weekday_sunday">Domingo</string>
+
+    <!-- Usuários -->
+    <string name="users_title">Usuários</string>
+    <string name="users_empty">Nenhum usuário ainda. Convide quem trabalha com você.</string>
+    <string name="users_invite">Convidar funcionário</string>
+    <string name="users_invite_title">Convidar por e-mail</string>
+    <string name="users_invite_hint">A pessoa cria a conta com este e-mail e entra com o perfil que você escolher.</string>
+    <string name="users_field_role">Perfil</string>
+    <string name="users_invite_send">Convidar</string>
+    <string name="users_make_admin">Tornar administrador</string>
+    <string name="users_make_employee">Tornar funcionário</string>
+    <string name="users_deactivate">Desativar</string>
+    <string name="users_deactivate_title">Desativar usuário?</string>
+    <string name="users_deactivate_text">%1$s não poderá mais entrar no app. Os registros que essa pessoa criou continuam guardados.</string>
+    <string name="users_invite_created">Convite criado para %1$s.</string>
+    <string name="users_invite_offline">Sem conexão. O convite fica pendente e será enviado quando houver internet.</string>
+    <string name="users_role_changed">Perfil alterado.</string>
+    <string name="users_deactivated">Usuário desativado.</string>
+    <string name="users_error_email_in_use">Já existe um usuário com esse e-mail.</string>
+    <string name="users_error_self">Você não pode mudar o seu próprio perfil nem se desativar.</string>
+    <string name="users_error_not_found">Usuário não encontrado.</string>
+
+    <!-- Dicas do "?" -->
+    <string name="tip_settings_title">Configurações</string>
+    <string name="tip_settings_text">Aqui você vê a sua conta e sai do app. Antes de sair, o app avisa quantos registros ainda não foram enviados. O administrador também ajusta as faixas da água e a agenda.</string>
+    <string name="tip_users_title">Usuários</string>
+    <string name="tip_users_text">Convide o funcionário pelo e-mail, por exemplo joao@exemplo.com. Ele cria a conta e registra ração, água, biometria e mortalidade. Sem internet, o convite fica pendente.</string>
+    <string name="tip_water_ranges_title">Faixas da água</string>
+    <string name="tip_water_ranges_text">Cada faixa define quando o app mostra Atenção, Crítico ou Emergência. Exemplo: oxigênio crítico abaixo de 3 mg/L. Mude só se o técnico orientar.</string>
+    <string name="tip_schedule_title">Agenda de medições</string>
+    <string name="tip_schedule_text">Define os horários e os intervalos da rotina diária. Exemplo: oxigênio de manhã às 6 h, antes da primeira ração.</string>
+</resources>
